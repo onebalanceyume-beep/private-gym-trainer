@@ -18,15 +18,22 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .title{font-size:18px;color:#222;font-weight:700;margin-bottom:6px}
 .sub{font-size:12px;color:#888;margin-bottom:24px;line-height:1.6}
 .card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
-.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:12px;font-weight:700}
-.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .fg label{font-size:10px;color:#888;font-weight:500}
-.fg input,.fg select,.fg textarea{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
-.fg textarea{height:80px;resize:none}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-top:8px}
+.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
+.time-label{font-size:10px;color:#888;font-weight:500;margin-bottom:10px}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.time-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;transition:all 0.15s}
+.time-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.time-btn:disabled{opacity:0.3;cursor:not-allowed;border-color:#ddd;color:#aaa}
+.selected-info{display:none;background:#fde8f0;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--pink2);text-align:center;font-weight:500}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-top:4px}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
 .note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
 .warn{font-size:11px;color:#e86060;background:#fff0f0;border-radius:8px;padding:10px 12px;margin-bottom:12px;display:none}
+.loading{text-align:center;padding:16px;font-size:12px;color:#aaa;display:none}
+.error-msg{font-size:12px;color:#e86060;text-align:center;padding:12px;display:none}
 .success{display:none;text-align:center;padding:40px 20px}
 .success-icon{font-size:60px;margin-bottom:16px}
 .success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
@@ -52,39 +59,24 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
           <input type="text" id="name" placeholder="長尾 儀弘">
         </div>
         <div class="fg">
+          <label>メールアドレス（任意）</label>
+          <input type="email" id="email" placeholder="example@gmail.com">
+        </div>
+        <div class="fg">
           <label>希望日</label>
-          <input type="date" id="date" onchange="onDateChange()">
+          <input type="date" id="date" onchange="loadSlots()">
         </div>
         <div id="date-warn" class="warn">⚠️ 予約は前日までにお願いします。翌日以降の日付を選択してください。</div>
-        <div class="fg">
-          <label>希望時間帯（30分刻み）</label>
-          <select id="time">
-            <option value="">選択してください</option>
-            <option value="10:00〜10:30">10:00〜10:30</option>
-            <option value="10:30〜11:00">10:30〜11:00</option>
-            <option value="11:00〜11:30">11:00〜11:30</option>
-            <option value="11:30〜12:00">11:30〜12:00</option>
-            <option value="13:00〜13:30">13:00〜13:30</option>
-            <option value="13:30〜14:00">13:30〜14:00</option>
-            <option value="14:00〜14:30">14:00〜14:30</option>
-            <option value="14:30〜15:00">14:30〜15:00</option>
-            <option value="15:00〜15:30">15:00〜15:30</option>
-            <option value="15:30〜16:00">15:30〜16:00</option>
-            <option value="16:00〜16:30">16:00〜16:30</option>
-            <option value="16:30〜17:00">16:30〜17:00</option>
-            <option value="17:00〜17:30">17:00〜17:30</option>
-            <option value="17:30〜18:00">17:30〜18:00</option>
-            <option value="19:00〜19:30">19:00〜19:30</option>
-            <option value="19:30〜20:00">19:30〜20:00</option>
-            <option value="20:00〜20:30">20:00〜20:30</option>
-            <option value="20:30〜21:00">20:30〜21:00</option>
-          </select>
-        </div>
-        <div class="fg">
+        <div class="time-label">希望時間帯（50分セッション）</div>
+        <div class="loading" id="loading">空き時間を確認中...</div>
+        <div class="error-msg" id="error-msg"></div>
+        <div class="time-grid" id="time-grid"></div>
+        <div class="selected-info" id="selected-info"></div>
+        <div class="fg" style="margin-bottom:0">
           <label>ご要望・メモ（任意）</label>
-          <textarea id="memo" placeholder="体の調子など、何かあればお気軽にどうぞ"></textarea>
+          <input type="text" id="memo" placeholder="体の調子など、何かあればお気軽にどうぞ">
         </div>
-        <button class="btn" id="submit-btn" onclick="submitForm()">予約リクエストを送る</button>
+        <button class="btn" id="submit-btn" onclick="submitForm()" disabled>予約リクエストを送る</button>
       </div>
       <div class="note">
         予約はリクエスト制です。トレーナーが確認後、LINEにてご連絡いたします。<br>
@@ -100,57 +92,115 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   </div>
 </div>
 <script>
-// 今日の日付をデフォルト設定（明日以降を選ばせる）
-const today = new Date();
-const tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
-const minDate = tomorrow.toISOString().slice(0,10);
-document.getElementById('date').setAttribute('min', minDate);
-document.getElementById('date').value = minDate;
+const GAS_URL='https://script.google.com/macros/s/AKfycbxco9rz7qBsnLU7LLEZZvBsyIeHVueQS375IO2DC0L-02TwELumccKxu0LjrpiT1nlN/exec';
+let selectedStart=null,selectedEnd=null;
 
-function onDateChange() {
-  const selectedDate = document.getElementById('date').value;
-  const warn = document.getElementById('date-warn');
-  const btn = document.getElementById('submit-btn');
+const today=new Date();
+const tomorrow=new Date(today);
+tomorrow.setDate(tomorrow.getDate()+1);
+const minDate=tomorrow.toISOString().slice(0,10);
+document.getElementById('date').setAttribute('min',minDate);
+document.getElementById('date').value=minDate;
 
-  if (!selectedDate) return;
+async function loadSlots(){
+  const date=document.getElementById('date').value;
+  if(!date) return;
 
-  // 前日締め切りチェック（今日以前はNG）
-  const selected = new Date(selectedDate + 'T00:00:00');
-  const todayDate = new Date();
-  todayDate.setHours(0,0,0,0);
+  const sel=new Date(date+'T00:00:00');
+  const tod=new Date();tod.setHours(0,0,0,0);
+  const warn=document.getElementById('date-warn');
+  if(sel<=tod){warn.style.display='block';return;}
+  warn.style.display='none';
 
-  if (selected <= todayDate) {
-    warn.style.display = 'block';
-    btn.disabled = true;
-  } else {
-    warn.style.display = 'none';
-    btn.disabled = false;
+  const grid=document.getElementById('time-grid');
+  const loading=document.getElementById('loading');
+  const errMsg=document.getElementById('error-msg');
+  grid.innerHTML='';
+  selectedStart=null;selectedEnd=null;
+  document.getElementById('selected-info').style.display='none';
+  document.getElementById('submit-btn').disabled=true;
+  loading.style.display='block';
+  errMsg.style.display='none';
+
+  try{
+    const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    loading.style.display='none';
+
+    if(data.error){
+      errMsg.textContent=data.error;
+      errMsg.style.display='block';
+      return;
+    }
+
+    if(!data.slots||data.slots.length===0){
+      errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';
+      errMsg.style.display='block';
+      return;
+    }
+
+    data.slots.forEach(slot=>{
+      const btn=document.createElement('button');
+      btn.className='time-btn';
+      btn.textContent=slot.label;
+      btn.onclick=()=>{
+        document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedStart=slot.start;
+        selectedEnd=slot.end;
+        const startLabel=slot.label;
+        const endDate=new Date(slot.end);
+        const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
+        const info=document.getElementById('selected-info');
+        info.style.display='block';
+        info.textContent='予約時間：'+startLabel+' 〜 '+endLabel+'（50分）';
+        document.getElementById('submit-btn').disabled=false;
+      };
+      grid.appendChild(btn);
+    });
+  }catch(err){
+    loading.style.display='none';
+    errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
+    errMsg.style.display='block';
   }
 }
 
-function submitForm() {
-  const name = document.getElementById('name').value.trim();
-  const date = document.getElementById('date').value;
-  const time = document.getElementById('time').value;
+async function submitForm(){
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const date=document.getElementById('date').value;
 
-  if (!name || !date || !time) {
-    alert('お名前・希望日・希望時間帯を入力してください');
-    return;
+  if(!name||!date||!selectedStart){alert('お名前・希望日・希望時間帯を入力してください');return;}
+
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='送信中...';
+
+  try{
+    const params=new URLSearchParams({
+      action:'submitReservation',
+      name,email,phone:'',
+      start:selectedStart,end:selectedEnd
+    });
+    const res=await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+
+    if(data.success){
+      document.getElementById('form-area').style.display='none';
+      document.getElementById('success-area').style.display='block';
+    }else{
+      alert(data.message||'予約に失敗しました。再度お試しください。');
+      btn.disabled=false;
+      btn.textContent='予約リクエストを送る';
+    }
+  }catch(err){
+    alert('送信に失敗しました。再度お試しください。');
+    btn.disabled=false;
+    btn.textContent='予約リクエストを送る';
   }
-
-  // 前日締め切り再チェック
-  const selected = new Date(date + 'T00:00:00');
-  const todayDate = new Date();
-  todayDate.setHours(0,0,0,0);
-  if (selected <= todayDate) {
-    alert('予約は前日までにお願いします。');
-    return;
-  }
-
-  document.getElementById('form-area').style.display = 'none';
-  document.getElementById('success-area').style.display = 'block';
 }
+
+loadSlots();
 </script>
 </body>
 </html>
