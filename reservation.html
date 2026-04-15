@@ -24,7 +24,9 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .fg input,.fg select,.fg textarea{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
 .fg textarea{height:80px;resize:none}
 .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-top:8px}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
 .note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
+.warn{font-size:11px;color:#e86060;background:#fff0f0;border-radius:8px;padding:10px 12px;margin-bottom:12px;display:none}
 .success{display:none;text-align:center;padding:40px 20px}
 .success-icon{font-size:60px;margin-bottom:16px}
 .success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
@@ -51,28 +53,38 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
         </div>
         <div class="fg">
           <label>希望日</label>
-          <input type="date" id="date">
+          <input type="date" id="date" onchange="onDateChange()">
         </div>
+        <div id="date-warn" class="warn">⚠️ 予約は前日までにお願いします。翌日以降の日付を選択してください。</div>
         <div class="fg">
-          <label>希望時間帯</label>
+          <label>希望時間帯（30分刻み）</label>
           <select id="time">
             <option value="">選択してください</option>
-            <option value="10:00〜11:00">10:00〜11:00</option>
-            <option value="11:00〜12:00">11:00〜12:00</option>
-            <option value="13:00〜14:00">13:00〜14:00</option>
-            <option value="14:00〜15:00">14:00〜15:00</option>
-            <option value="15:00〜16:00">15:00〜16:00</option>
-            <option value="16:00〜17:00">16:00〜17:00</option>
-            <option value="17:00〜18:00">17:00〜18:00</option>
-            <option value="19:00〜20:00">19:00〜20:00</option>
-            <option value="20:00〜21:00">20:00〜21:00</option>
+            <option value="10:00〜10:30">10:00〜10:30</option>
+            <option value="10:30〜11:00">10:30〜11:00</option>
+            <option value="11:00〜11:30">11:00〜11:30</option>
+            <option value="11:30〜12:00">11:30〜12:00</option>
+            <option value="13:00〜13:30">13:00〜13:30</option>
+            <option value="13:30〜14:00">13:30〜14:00</option>
+            <option value="14:00〜14:30">14:00〜14:30</option>
+            <option value="14:30〜15:00">14:30〜15:00</option>
+            <option value="15:00〜15:30">15:00〜15:30</option>
+            <option value="15:30〜16:00">15:30〜16:00</option>
+            <option value="16:00〜16:30">16:00〜16:30</option>
+            <option value="16:30〜17:00">16:30〜17:00</option>
+            <option value="17:00〜17:30">17:00〜17:30</option>
+            <option value="17:30〜18:00">17:30〜18:00</option>
+            <option value="19:00〜19:30">19:00〜19:30</option>
+            <option value="19:30〜20:00">19:30〜20:00</option>
+            <option value="20:00〜20:30">20:00〜20:30</option>
+            <option value="20:30〜21:00">20:30〜21:00</option>
           </select>
         </div>
         <div class="fg">
           <label>ご要望・メモ（任意）</label>
           <textarea id="memo" placeholder="体の調子など、何かあればお気軽にどうぞ"></textarea>
         </div>
-        <button class="btn" onclick="submit()">予約リクエストを送る</button>
+        <button class="btn" id="submit-btn" onclick="submitForm()">予約リクエストを送る</button>
       </div>
       <div class="note">
         予約はリクエスト制です。トレーナーが確認後、LINEにてご連絡いたします。<br>
@@ -88,15 +100,57 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   </div>
 </div>
 <script>
-function submit(){
-  const name=document.getElementById('name').value;
-  const date=document.getElementById('date').value;
-  const time=document.getElementById('time').value;
-  if(!name||!date||!time){alert('お名前・希望日・希望時間帯を入力してください');return;}
-  document.getElementById('form-area').style.display='none';
-  document.getElementById('success-area').style.display='block';
+// 今日の日付をデフォルト設定（明日以降を選ばせる）
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+const minDate = tomorrow.toISOString().slice(0,10);
+document.getElementById('date').setAttribute('min', minDate);
+document.getElementById('date').value = minDate;
+
+function onDateChange() {
+  const selectedDate = document.getElementById('date').value;
+  const warn = document.getElementById('date-warn');
+  const btn = document.getElementById('submit-btn');
+
+  if (!selectedDate) return;
+
+  // 前日締め切りチェック（今日以前はNG）
+  const selected = new Date(selectedDate + 'T00:00:00');
+  const todayDate = new Date();
+  todayDate.setHours(0,0,0,0);
+
+  if (selected <= todayDate) {
+    warn.style.display = 'block';
+    btn.disabled = true;
+  } else {
+    warn.style.display = 'none';
+    btn.disabled = false;
+  }
 }
-document.getElementById('date').value=new Date().toISOString().slice(0,10);
+
+function submitForm() {
+  const name = document.getElementById('name').value.trim();
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+
+  if (!name || !date || !time) {
+    alert('お名前・希望日・希望時間帯を入力してください');
+    return;
+  }
+
+  // 前日締め切り再チェック
+  const selected = new Date(date + 'T00:00:00');
+  const todayDate = new Date();
+  todayDate.setHours(0,0,0,0);
+  if (selected <= todayDate) {
+    alert('予約は前日までにお願いします。');
+    return;
+  }
+
+  document.getElementById('form-area').style.display = 'none';
+  document.getElementById('success-area').style.display = 'block';
+}
 </script>
 </body>
 </html>
