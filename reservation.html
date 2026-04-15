@@ -15,8 +15,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .logo-sub{font-size:7px;color:#ccc;letter-spacing:.22em;margin-top:3px}
 .logo-catch{font-size:11px;color:var(--pink);margin-top:4px}
 .body{padding:20px}
-.title{font-size:18px;color:#222;font-weight:700;margin-bottom:6px}
-.sub{font-size:12px;color:#888;margin-bottom:24px;line-height:1.6}
+.title{font-size:18px;color:#222;font-weight:700;margin-bottom:24px}
 .card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
 .card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
@@ -26,12 +25,10 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .time-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;transition:all 0.15s}
 .time-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
-.time-btn:disabled{opacity:0.3;cursor:not-allowed;border-color:#ddd;color:#aaa}
-.selected-info{display:none;background:#fde8f0;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--pink2);text-align:center;font-weight:500}
+.selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--pink2);text-align:center;font-weight:500}
 .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-top:4px}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
 .note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
-.warn{font-size:11px;color:#e86060;background:#fff0f0;border-radius:8px;padding:10px 12px;margin-bottom:12px;display:none}
 .loading{text-align:center;padding:16px;font-size:12px;color:#aaa;display:none}
 .error-msg{font-size:12px;color:#e86060;text-align:center;padding:12px;display:none}
 .success{display:none;text-align:center;padding:40px 20px}
@@ -50,38 +47,27 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   </div>
   <div class="body">
     <div id="form-area">
-      <div class="title">セッションを予約する</div>
-      <div class="sub">ご希望の日時をお選びください。確認後、トレーナーよりご連絡いたします。</div>
+      <div class="title">ご希望の日にちをお選びください</div>
       <div class="card">
         <div class="card-title">予約情報</div>
         <div class="fg">
           <label>お名前</label>
           <input type="text" id="name" placeholder="長尾 儀弘">
         </div>
-        <div class="fg">
-          <label>メールアドレス（任意）</label>
-          <input type="email" id="email" placeholder="example@gmail.com">
-        </div>
-        <div class="fg">
+        <div class="fg" style="margin-bottom:0">
           <label>希望日</label>
           <input type="date" id="date" onchange="loadSlots()">
         </div>
-        <div id="date-warn" class="warn">⚠️ 予約は前日までにお願いします。翌日以降の日付を選択してください。</div>
-        <div class="time-label">希望時間帯（50分セッション）</div>
+      </div>
+      <div class="card" id="slot-card" style="display:none">
+        <div class="card-title">希望時間帯（50分セッション）</div>
         <div class="loading" id="loading">空き時間を確認中...</div>
         <div class="error-msg" id="error-msg"></div>
         <div class="time-grid" id="time-grid"></div>
         <div class="selected-info" id="selected-info"></div>
-        <div class="fg" style="margin-bottom:0">
-          <label>ご要望・メモ（任意）</label>
-          <input type="text" id="memo" placeholder="体の調子など、何かあればお気軽にどうぞ">
-        </div>
         <button class="btn" id="submit-btn" onclick="submitForm()" disabled>予約リクエストを送る</button>
       </div>
-      <div class="note">
-        予約はリクエスト制です。トレーナーが確認後、LINEにてご連絡いたします。<br>
-        キャンセルはセッション前日までにご連絡ください。
-      </div>
+      <div class="note">キャンセルはセッション前日までにご連絡ください。</div>
     </div>
     <div class="success" id="success-area">
       <div class="success-icon">🎉</div>
@@ -98,23 +84,21 @@ let selectedStart=null,selectedEnd=null;
 const today=new Date();
 const tomorrow=new Date(today);
 tomorrow.setDate(tomorrow.getDate()+1);
-const minDate=tomorrow.toISOString().slice(0,10);
-document.getElementById('date').setAttribute('min',minDate);
-document.getElementById('date').value=minDate;
+document.getElementById('date').setAttribute('min',tomorrow.toISOString().slice(0,10));
+document.getElementById('date').value=tomorrow.toISOString().slice(0,10);
 
 async function loadSlots(){
   const date=document.getElementById('date').value;
-  if(!date) return;
-
+  if(!date)return;
   const sel=new Date(date+'T00:00:00');
   const tod=new Date();tod.setHours(0,0,0,0);
-  const warn=document.getElementById('date-warn');
-  if(sel<=tod){warn.style.display='block';return;}
-  warn.style.display='none';
+  if(sel<=tod)return;
 
+  const slotCard=document.getElementById('slot-card');
   const grid=document.getElementById('time-grid');
   const loading=document.getElementById('loading');
   const errMsg=document.getElementById('error-msg');
+  slotCard.style.display='block';
   grid.innerHTML='';
   selectedStart=null;selectedEnd=null;
   document.getElementById('selected-info').style.display='none';
@@ -126,19 +110,8 @@ async function loadSlots(){
     const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
     loading.style.display='none';
-
-    if(data.error){
-      errMsg.textContent=data.error;
-      errMsg.style.display='block';
-      return;
-    }
-
-    if(!data.slots||data.slots.length===0){
-      errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';
-      errMsg.style.display='block';
-      return;
-    }
-
+    if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';return;}
+    if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';return;}
     data.slots.forEach(slot=>{
       const btn=document.createElement('button');
       btn.className='time-btn';
@@ -146,14 +119,12 @@ async function loadSlots(){
       btn.onclick=()=>{
         document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
         btn.classList.add('selected');
-        selectedStart=slot.start;
-        selectedEnd=slot.end;
-        const startLabel=slot.label;
+        selectedStart=slot.start;selectedEnd=slot.end;
         const endDate=new Date(slot.end);
         const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
         const info=document.getElementById('selected-info');
         info.style.display='block';
-        info.textContent='予約時間：'+startLabel+' 〜 '+endLabel+'（50分）';
+        info.textContent='予約時間：'+slot.label+' 〜 '+endLabel+'（50分）';
         document.getElementById('submit-btn').disabled=false;
       };
       grid.appendChild(btn);
@@ -167,40 +138,26 @@ async function loadSlots(){
 
 async function submitForm(){
   const name=document.getElementById('name').value.trim();
-  const email=document.getElementById('email').value.trim();
   const date=document.getElementById('date').value;
-
-  if(!name||!date||!selectedStart){alert('お名前・希望日・希望時間帯を入力してください');return;}
-
+  if(!name||!date||!selectedStart){alert('お名前と希望日・時間を入力してください');return;}
   const btn=document.getElementById('submit-btn');
-  btn.disabled=true;
-  btn.textContent='送信中...';
-
+  btn.disabled=true;btn.textContent='送信中...';
   try{
-    const params=new URLSearchParams({
-      action:'submitReservation',
-      name,email,phone:'',
-      start:selectedStart,end:selectedEnd
-    });
+    const params=new URLSearchParams({action:'submitReservation',name,email:'',phone:'',start:selectedStart,end:selectedEnd});
     const res=await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
     const data=await res.json();
-
     if(data.success){
       document.getElementById('form-area').style.display='none';
       document.getElementById('success-area').style.display='block';
     }else{
       alert(data.message||'予約に失敗しました。再度お試しください。');
-      btn.disabled=false;
-      btn.textContent='予約リクエストを送る';
+      btn.disabled=false;btn.textContent='予約リクエストを送る';
     }
   }catch(err){
     alert('送信に失敗しました。再度お試しください。');
-    btn.disabled=false;
-    btn.textContent='予約リクエストを送る';
+    btn.disabled=false;btn.textContent='予約リクエストを送る';
   }
 }
-
-loadSlots();
 </script>
 </body>
 </html>
