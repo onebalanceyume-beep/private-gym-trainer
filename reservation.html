@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — 予約</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
+.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#222;letter-spacing:.32em}
+.logo-sub{font-size:7px;color:#ccc;letter-spacing:.22em;margin-top:3px}
+.logo-catch{font-size:11px;color:var(--pink);margin-top:4px}
+.body{padding:20px}
+.title{font-size:18px;color:#222;font-weight:700;margin-bottom:6px}
+.sub{font-size:12px;color:#888;margin-bottom:24px;line-height:1.6}
+.card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
+.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:12px;font-weight:700}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fg label{font-size:10px;color:#888;font-weight:500}
+.fg input,.fg select,.fg textarea{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
+.fg textarea{height:80px;resize:none}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-top:8px}
+.note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
+.success{display:none;text-align:center;padding:40px 20px}
+.success-icon{font-size:60px;margin-bottom:16px}
+.success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
+.success-sub{font-size:12px;color:#888;line-height:1.6}
+.back-btn{display:inline-block;margin-top:20px;padding:10px 24px;background:var(--pink-bg);color:var(--pink2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hd">
+    <div class="logo">ONE TRE</div>
+    <div class="logo-sub">PERSONAL TRAINING GYM</div>
+    <div class="logo-catch">私は私</div>
+  </div>
+  <div class="body">
+    <div id="form-area">
+      <div class="title">セッションを予約する</div>
+      <div class="sub">ご希望の日時をお選びください。確認後、トレーナーよりご連絡いたします。</div>
+      <div class="card">
+        <div class="card-title">予約情報</div>
+        <div class="fg">
+          <label>お名前</label>
+          <input type="text" id="name" placeholder="長尾 儀弘">
+        </div>
+        <div class="fg">
+          <label>希望日</label>
+          <input type="date" id="date">
+        </div>
+        <div class="fg">
+          <label>希望時間帯</label>
+          <select id="time">
+            <option value="">選択してください</option>
+            <option value="10:00〜11:00">10:00〜11:00</option>
+            <option value="11:00〜12:00">11:00〜12:00</option>
+            <option value="13:00〜14:00">13:00〜14:00</option>
+            <option value="14:00〜15:00">14:00〜15:00</option>
+            <option value="15:00〜16:00">15:00〜16:00</option>
+            <option value="16:00〜17:00">16:00〜17:00</option>
+            <option value="17:00〜18:00">17:00〜18:00</option>
+            <option value="19:00〜20:00">19:00〜20:00</option>
+            <option value="20:00〜21:00">20:00〜21:00</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>ご要望・メモ（任意）</label>
+          <textarea id="memo" placeholder="体の調子など、何かあればお気軽にどうぞ"></textarea>
+        </div>
+        <button class="btn" onclick="submit()">予約リクエストを送る</button>
+      </div>
+      <div class="note">
+        予約はリクエスト制です。トレーナーが確認後、LINEにてご連絡いたします。<br>
+        キャンセルはセッション前日までにご連絡ください。
+      </div>
+    </div>
+    <div class="success" id="success-area">
+      <div class="success-icon">🎉</div>
+      <div class="success-msg">予約リクエストを送りました！</div>
+      <div class="success-sub">トレーナーが確認後、LINEにてご連絡いたします。<br>しばらくお待ちください。</div>
+      <a href="javascript:history.back()" class="back-btn">マイページに戻る</a>
+    </div>
+  </div>
+</div>
+<script>
+function submit(){
+  const name=document.getElementById('name').value;
+  const date=document.getElementById('date').value;
+  const time=document.getElementById('time').value;
+  if(!name||!date||!time){alert('お名前・希望日・希望時間帯を入力してください');return;}
+  document.getElementById('form-area').style.display='none';
+  document.getElementById('success-area').style.display='block';
+}
+document.getElementById('date').value=new Date().toISOString().slice(0,10);
+</script>
+</body>
+</html>

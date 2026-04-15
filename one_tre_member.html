@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — My Page</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fff;--bg2:#fdf6fb;--black:#222;--g1:#444;--g2:#888;--g3:#bbb;--g4:#ddd;--g5:#f0f0f0;--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--green:#60c890;--green-bg:#e8f8f0;--blue:#80a0e8;--blue-bg:#e8f0ff;--orange:#e8a060;--orange-bg:#fff0e0;}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--black);min-height:100vh}
+.app{max-width:480px;margin:0 auto}
+.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:var(--bg)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--black);letter-spacing:.32em}
+.logo-sub{font-size:7px;color:var(--g3);letter-spacing:.22em;margin-top:3px;font-weight:300}
+.logo-catch{font-size:11px;color:var(--pink);margin-top:4px;font-weight:400}
+.member-name{font-size:16px;color:var(--black);margin-top:8px;font-weight:700}
+.nav{display:flex;gap:6px;padding:10px;background:var(--bg2);position:sticky;top:0;z-index:10}
+.nb{flex:1;padding:8px 0;font-size:10px;text-align:center;border:none;border-radius:20px;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:500;transition:all .2s;color:#bbb;background:#fff}
+.nb-attend{background:var(--pink-bg);color:var(--pink2)}
+.nb-body{color:#bbb;background:#fff}
+.nb-body.a{background:var(--green-bg);color:var(--green)}
+.nb-training{color:#bbb;background:#fff}
+.nb-training.a{background:var(--blue-bg);color:var(--blue)}
+.nb-growth{color:#bbb;background:#fff}
+.nb-growth.a{background:var(--orange-bg);color:var(--orange)}
+.nb-attend.a{background:var(--pink-bg);color:var(--pink2)}
+.pg{display:none;padding:16px}.pg.active{display:block}
+.st{font-size:9px;color:var(--g3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-weight:500}
+.st::after{content:'';flex:1;height:1px;background:var(--pink-bg)}
+.att-box{padding:16px;border-radius:16px;margin-bottom:14px;background:linear-gradient(135deg,#fff0f8,#fff8e8)}
+.att-label{font-size:9px;color:var(--pink);letter-spacing:.1em;margin-bottom:4px;font-weight:500}
+.att-days{font-size:42px;color:var(--black);font-weight:700;line-height:1}
+.att-unit{font-size:13px;color:var(--pink);margin-left:3px}
+.att-msg{font-size:11px;color:var(--g1);margin-top:5px;font-weight:400}
+.att-dots{display:flex;gap:5px;margin-top:10px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--g5)}
+.dot.on{background:var(--pink)}
+.rsv-btn{display:block;background:linear-gradient(135deg,var(--pink),#c0a0e8);border-radius:16px;padding:14px;text-align:center;text-decoration:none;margin-bottom:14px}
+.rsv-t{font-size:12px;color:#fff;font-weight:700;letter-spacing:.05em}
+.rsv-s{font-size:9px;color:rgba(255,255,255,0.8);margin-top:3px}
+.cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cal-month{font-size:14px;color:var(--black);font-weight:700}
+.cal-count{font-size:9px;color:var(--pink2);background:var(--pink-bg);padding:3px 10px;border-radius:20px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cd{text-align:center;font-size:10px;color:var(--g3);padding:4px 0;font-weight:400}
+.cd.dh{font-size:8px;color:var(--g3);font-weight:500}
+.cd-v{background:var(--pink);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px;font-weight:700}
+.cd-t{border:2px solid var(--pink);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px;color:var(--pink2);font-weight:700}
+.wt-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.wt-val{font-size:48px;color:var(--black);font-weight:700;line-height:1}
+.wt-unit{font-size:14px;color:var(--g3)}
+.wt-diff.down{color:var(--green)}
+.wt-diff.up{color:var(--pink2)}
+.ch-wrap{height:120px;position:relative;margin:10px 0 4px}
+.tr-row{padding:12px;border-radius:12px;margin-bottom:8px;background:var(--blue-bg)}
+.tr-date{font-size:13px;color:var(--black);margin-bottom:4px;font-weight:700}
+.tr-set{font-size:11px;color:var(--g1);font-weight:400;line-height:1.8}
+.tr-badge{display:inline-block;font-size:8px;padding:2px 8px;background:var(--blue);color:#fff;border-radius:10px;margin-left:6px;font-weight:700}
+.pb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--orange-bg);border-radius:12px;margin-bottom:6px}
+.pb-name{font-size:12px;color:var(--black);font-weight:500}
+.pb-val{font-size:20px;color:var(--orange);font-weight:700}
+.pb-unit{font-size:10px;color:var(--g3);margin-left:2px}
+.pb-up{font-size:10px;color:var(--green);margin-left:6px;font-weight:700}
+.nodata{text-align:center;padding:40px 20px;color:var(--g3);font-size:13px;font-weight:400}
+.score-card{border-radius:14px;padding:12px;margin-bottom:8px}
+.score-label{font-size:9px;letter-spacing:.08em;margin-bottom:4px;font-weight:700}
+.score-num{font-size:26px;font-weight:700;line-height:1}
+.score-bar-bg{height:4px;border-radius:2px;margin-top:8px;overflow:hidden}
+.score-bar{height:100%;border-radius:2px;transition:width .6s ease}
+.total-card{background:linear-gradient(135deg,var(--pink-bg),var(--blue-bg));border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.wt-input-box{background:linear-gradient(135deg,var(--pink-bg),#f0e8ff);border-radius:14px;padding:14px;margin-bottom:14px}
+.wt-input-label{font-size:9px;color:var(--pink2);letter-spacing:.1em;margin-bottom:8px;font-weight:700}
+.wt-input{border:1.5px solid rgba(232,96,138,0.3);border-radius:10px;padding:10px 12px;background:#fff;font-family:'M PLUS Rounded 1c',sans-serif;font-size:22px;color:var(--black);font-weight:700;outline:none;width:100%}
+.wt-save-btn{background:linear-gradient(135deg,var(--pink),#c0a0e8);border:none;border-radius:10px;padding:10px 14px;font-size:11px;color:#fff;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:700;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hd">
+    <div class="logo">ONE TRE</div>
+    <div class="logo-sub">PERSONAL TRAINING GYM</div>
+    <div class="logo-catch">私は私</div>
+    <div class="member-name" id="member-name">...</div>
+  </div>
+  <div class="nav">
+    <button class="nb nb-attend a" onclick="sw('attend',this)">通う</button>
+    <button class="nb nb-body" onclick="sw('body',this)">体重</button>
+    <button class="nb nb-training" onclick="sw('training',this)">記録</button>
+    <button class="nb nb-growth" onclick="sw('growth',this)">成長</button>
+  </div>
+
+  <div id="pg-attend" class="pg active">
+    <div id="att-status"></div>
+    <a href="https://onebalanceyume-beep.github.io/private-gym-member/reservation.html" class="rsv-btn">
+      <div class="rsv-t">次のセッションを予約する</div>
+      <div class="rsv-s">タップして予約画面へ</div>
+    </a>
+    <div class="st">attendance</div>
+    <div class="cal-hd"><div class="cal-month" id="cal-month"></div><div class="cal-count" id="cal-count"></div></div>
+    <div class="cal-grid" id="cal-hdr"></div>
+    <div class="cal-grid" style="margin-top:3px" id="cal-body"></div>
+  </div>
+
+  <div id="pg-body" class="pg">
+    <div class="st">today's weight</div>
+    <div class="wt-input-box">
+      <div class="wt-input-label">今日の体重を記録する</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <input type="number" id="wt-input" step="0.1" placeholder="56.5" class="wt-input">
+        <span style="font-size:12px;color:var(--g3)">kg</span>
+        <button onclick="saveWeightEntry()" class="wt-save-btn">記録する</button>
+      </div>
+      <div id="wt-feedback" style="font-size:10px;color:var(--pink2);font-weight:500;min-height:16px"></div>
+    </div>
+    <div class="st">weight history</div>
+    <div id="wt-content"><div class="nodata">体重データがありません</div></div>
+    <div class="ch-wrap"><canvas id="cw"></canvas></div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;margin-bottom:14px"><span style="font-size:8px;color:var(--g3)">開始時</span><span style="font-size:8px;color:var(--g3)">現在</span></div>
+    <div id="wt-history-list"></div>
+    <div style="margin-top:20px;padding:14px 16px;background:var(--pink-bg);border-radius:14px">
+      <div style="font-size:9px;color:var(--pink2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;font-weight:700">目標体重（任意）</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <input type="number" id="goal-wt" step="0.1" placeholder="50.0" style="font-size:16px;padding:8px 10px;border:1.5px solid rgba(232,96,138,0.3);border-radius:10px;background:#fff;color:var(--black);width:100px;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:700">
+        <span style="font-size:12px;color:var(--g3)">kg</span>
+        <button onclick="saveGoal()" style="font-size:10px;padding:7px 14px;background:linear-gradient(135deg,var(--pink),#c0a0e8);color:#fff;border:none;cursor:pointer;border-radius:10px;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:700">設定</button>
+        <button onclick="clearGoal()" style="font-size:10px;padding:7px 10px;background:#fff;border:1.5px solid var(--pink);color:var(--pink2);cursor:pointer;border-radius:10px;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:500">クリア</button>
+      </div>
+      <div id="goal-display"></div>
+      <div style="font-size:10px;color:var(--pink);margin-top:8px;line-height:1.6;font-weight:400">この体重はトレーナーには見えません。あなただけが確認できます。</div>
+    </div>
+  </div>
+
+  <div id="pg-training" class="pg">
+    <div class="st">training log</div>
+    <div id="tr-list"><div class="nodata">トレーニング記録がありません</div></div>
+  </div>
+
+  <div id="pg-growth" class="pg">
+    <div class="st">body balance</div>
+    <div id="radar-wrap" style="margin-bottom:16px">
+      <div style="position:relative;height:240px;margin-bottom:8px"><canvas id="cr"></canvas></div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:var(--g2)"><div style="width:14px;height:3px;background:var(--pink);border-radius:2px"></div>現在</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:var(--g3)"><div style="width:14px;border-top:2px dashed var(--g3)"></div>理想</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div class="score-card" style="background:var(--pink-bg)">
+          <div class="score-label" style="color:var(--pink2)">筋力</div>
+          <div style="display:flex;align-items:baseline;gap:3px"><span id="score-strength-val" class="score-num" style="color:var(--pink2)">0</span><span style="font-size:10px;color:var(--pink)">/ 25</span></div>
+          <div class="score-bar-bg" style="background:rgba(240,160,184,0.2)"><div id="bar-strength" class="score-bar" style="background:var(--pink);width:0%"></div></div>
+        </div>
+        <div class="score-card" style="background:var(--blue-bg)">
+          <div class="score-label" style="color:var(--blue)">体幹</div>
+          <div style="display:flex;align-items:baseline;gap:3px"><span id="score-core-val" class="score-num" style="color:var(--blue)">0</span><span style="font-size:10px;color:var(--blue)">/ 25</span></div>
+          <div class="score-bar-bg" style="background:rgba(128,160,232,0.2)"><div id="bar-core" class="score-bar" style="background:var(--blue);width:0%"></div></div>
+        </div>
+        <div class="score-card" style="background:var(--green-bg)">
+          <div class="score-label" style="color:var(--green)">連動性</div>
+          <div style="display:flex;align-items:baseline;gap:3px"><span id="score-agility-val" class="score-num" style="color:var(--green)">0</span><span style="font-size:10px;color:var(--green)">/ 25</span></div>
+          <div class="score-bar-bg" style="background:rgba(96,200,144,0.2)"><div id="bar-agility" class="score-bar" style="background:var(--green);width:0%"></div></div>
+        </div>
+        <div class="score-card" style="background:var(--orange-bg)">
+          <div class="score-label" style="color:var(--orange)">柔軟性</div>
+          <div style="display:flex;align-items:baseline;gap:3px"><span id="score-flex-val" class="score-num" style="color:var(--orange)">0</span><span style="font-size:10px;color:var(--orange)">/ 25</span></div>
+          <div class="score-bar-bg" style="background:rgba(232,160,96,0.2)"><div id="bar-flex" class="score-bar" style="background:var(--orange);width:0%"></div></div>
+        </div>
+      </div>
+      <div class="total-card">
+        <div>
+          <div style="font-size:11px;color:var(--g2);font-weight:500">トータルスコア</div>
+          <div style="font-size:10px;color:var(--g3);margin-top:2px;font-weight:400">あなたの理想に向かっています</div>
+        </div>
+        <div><span id="score-total-val" style="font-size:36px;color:var(--black);font-weight:700">0</span><span style="font-size:12px;color:var(--g3);margin-left:3px">/ 100</span></div>
+      </div>
+    </div>
+    <div id="radar-nodata" style="display:none" class="nodata">スコアはまだ設定されていません</div>
+    <div class="st" style="margin-top:16px">personal best</div>
+    <div id="pb-list"><div class="nodata">記録がありません</div></div>
+    <div class="st" style="margin-top:16px">volume trend</div>
+    <div class="ch-wrap" style="height:140px"><canvas id="cv"></canvas></div>
+    <div class="st" style="margin-top:16px">exercise progress</div>
+    <div class="ch-wrap" style="height:160px"><canvas id="ce"></canvas></div>
+  </div>
+</div>
+
+<script>
+const urlId=new URLSearchParams(location.search).get('id');
+const GAS_URL='https://script.google.com/macros/s/AKfycbybXagOrMGMuF9M-c-m3XCp01gktZdSuW-bGsSlanRhI90bQUiCMepaTv9lsAWW-WX7/exec';
+let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
+let mem=null,mts=[];let C={};
+const now=new Date();const cY=now.getFullYear(),cM=now.getMonth();
+function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
+function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/(1000*60*60*24));}
+async function init(){
+  if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
+  document.getElementById('member-name').textContent='読み込み中...';
+  const nameMap={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','DDD4DF':'長尾 儀弘','CZVX34':'古志野 佳恵'};
+  try{
+    const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    const gasMem=(data.members||[]).find(m=>String(m.id)===urlId);
+    mem={id:urlId,name:gasMem?gasMem.name:(nameMap[urlId]||'会員'),weights:[],dob:'',gender:'f'};
+    if(data.training&&data.training.length){
+      const grouped={};
+      data.training.forEach(r=>{
+        if(!grouped[r.date])grouped[r.date]={id:'gas_'+r.date,memberId:urlId,date:r.date,sets:[]};
+        grouped[r.date].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
+      });
+      mts=Object.values(grouped).sort((a,b)=>b.date.localeCompare(a.date));
+      localStorage.setItem('onetreT',JSON.stringify(mts));
+    }else{mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));}
+    if(data.weights&&data.weights.length){
+      mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
+      localStorage.setItem('onetreWeights_'+urlId,JSON.stringify(data.weights.map(w=>({date:w.date,weight:w.weight}))));
+    }else{mem.weights=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]').map(e=>e.weight).filter(w=>w>0);}
+    if(data.bodyScore&&(data.bodyScore.strength||data.bodyScore.core||data.bodyScore.agility||data.bodyScore.flex)){
+      localStorage.setItem('onetreScore_'+urlId,JSON.stringify(data.bodyScore));
+    }
+  }catch(e){
+    console.log('GAS失敗:',e);
+    mem={id:urlId,name:nameMap[urlId]||'会員',weights:[],dob:'',gender:'f'};
+    mem.weights=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]').map(e=>e.weight).filter(w=>w>0);
+    mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
+  }
+  document.getElementById('member-name').textContent=mem.name+' さん';
+  document.title='ONE TRE — '+mem.name;
+  renderAttend();renderBody();renderWeightHistory();renderGoal();renderTraining();renderGrowth();
+}
+function showError(msg){
+  document.getElementById('member-name').textContent='';
+  document.querySelector('.nav').style.display='none';
+  document.getElementById('pg-attend').innerHTML='<div class="nodata" style="padding:60px 20px">'+msg.replace(/\n/g,'<br>')+'</div>';
+  document.getElementById('pg-attend').classList.add('active');
+}
+function sw(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('a'));
+  document.getElementById('pg-'+id).classList.add('active');btn.classList.add('a');
+}
+function renderAttend(){
+  const last=mts.length?mts[0].date:null;const days=daysSince(last);
+  const box=document.getElementById('att-status');
+  if(last){
+    const isWarn=days>=7;let msg='';
+    if(days===0)msg='今日もお疲れさまでした！';
+    else if(days<=3)msg='いいペースです。この調子で！';
+    else if(days<=6)msg='次のセッションが近づいています';
+    else if(days<=10)msg='そろそろ次のセッションを';
+    else msg='お体の調子はいかがですか？';
+    let dotHtml='';const dayMod=Math.min(days,8);
+    for(let i=0;i<8;i++){dotHtml+='<div class="dot'+(i<(8-dayMod)?' on':'')+'"></div>';}
+    box.innerHTML='<div class="att-box"><div class="att-label">前回から</div><div><span class="att-days">'+days+'</span><span class="att-unit">日</span></div><div class="att-msg">'+msg+'</div><div class="att-dots">'+dotHtml+'</div></div>';
+  }else{box.innerHTML='<div class="att-box"><div class="att-label">来店記録</div><div class="att-msg">トレーニング記録がまだありません</div></div>';}
+  document.getElementById('cal-month').textContent=cY+'年'+(cM+1)+'月';
+  const mv=mts.filter(t=>t.date.startsWith(cY+'-'+String(cM+1).padStart(2,'0')));
+  document.getElementById('cal-count').textContent='今月 '+mv.length+'回';
+  document.getElementById('cal-hdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>'<div class="cd dh">'+d+'</div>').join('');
+  const first=new Date(cY,cM,1).getDay(),dim=new Date(cY,cM+1,0).getDate(),ts=now.toISOString().slice(0,10);
+  let html=Array(first).fill('<div class="cd"></div>').join('');
+  for(let d=1;d<=dim;d++){
+    const ds=cY+'-'+String(cM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const vis=mts.some(t=>t.date===ds);const isT=ds===ts;
+    if(vis)html+='<div class="cd"><span class="cd-v">'+d+'</span></div>';
+    else if(isT)html+='<div class="cd"><span class="cd-t">'+d+'</span></div>';
+    else html+='<div class="cd">'+d+'</div>';
+  }
+  document.getElementById('cal-body').innerHTML=html;
+}
+function renderBody(){
+  const weights=mem.weights||[];if(!weights.length)return;
+  const cur=weights[weights.length-1],first=weights[0];const diff=(cur-first).toFixed(1);
+  document.getElementById('wt-content').innerHTML='<div class="wt-hero"><span class="wt-val">'+cur+'</span><span class="wt-unit">kg</span><span class="wt-diff '+(diff<=0?'down':'up')+'" style="font-size:13px;font-weight:700;margin-left:4px">'+(diff<=0?'▼':'▲')+' '+Math.abs(diff)+'kg</span></div><div style="font-size:10px;color:var(--g3)">開始時 '+first+'kg → 現在 '+cur+'kg</div>';
+  dc('cw');C.cw=new Chart(document.getElementById('cw'),{type:'line',data:{labels:weights.map((_,i)=>i===0?'開始':'記録'+(i+1)),datasets:[{data:weights,borderColor:'#c0a0e8',backgroundColor:'rgba(192,160,232,0.1)',tension:0.4,pointRadius:5,pointBackgroundColor:'#c0a0e8',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#bbb',font:{size:9,family:'M PLUS Rounded 1c'}}},y:{ticks:{color:'#bbb',callback:v=>v+'kg'},grid:{color:'#f5f0f8'}}}}});
+}
+function renderTraining(){
+  const list=document.getElementById('tr-list');
+  if(!mts.length){list.innerHTML='<div class="nodata">トレーニング記録がありません</div>';return;}
+  list.innerHTML='';
+  mts.slice(0,10).forEach((t,i)=>{
+    const div=document.createElement('div');div.className='tr-row';
+    const prev=mts[i+1];
+    const setLines=t.sets.map(s=>{
+      let upStr='';if(prev){const ps=prev.sets.find(p=>p.exercise===s.exercise);if(ps&&s.weight>ps.weight)upStr='<span style="color:var(--green);margin-left:4px;font-weight:700">▲ +'+(s.weight-ps.weight).toFixed(1)+'kg</span>';}
+      return '<div style="padding:2px 0">'+s.exercise+' <span style="color:var(--blue);font-weight:500">'+s.weight+'kg × '+s.reps+'回 × '+(s.sets||1)+'セット</span>'+upStr+'</div>';
+    }).join('');
+    div.innerHTML='<div class="tr-date">'+t.date+(i===0?'<span class="tr-badge">LATEST</span>':'')+'</div><div class="tr-set">'+setLines+'</div>';
+    list.appendChild(div);
+  });
+}
+function renderGrowth(){
+  const score=JSON.parse(localStorage.getItem('onetreScore_'+urlId)||'null');dc('cr');
+  if(score&&(score.strength||score.core||score.agility||score.flex)){
+    document.getElementById('radar-wrap').style.display='block';document.getElementById('radar-nodata').style.display='none';
+    const s=score.strength||0,c=score.core||0,a=score.agility||0,f=score.flex||0;const total=s+c+a+f;
+    document.getElementById('score-strength-val').textContent=s;document.getElementById('score-core-val').textContent=c;
+    document.getElementById('score-agility-val').textContent=a;document.getElementById('score-flex-val').textContent=f;
+    document.getElementById('score-total-val').textContent=total;
+    document.getElementById('bar-strength').style.width=(s/25*100)+'%';document.getElementById('bar-core').style.width=(c/25*100)+'%';
+    document.getElementById('bar-agility').style.width=(a/25*100)+'%';document.getElementById('bar-flex').style.width=(f/25*100)+'%';
+    C.cr=new Chart(document.getElementById('cr'),{type:'radar',data:{labels:['筋力','体幹','連動性','柔軟性'],datasets:[{label:'現在',data:[s,c,a,f],backgroundColor:'rgba(240,160,184,0.2)',borderColor:'#f0a0b8',borderWidth:2.5,pointBackgroundColor:['#f0a0b8','#80a0e8','#60c890','#e8a060'],pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:6},{label:'理想',data:[25,25,25,25],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(180,180,180,0.3)',borderWidth:1.5,borderDash:[5,4],pointBackgroundColor:'rgba(180,180,180,0.2)',pointRadius:3,pointBorderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:25,ticks:{stepSize:5,color:'#ccc',font:{size:9},backdropColor:'transparent'},grid:{color:'rgba(240,160,184,0.15)'},angleLines:{color:'rgba(240,160,184,0.15)'},pointLabels:{color:['#f0a0b8','#80a0e8','#60c890','#e8a060'],font:{size:13,family:'M PLUS Rounded 1c',weight:'700'}}}},plugins:{legend:{display:false}}}});
+  }else{document.getElementById('radar-wrap').style.display='none';document.getElementById('radar-nodata').style.display='block';}
+  const prs={};mts.forEach(t=>t.sets.forEach(s=>{if(!prs[s.exercise]||s.weight>prs[s.exercise].w){prs[s.exercise]={w:s.weight,date:t.date};}}));
+  const pbList=document.getElementById('pb-list');
+  if(!Object.keys(prs).length){pbList.innerHTML='<div class="nodata">記録がありません</div>';}
+  else{
+    pbList.innerHTML='';
+    Object.entries(prs).forEach(([ex,pr])=>{
+      let firstW=null;for(let i=mts.length-1;i>=0;i--){const s=mts[i].sets.find(s=>s.exercise===ex);if(s){firstW=s.weight;break;}}
+      const upStr=firstW&&pr.w>firstW?'<span class="pb-up">▲ +'+(pr.w-firstW).toFixed(1)+'kg</span>':'';
+      const div=document.createElement('div');div.className='pb-row';
+      div.innerHTML='<div><div class="pb-name">'+ex+'</div><div style="font-size:9px;color:var(--g3);margin-top:2px">'+pr.date+'</div></div><div><span class="pb-val">'+pr.w+'</span><span class="pb-unit">kg</span>'+upStr+'</div>';
+      pbList.appendChild(div);
+    });
+  }
+  if(mts.length>=2){
+    const vols=[...mts].reverse().map(t=>({date:t.date.slice(5),vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));
+    dc('cv');C.cv=new Chart(document.getElementById('cv'),{type:'bar',data:{labels:vols.map(v=>v.date),datasets:[{data:vols.map(v=>v.vol),backgroundColor:'#c0a0e8',borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#bbb',font:{size:9,family:'M PLUS Rounded 1c'}}},y:{ticks:{color:'#bbb',callback:v=>v+'kg'},grid:{color:'#f5f0f8'}}}}});
+  }
+  const em={};[...mts].reverse().forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]=[];em[s.exercise].push({date:t.date.slice(5),w:s.weight});}));
+  if(Object.keys(em).length){
+    dc('ce');C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set([...mts].reverse().map(t=>t.date.slice(5)))],datasets:Object.entries(em).slice(0,4).map(([ex,arr],i)=>({label:ex,data:arr.map(a=>a.w),borderColor:['#f0a0b8','#80a0e8','#60c890','#e8a060'][i],tension:0.4,pointRadius:4,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10,family:'M PLUS Rounded 1c'},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#bbb',font:{size:9}}},y:{ticks:{color:'#bbb',callback:v=>v+'kg'},grid:{color:'#f5f0f8'}}}}});
+  }
+}
+function saveWeightEntry(){
+  const v=parseFloat(document.getElementById('wt-input').value);
+  if(!v||v<20||v>200){document.getElementById('wt-feedback').textContent='正しい体重を入力してください';return;}
+  const today=new Date().toISOString().slice(0,10);const key='onetreWeights_'+urlId;
+  const entries=JSON.parse(localStorage.getItem(key)||'[]');const existing=entries.findIndex(e=>e.date===today);
+  if(existing>=0)entries[existing].weight=v;else entries.push({date:today,weight:v});
+  entries.sort((a,b)=>a.date.localeCompare(b.date));localStorage.setItem(key,JSON.stringify(entries));
+  const prev=entries.length>=2?entries[entries.length-2]:null;const diff=prev?(v-prev.weight).toFixed(1):null;
+  const fb=document.getElementById('wt-feedback');
+  if(diff!==null){fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');fb.style.color=diff<=0?'var(--green)':'var(--pink2)';}
+  else{fb.textContent='記録しました！';fb.style.color='var(--pink2)';}
+  if(mem)mem.weights=entries.map(e=>e.weight);
+  document.getElementById('wt-input').value='';renderBody();renderWeightHistory();
+}
+function renderWeightHistory(){
+  const entries=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]');
+  const el=document.getElementById('wt-history-list');if(!el)return;if(!entries.length){el.innerHTML='';return;}
+  const colors=['var(--pink-bg)','var(--blue-bg)','var(--green-bg)','var(--orange-bg)'];
+  const tcolors=['var(--pink2)','var(--blue)','var(--green)','var(--orange)'];
+  el.innerHTML='';
+  [...entries].reverse().slice(0,6).forEach((e,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:'+colors[i%4]+';border-radius:12px;margin-bottom:6px';
+    div.innerHTML='<div style="font-size:11px;color:var(--g2);font-weight:500">'+e.date+'</div><div style="display:flex;align-items:baseline;gap:3px"><span style="font-size:20px;color:'+tcolors[i%4]+';font-weight:700">'+e.weight+'</span><span style="font-size:9px;color:var(--g3);margin-left:2px">kg</span></div>';
+    el.appendChild(div);
+  });
+}
+function saveGoal(){
+  const v=parseFloat(document.getElementById('goal-wt').value);if(!v||v<20||v>200){alert('正しい体重を入力してください');return;}
+  localStorage.setItem('onetreGoal_'+urlId,v);renderGoal();
+}
+function clearGoal(){localStorage.removeItem('onetreGoal_'+urlId);document.getElementById('goal-wt').value='';renderGoal();}
+function renderGoal(){
+  const goal=parseFloat(localStorage.getItem('onetreGoal_'+urlId));const el=document.getElementById('goal-display');
+  if(!goal){el.innerHTML='<div style="font-size:11px;color:var(--g3);font-weight:400">目標未設定</div>';return;}
+  const cur=mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:null;const diff=cur?+(cur-goal).toFixed(1):null;
+  const diffStr=diff!==null?(diff===0?'目標達成！':(diff>0?'あと'+diff+'kg':'目標達成！ '+Math.abs(diff)+'kgオーバー')):'';
+  el.innerHTML='<div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:28px;color:var(--black);font-weight:700">'+goal+'</span><span style="font-size:11px;color:var(--g3)">kg</span>'+(diff!==null?'<span style="font-size:12px;color:var(--pink2);font-weight:700;margin-left:4px">'+diffStr+'</span>':'')+'</div>';
+  document.getElementById('goal-wt').value=goal;
+}
+init();
+</script>
+</body>
+</html>

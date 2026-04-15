@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — Trainer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fff;--bg2:#fafafa;--bg3:#f5f5f5;--black:#111;--g1:#444;--g2:#777;--g3:#aaa;--g4:#ccc;--g5:#e0e0e0;--g6:#f0f0f0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--black);min-height:100vh}
+.app{max-width:960px;margin:0 auto;background:var(--bg)}
+.topbar{background:var(--bg);border-bottom:1px solid var(--g5);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--black);letter-spacing:.3em}
+.logo-sub{font-size:7px;color:var(--g4);letter-spacing:.2em;margin-top:2px;font-weight:300}
+.logo-catch{font-family:'Cormorant Garamond',serif;font-size:10px;font-style:italic;color:var(--g3);margin-top:2px;letter-spacing:.06em}
+.mode-badge{font-size:9px;padding:4px 10px;border:1px solid var(--g5);color:var(--g2);letter-spacing:.1em;font-weight:300}
+.nav{background:var(--bg);border-bottom:1px solid var(--g5);padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nbtn{font-size:10px;padding:12px 14px;border:none;background:transparent;color:var(--g4);cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;border-bottom:1.5px solid transparent;flex-shrink:0;letter-spacing:.12em;transition:all .2s}
+.nbtn.active{color:var(--black);border-bottom-color:var(--black)}
+.page{display:none;padding:20px}.page.active{display:block}
+.sec{font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec::after{content:'';flex:1;height:.5px;background:var(--g6)}
+/* メトリクス - 3列（平均年齢削除） */
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:20px;background:var(--g5)}
+.metric{background:var(--bg);padding:20px 16px}
+.ml{font-size:12px;color:var(--g2);letter-spacing:.06em;margin-bottom:10px;font-weight:400}
+.mv{font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--black);font-weight:400;line-height:1}
+.ms{font-size:12px;color:var(--g2);margin-top:6px;font-weight:400}
+.card{background:var(--bg);border:.5px solid var(--g5);padding:18px;margin-bottom:12px}
+.ctitle{font-family:'Cormorant Garamond',serif;font-size:9px;letter-spacing:.2em;color:var(--g4);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.ctitle::after{content:'';flex:1;height:.5px;background:var(--g6)}
+.charts-row{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
+@media(min-width:600px){.charts-row{grid-template-columns:1fr 1fr}}
+.follow-box{padding:14px 16px;border:.5px solid var(--black);background:var(--bg);margin-bottom:14px}
+.follow-label{font-size:11px;color:var(--g2);letter-spacing:.06em;margin-bottom:6px;font-weight:400}
+.follow-val{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--black);font-weight:400}
+.follow-sub{font-size:12px;color:var(--g2);margin-top:4px;font-weight:400;line-height:1.6}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:10px;color:var(--g2);letter-spacing:.06em;font-weight:400}
+.fg input,.fg select{font-size:13px;padding:9px 12px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--black)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-black{background:var(--black);color:#fff;border:1px solid var(--black);padding:10px 22px;border-radius:0;font-size:11px;cursor:pointer;letter-spacing:.14em;margin-top:12px;font-family:'Noto Sans JP',sans-serif}
+.btn-ghost{background:transparent;border:.5px solid var(--g4);padding:7px 14px;border-radius:0;font-size:11px;cursor:pointer;color:var(--g1);font-family:'Noto Sans JP',sans-serif;letter-spacing:.06em}
+.btn-ghost:hover{border-color:var(--black);color:var(--black)}
+.mrow{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:.5px solid var(--g6)}
+.mrow:last-child{border:none}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;flex-shrink:0;background:var(--black);color:#fff}
+.av-warn{background:var(--g5);color:var(--g3)}
+.mname{font-size:13px;color:var(--black);font-weight:400;letter-spacing:.04em}
+.mmeta{font-size:11px;color:var(--g2);margin-top:2px}
+.mbadge{font-size:9px;padding:2px 8px;border:.5px solid var(--g4);letter-spacing:.06em;color:var(--g2);white-space:nowrap;flex-shrink:0;margin-top:2px}
+.mbadge-warn{border-color:var(--g5);color:var(--g4)}
+.url-box{display:flex;align-items:center;gap:6px;margin-top:8px;background:var(--g6);padding:8px 10px}
+.url-text{font-size:9px;color:var(--g2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
+.copy-btn{font-size:8px;padding:4px 10px;background:var(--black);color:#fff;border:none;cursor:pointer;letter-spacing:.06em;white-space:nowrap;flex-shrink:0}
+.set-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 30px;gap:6px;align-items:center;margin-bottom:6px}
+.set-row input{font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif}
+.del-btn{width:28px;height:28px;border:.5px solid var(--g5);background:transparent;cursor:pointer;color:var(--g3);font-size:14px}
+.pi{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--g6)}
+.pi:last-child{border:none}
+.pn{font-size:13px;color:var(--black);font-weight:400}
+.pvs{display:flex;gap:8px;font-size:11px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pp{color:var(--g4)}.pc{color:var(--black);font-weight:400}.pu{color:var(--black);font-size:11px;font-weight:500}
+.msel{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.msel select,.msel input[type=date]{font-size:12px;padding:7px 11px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cday{text-align:center;padding:6px 2px;font-size:11px;color:var(--g4);font-weight:300}
+.cday.hdr{font-size:8px;color:var(--g4);font-weight:400;letter-spacing:.08em}
+.cday.has{background:var(--black);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px}
+.cday.today{border:1px solid var(--black);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.pr-list{display:flex;flex-direction:column;gap:8px}
+.pr-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--g6)}
+.pr-name{font-size:12px;color:var(--black);font-weight:400}
+.pr-val{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--black)}
+.pr-date{font-size:10px;color:var(--g3);margin-top:1px}
+.pr-badge{font-size:7px;padding:1px 6px;border:.5px solid var(--g4);color:var(--g2);letter-spacing:.1em;margin-left:6px}
+.sales-kpi{display:grid;grid-template-columns:1fr;gap:1px;margin-bottom:20px;background:var(--g5)}
+@media(min-width:480px){.sales-kpi{grid-template-columns:repeat(3,1fr)}}
+.course-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--g6)}
+.course-item:last-child{border:none}
+.course-name{font-size:12px;color:var(--black);font-weight:400}
+.course-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)}
+.course-count{font-size:10px;color:var(--g3);margin-top:2px}
+.loading{text-align:center;padding:32px;color:var(--g3);font-size:13px;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div>
+      <div class="logo">ONE TRE</div>
+      <div class="logo-sub">PERSONAL TRAINING · YONAGO</div>
+      <div class="logo-catch">私は私</div>
+    </div>
+    <div class="mode-badge">TRAINER MODE</div>
+  </div>
+  <div class="nav">
+    <button class="nbtn active" onclick="sp('dashboard',this)">ダッシュボード</button>
+    <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
+    <button class="nbtn" onclick="sp('members',this)">会員管理</button>
+    <button class="nbtn" onclick="sp('training',this)">トレーニング</button>
+    <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
+    <button class="nbtn" onclick="sp('progress',this)">成長グラフ</button>
+  </div>
+
+  <div id="page-dashboard" class="page active">
+    <!-- 平均年齢削除・ラベル日本語化・数字大きく -->
+    <div class="metrics">
+      <div class="metric"><div class="ml">会員数</div><div class="mv" id="mt">0</div><div class="ms">名</div></div>
+      <div class="metric"><div class="ml">女性</div><div class="mv" id="mf">0</div><div class="ms" id="mfp">-%</div></div>
+      <div class="metric"><div class="ml">男性</div><div class="mv" id="mm">0</div><div class="ms" id="mmp">-%</div></div>
+    </div>
+    <div id="follow-alert" style="display:none" class="follow-box">
+      <div class="follow-label">要フォロー — 7日以上 来店なし</div>
+      <div class="follow-val" id="follow-count">0<span style="font-size:16px;color:var(--g3);margin-left:4px">名</span></div>
+      <div class="follow-sub" id="follow-names"></div>
+    </div>
+    <div class="charts-row">
+      <div class="card"><div class="ctitle">男女比</div><div style="position:relative;height:180px"><canvas id="cg"></canvas></div></div>
+      <div class="card"><div class="ctitle">年代別</div><div style="position:relative;height:180px"><canvas id="ca"></canvas></div></div>
+    </div>
+  </div>
+
+  <div id="page-sales" class="page">
+    <div id="sales-loading" class="loading">スプレッドシートからデータを取得中...</div>
+    <div id="sales-content" style="display:none">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="cPrevYear()" style="padding:5px 12px">&#8249;</button>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black)" id="sales-year-label"></span>
+        <button class="btn-ghost" onclick="cNextYear()" style="padding:5px 12px">&#8250;</button>
+        <span style="font-size:10px;color:var(--g3);margin-left:4px">年を切り替えて比較できます</span>
+      </div>
+      <div class="sales-kpi">
+        <div class="metric"><div class="ml">今月の売上</div><div class="mv" id="s-month">¥0</div><div class="ms" id="s-month-count">0件</div></div>
+        <div class="metric"><div class="ml" id="s-year-label">年間売上</div><div class="mv" id="s-year">¥0</div><div class="ms" id="s-year-count">0件</div></div>
+        <div class="metric"><div class="ml">前年比</div><div class="mv" id="s-yoy">-</div><div class="ms" id="s-yoy-sub"></div></div>
+      </div>
+      <div class="charts-row">
+        <div class="card"><div class="ctitle" id="cs-month-title">月別売上</div><div style="position:relative;height:200px"><canvas id="cs-month"></canvas></div></div>
+        <div class="card"><div class="ctitle">今年 vs 去年</div><div style="position:relative;height:200px"><canvas id="cs-yoy"></canvas></div></div>
+      </div>
+      <div class="charts-row">
+        <div class="card"><div class="ctitle">コース別内訳</div><div style="position:relative;height:200px"><canvas id="cs-course"></canvas></div></div>
+        <div class="card"><div class="ctitle">コース別詳細</div><div id="course-detail"></div></div>
+      </div>
+      <div class="card"><div class="ctitle">申込一覧</div><div id="form-list"></div></div>
+    </div>
+    <div id="sales-error" style="display:none;padding:20px;color:var(--g3);font-size:13px;text-align:center">データの取得に失敗しました。GASのデプロイ設定を確認してください。</div>
+  </div>
+
+  <div id="page-members" class="page">
+    <div class="card">
+      <div class="ctitle">ボディバランス スコア設定</div>
+      <div style="font-size:11px;color:var(--g2);margin-bottom:12px;font-weight:400;line-height:1.6">会員ごとに4軸のスコアを設定します。各軸0〜25点・合計100点満点。保存するとマイページに即時反映されます。</div>
+      <div style="margin-bottom:10px">
+        <div class="fg"><label>会員を選択</label>
+          <select id="score-member" onchange="loadBodyScore()"><option value="">会員を選択してください</option></select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="background:#fdf0f6;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#c8608a;letter-spacing:.08em;margin-bottom:6px">筋力</div>
+          <select id="sc-strength" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#e8a0bf;margin-top:4px">/ 25点</div>
+        </div>
+        <div style="background:#f3f0fd;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#7060b8;letter-spacing:.08em;margin-bottom:6px">体幹</div>
+          <select id="sc-core" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#b4a0e8;margin-top:4px">/ 25点</div>
+        </div>
+        <div style="background:#f0f9f6;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#3a8a6a;letter-spacing:.08em;margin-bottom:6px">連動性</div>
+          <select id="sc-agility" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(128,200,170,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#3a8a6a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#80c8aa;margin-top:4px">/ 25点</div>
+        </div>
+        <div style="background:#fdf7f0;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#b87830;letter-spacing:.08em;margin-bottom:6px">柔軟性</div>
+          <select id="sc-flex" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#b87830;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#f0b870;margin-top:4px">/ 25点</div>
+        </div>
+      </div>
+      <div id="score-total" style="font-size:13px;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">合計: 0 / 100</div>
+      <button class="btn-black" onclick="saveBodyScore()">スコアを保存 → 会員マイページに反映</button>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
+      <div style="font-size:11px;color:var(--g2);margin-bottom:12px;font-weight:400;line-height:1.6">Googleフォームから申し込まれた会員が自動で表示されます。URLをコピーしてLINEで送ってください。</div>
+      <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
+    </div>
+  </div>
+
+  <div id="page-training" class="page">
+    <div class="card">
+      <div class="ctitle">トレーニング記録</div>
+      <div class="msel">
+        <select id="str"><option value="">会員を選択</option></select>
+        <input id="idate" type="date">
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 30px;gap:6px;margin-bottom:8px">
+        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">種目名</span>
+        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">重量kg</span>
+        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">回数</span>
+        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">セット</span>
+        <span></span>
+      </div>
+      <div id="sw"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="addS()">+ 種目追加</button>
+        <button class="btn-black" onclick="saveTr()">記録を保存 → 会員画面に反映</button>
+      </div>
+    </div>
+    <div class="card"><div class="ctitle">直近の記録</div><div id="rl"></div></div>
+  </div>
+
+  <div id="page-calendar" class="page">
+    <div class="card">
+      <div class="msel">
+        <select id="scal" onchange="rCal()"><option value="">全会員</option></select>
+        <button class="btn-ghost" onclick="cPrev()">&#8249;</button>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black)" id="ctitle"></span>
+        <button class="btn-ghost" onclick="cNext()">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="chdr"></div>
+      <div class="cal-grid" style="margin-top:4px" id="cbody"></div>
+    </div>
+  </div>
+
+  <div id="page-progress" class="page">
+    <div class="msel"><select id="spro" onchange="rPro()"><option value="">会員を選択</option></select></div>
+    <div class="charts-row">
+      <div class="card"><div class="ctitle">週トレーニング頻度</div><div style="position:relative;height:180px"><canvas id="cf"></canvas></div></div>
+      <div class="card"><div class="ctitle">総ボリューム推移</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
+    </div>
+    <div class="card"><div class="ctitle">自己ベスト</div><div id="pr-list" class="pr-list"></div></div>
+    <div class="card"><div class="ctitle">前回比較</div><div id="pcmp"></div></div>
+  </div>
+</div>
+
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbybXagOrMGMuF9M-c-m3XCp01gktZdSuW-bGsSlanRhI90bQUiCMepaTv9lsAWW-WX7/exec';
+const NAME_KEY='お名前（長尾儀弘）';
+let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
+let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
+let gasMembers=[];
+let cY=new Date().getFullYear(),cM2=new Date().getMonth();
+let C={};
+
+function sv(){localStorage.setItem('onetreM',JSON.stringify(M));localStorage.setItem('onetreT',JSON.stringify(T));}
+function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
+function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
+function daysSince(dateStr){if(!dateStr)return null;return Math.floor((new Date()-new Date(dateStr))/(1000*60*60*24));}
+function getLastVisit(memberId){const mts=T.filter(t=>t.memberId===memberId).sort((a,b)=>b.date.localeCompare(a.date));return mts.length?mts[0].date:null;}
+
+function getMemberUrl(id){
+  return 'https://onebalanceyume-beep.github.io/private-gym-member/one_tre_member.html?id='+id;
+}
+
+let gasCache=null;
+
+async function fetchGasData(){
+  if(gasCache)return gasCache;
+  try{
+    const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    gasCache=await res.json();
+    return gasCache;
+  }catch(e){console.error('GAS fetch error:',e);return null;}
+}
+
+async function loadGasMembers(){
+  const data=await fetchGasData();
+  if(!data){gasMembers=[...M];pSel();rMem();rDash();return;}
+  const members=Array.isArray(data)?data:(data.members||[]);
+  gasMembers=[];
+  members.forEach(row=>{
+    const name=String(row.name||'').trim();
+    const id=String(row.id||'').trim();
+    const genderRaw=String(row.gender||'').trim();
+    const gender=genderRaw==='男性'?'m':'f';
+    if(name&&id&&!gasMembers.find(m=>m.id===id)){
+      gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true});
+    }
+  });
+  M.forEach(m=>{if(!gasMembers.find(g=>g.id===m.id))gasMembers.push(m);});
+  pSel();rMem();rDash();
+}
+
+let salesCache=null;
+let salesViewYear=new Date().getFullYear();
+
+function cPrevYear(){salesViewYear--;renderSales();}
+function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;renderSales();}
+
+function calcYearData(data,year){
+  const mD={};for(let i=1;i<=12;i++)mD[i]=0;
+  const cD={};let yT=0,yC=0;
+  data.forEach(row=>{
+    const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0),course=row['各コース']||'不明';
+    if(!ts||!actual)return;
+    const d=new Date(ts);if(d.getFullYear()!==year)return;
+    const mo=d.getMonth()+1;
+    yT+=actual;yC++;mD[mo]=(mD[mo]||0)+actual;
+    const cn=course.split('¥')[0].trim().substring(0,20);
+    if(!cD[cn])cD[cn]={total:0,count:0};
+    cD[cn].total+=actual;cD[cn].count++;
+  });
+  return{mD,cD,yT,yC};
+}
+
+function renderSales(){
+  if(!salesCache)return;
+  const data=salesCache;
+  const now=new Date(),ty=salesViewYear,tm=now.getMonth()+1;
+  const isCurrentYear=ty===now.getFullYear();
+  document.getElementById('sales-year-label').textContent=ty+'年';
+  document.getElementById('s-year-label').textContent=ty+'年 売上';
+  document.getElementById('cs-month-title').textContent=ty+'年 月別売上';
+  const cur=calcYearData(data,ty);
+  const prev=calcYearData(data,ty-1);
+  let mT=0,mC=0;
+  if(isCurrentYear){
+    data.forEach(row=>{
+      const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0);
+      if(!ts||!actual)return;
+      const d=new Date(ts);if(d.getFullYear()===ty&&d.getMonth()+1===tm){mT+=actual;mC++;}
+    });
+  }
+  document.getElementById('s-month').textContent=isCurrentYear?fmtYen(mT):'-';
+  document.getElementById('s-month-count').textContent=isCurrentYear?mC+'件':'-';
+  document.getElementById('s-year').textContent=fmtYen(cur.yT);
+  document.getElementById('s-year-count').textContent=cur.yC+'件';
+  const yoyEl=document.getElementById('s-yoy');
+  const yoySub=document.getElementById('s-yoy-sub');
+  if(prev.yT>0){
+    const pct=Math.round((cur.yT-prev.yT)/prev.yT*100);
+    yoyEl.textContent=(pct>=0?'+':'')+pct+'%';
+    yoyEl.style.color=pct>=0?'var(--black)':'var(--g2)';
+    yoySub.textContent='前年 '+fmtYen(prev.yT);
+  }else{yoyEl.textContent='-';yoySub.textContent='前年データなし';}
+  dc('csm');
+  C.csm=new Chart(document.getElementById('cs-month'),{type:'bar',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),backgroundColor:'#111',borderRadius:0,borderSkipped:false},{label:(ty-1)+'年',data:Object.values(prev.mD),backgroundColor:'#ccc',borderRadius:0,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
+  dc('csyoy');
+  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  C.csyoy=new Chart(document.getElementById('cs-yoy'),{type:'line',data:{labels:months,datasets:[{label:ty+'年',data:Object.values(cur.mD),borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:3,fill:true},{label:(ty-1)+'年',data:Object.values(prev.mD),borderColor:'#ccc',backgroundColor:'transparent',tension:0.4,pointRadius:3,borderDash:[4,4],fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
+  dc('csc');
+  const courseColors=['#DB444C','#5BB9CD','#e8a0bf','#b4a0e8','#80c8aa','#f0b870'];
+  const sortedCourses=Object.entries(cur.cD).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
+  C.csc=new Chart(document.getElementById('cs-course'),{type:'doughnut',data:{labels:sortedCourses.map(([n])=>n),datasets:[{data:sortedCourses.map(([,d])=>d.total),backgroundColor:courseColors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:6,boxWidth:8}}}}});
+  const det=document.getElementById('course-detail');det.innerHTML='';
+  Object.entries(cur.cD).sort((a,b)=>b[1].count-a[1].count).forEach(([n,d],i)=>{const div=document.createElement('div');div.className='course-item';div.innerHTML=`<div><div class="course-name" style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${courseColors[i]||'#aaa'};flex-shrink:0"></span>${n}</div><div class="course-count" style="padding-left:14px">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;det.appendChild(div);});
+  const fl=document.getElementById('form-list');fl.innerHTML='';
+  [...data].filter(row=>{const ts=row['タイムスタンプ'];if(!ts)return false;return new Date(ts).getFullYear()===salesViewYear;}).reverse().slice(0,10).forEach(row=>{
+    const div=document.createElement('div');div.className='pi';
+    const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
+    const name=row[NAME_KEY]||row['お名前']||'-';
+    const course=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
+    const actual=parseFloat(row['実際の金額']||0);
+    div.innerHTML=`<div><div class="pn">${name}</div><div style="font-size:11px;color:var(--g3);margin-top:2px">${ts} / ${course}</div></div><div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${fmtYen(actual)}</div>`;
+    fl.appendChild(div);
+  });
+}
+
+async function rSales(){
+  document.getElementById('sales-loading').style.display='block';
+  document.getElementById('sales-content').style.display='none';
+  document.getElementById('sales-error').style.display='none';
+  const rawData=await fetchGasData();
+  if(!rawData){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
+  const data=Array.isArray(rawData)?(rawData):(rawData.all||[]);
+  if(!data||!data.length){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
+  salesCache=data;
+  salesViewYear=new Date().getFullYear();
+  document.getElementById('sales-loading').style.display='none';
+  document.getElementById('sales-content').style.display='block';
+  renderSales();
+}
+
+function loadBodyScore(){
+  const mid=document.getElementById('score-member').value;
+  if(!mid)return;
+  const saved=JSON.parse(localStorage.getItem('onetreScore_'+mid)||'{"strength":0,"core":0,"agility":0,"flex":0}');
+  document.getElementById('sc-strength').value=saved.strength||0;
+  document.getElementById('sc-core').value=saved.core||0;
+  document.getElementById('sc-agility').value=saved.agility||0;
+  document.getElementById('sc-flex').value=saved.flex||0;
+  updateScoreTotal();
+}
+
+function updateScoreTotal(){
+  const s=parseInt(document.getElementById('sc-strength').value)||0;
+  const c=parseInt(document.getElementById('sc-core').value)||0;
+  const a=parseInt(document.getElementById('sc-agility').value)||0;
+  const f=parseInt(document.getElementById('sc-flex').value)||0;
+  const total=s+c+a+f;
+  const el=document.getElementById('score-total');
+  el.textContent='合計: '+total+' / 100';
+  el.style.color=total===100?'#3a8a6a':'var(--g2)';
+}
+
+function saveBodyScore(){
+  const mid=document.getElementById('score-member').value;
+  if(!mid){alert('会員を選択してください');return;}
+  const s=parseInt(document.getElementById('sc-strength').value)||0;
+  const c=parseInt(document.getElementById('sc-core').value)||0;
+  const a=parseInt(document.getElementById('sc-agility').value)||0;
+  const f=parseInt(document.getElementById('sc-flex').value)||0;
+  const score={strength:s,core:c,agility:a,flex:f};
+  // localStorageに保存
+  localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
+  const params=new URLSearchParams({action:'saveBodyScore',memberId:mid,strength:s,core:c,agility:a,flex:f});
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+  .then(()=>alert('スコアを保存しました。会員のマイページを開き直すと反映されます。'))
+  .catch(()=>alert('スコアを保存しました（オフラインモード）。'));
+}
+
+function sp(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
+  if(name==='dashboard')rDash();
+  if(name==='sales')rSales();
+  if(name==='members')rMem();
+  if(name==='training'){pSel();rRec();}
+  if(name==='calendar'){pSel();rCal();}
+  if(name==='progress')pSel();
+}
+
+function getAllMembers(){return gasMembers.length>0?gasMembers:M;}
+
+function rDash(){
+  const all=getAllMembers();
+  const t=all.length,f=all.filter(m=>m.gender==='f').length,ml=t-f;
+  document.getElementById('mt').textContent=t;
+  document.getElementById('mf').textContent=f;document.getElementById('mfp').textContent=t?Math.round(f/t*100)+'%':'-%';
+  document.getElementById('mm').textContent=ml;document.getElementById('mmp').textContent=t?Math.round(ml/t*100)+'%':'-%';
+  const followList=all.filter(m=>{const last=getLastVisit(m.id);return last&&daysSince(last)>=7;});
+  const fbox=document.getElementById('follow-alert');
+  if(followList.length>0){
+    fbox.style.display='block';
+    document.getElementById('follow-count').innerHTML=followList.length+'<span style="font-size:16px;color:var(--g3);margin-left:4px">名</span>';
+    document.getElementById('follow-names').textContent=followList.map(m=>m.name+'（'+daysSince(getLastVisit(m.id))+'日前）').join(' · ');
+  }else{fbox.style.display='none';}
+  dc('g');dc('a');
+  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#DB444C','#5BB9CD'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:12,boxWidth:10}}}}});
+  // 年代別グラフ - カラー
+  const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
+  const ageColors=['#e8a0bf','#b4a0e8','#DB444C','#5BB9CD'];
+  const allData=(gasCache&&gasCache.all)?gasCache.all:[];
+  allData.forEach(row=>{
+    const ag=String(row['年代']||row['年齢']||'').trim();
+    if(ag.includes('20'))bk['20代']++;
+    else if(ag.includes('30'))bk['30代']++;
+    else if(ag.includes('40'))bk['40代']++;
+    else if(ag.includes('50')||ag.includes('60')||ag.includes('70'))bk['50代+']++;
+  });
+  C.a=new Chart(document.getElementById('ca'),{type:'bar',data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:ageColors,borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#555',font:{size:12}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#555'},grid:{color:'#f0f0f0'}}}}});
+}
+
+function rMem(){
+  const l=document.getElementById('mlist');
+  const all=getAllMembers();
+  l.innerHTML=all.length?'':'<p style="font-size:13px;color:var(--g3)">会員がいません</p>';
+  all.forEach(m=>{
+    const last=getLastVisit(m.id),days=last?daysSince(last):null,isWarn=days!==null&&days>=7;
+    const url=getMemberUrl(m.id);
+    const avColor=m.gender==='m'?'background:#5BB9CD':'background:#DB444C';
+    const d=document.createElement('div');d.className='mrow';
+    d.innerHTML=`<div class="av ${isWarn?'av-warn':''}" style="${avColor}">${m.name.charAt(0)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div class="mname">${m.name}${m.fromSheet?'<span style="font-size:9px;color:var(--g4);margin-left:6px;letter-spacing:.06em">フォーム</span>':''}</div>
+          <span class="mbadge ${isWarn?'mbadge-warn':''}">${days!==null?days+'日前':'未記録'}</span>
+        </div>
+        <div class="url-box">
+          <span class="url-text">${url}</span>
+          <button class="copy-btn" onclick="cpUrl('${url}',this)">URLコピー</button>
+        </div>
+      </div>`;
+    l.appendChild(d);
+  });
+}
+
+function cpUrl(url,btn){
+  navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ コピー済';setTimeout(()=>btn.textContent='URLコピー',2000);});
+}
+
+function pSel(){
+  const all=getAllMembers();
+  ['str','scal','spro','score-member'].forEach(id=>{
+    const s=document.getElementById(id);if(!s)return;
+    const ha=s.options[0]&&s.options[0].value==='';
+    while(s.options.length>(ha?1:0))s.remove(ha?1:0);
+    all.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;s.appendChild(o);});
+  });
+  const td=document.getElementById('idate');if(td&&!td.value)td.value=new Date().toISOString().slice(0,10);
+}
+
+function addS(){
+  const c=document.getElementById('sw'),r=document.createElement('div');r.className='set-row';
+  r.innerHTML=`<input placeholder="スクワット" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:100%"><input type="number" placeholder="40" step="0.5" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100%"><input type="number" placeholder="10" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100%"><input type="number" placeholder="3" min="1" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100%"><button class="del-btn" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(r);
+}
+
+function saveTr(){
+  const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
+  if(!mid||!dt){alert('会員と日付を選んでください');return;}
+  const setsArr=[];
+  document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});});
+  if(!setsArr.length){alert('種目を入力してください');return;}
+  T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets:setsArr});sv();
+  const params=new URLSearchParams({action:'saveTraining',memberId:mid,date:dt,sets:JSON.stringify(setsArr)});
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+  .then(()=>{document.getElementById('sw').innerHTML='';rRec();alert('保存しました。会員のマイページを開き直すと反映されます。');})
+  .catch(()=>{document.getElementById('sw').innerHTML='';rRec();alert('保存しました（オフラインモード）。');});
+}
+
+function rRec(){
+  const mid=document.getElementById('str').value,l=document.getElementById('rl');
+  const all=getAllMembers();
+  const rs=T.filter(t=>!mid||t.memberId===mid).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
+  l.innerHTML=rs.length?'':'<p style="font-size:13px;color:var(--g3)">記録なし</p>';
+  rs.forEach(t=>{const m=all.find(x=>x.id===t.memberId);const d=document.createElement('div');d.className='pi';d.innerHTML=`<div style="min-width:0"><div class="pn">${t.date}${m?' — '+m.name:''}</div><div style="font-size:11px;color:var(--g3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回'+(s.sets&&s.sets>1?' ×'+s.sets+'セット':'')).join(' / ')}</div></div>`;l.appendChild(d);});
+}
+
+function rCal(){
+  const mid=document.getElementById('scal').value;
+  document.getElementById('ctitle').textContent=cY+'年'+(cM2+1)+'月';
+  document.getElementById('chdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>`<div class="cday hdr">${d}</div>`).join('');
+  const first=new Date(cY,cM2,1).getDay(),days=new Date(cY,cM2+1,0).getDate(),today=new Date().toISOString().slice(0,10);
+  let html=Array(first).fill('<div class="cday"></div>').join('');
+  for(let d=1;d<=days;d++){const ds=`${cY}-${String(cM2+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const has=T.some(t=>t.date===ds&&(!mid||t.memberId===mid));const isT=ds===today;html+=`<div class="cday${has?' has':''}${isT&&!has?' today':''}">${d}</div>`;}
+  document.getElementById('cbody').innerHTML=html;
+}
+function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
+function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
+
+function calcPRs(mts){const pr={};mts.forEach(t=>t.sets.forEach(s=>{if(!pr[s.exercise]||s.weight>pr[s.exercise].weight)pr[s.exercise]={weight:s.weight,date:t.date};}));return pr;}
+function calcVolumes(mts){return mts.map(t=>({date:t.date,vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));}
+function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const k=mon.toISOString().slice(0,10);wk[k]=(wk[k]||0)+1;});return Object.entries(wk).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8);}
+
+function rPro(){
+  const mid=document.getElementById('spro').value;if(!mid)return;
+  const all=getAllMembers(),mem=all.find(m=>m.id===mid);if(!mem)return;
+  const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
+  dc('cf');dc('cv');dc('ce');
+  const freq=calcFreq(mts);
+  C.cf=new Chart(document.getElementById('cf'),{type:'bar',data:{labels:freq.map(f=>f[0].slice(5)),datasets:[{data:freq.map(f=>f[1]),backgroundColor:'#DB444C',borderRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f0f0f0'}}}}});
+  const vols=calcVolumes(mts);
+  C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#5BB9CD',backgroundColor:'rgba(91,185,205,0.08)',tension:0.4,pointRadius:4,pointBackgroundColor:'#5BB9CD',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
+  const em={};mts.forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]={dates:[],weights:[]};em[s.exercise].dates.push(t.date);em[s.exercise].weights.push(s.weight);}));
+  C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set(mts.map(t=>t.date))].map(d=>d.slice(5)),datasets:Object.entries(em).slice(0,5).map(([ex,d],i)=>({label:ex,data:d.weights,borderColor:['#e8a0bf','#b4a0e8','#80c8aa','#f0b870','#DB444C'][i],tension:0.4,pointRadius:4,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
+  const prs=calcPRs(mts),pl=document.getElementById('pr-list');pl.innerHTML='';
+  if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--g3)">記録がありません</p>';return;}
+  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${pr.date}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
+  const cmp=document.getElementById('pcmp');cmp.innerHTML='';
+  if(mts.length<2){cmp.innerHTML='<p style="font-size:13px;color:var(--g3)">2回以上記録すると比較が表示されます</p>';return;}
+  const last=mts[mts.length-1],prev=mts[mts.length-2];
+  last.sets.forEach(s=>{const ps=prev.sets.find(p=>p.exercise===s.exercise);if(!ps)return;const dw=s.weight-ps.weight,dr=s.reps-ps.reps;const div=document.createElement('div');div.className='pi';div.innerHTML=`<div class="pn">${s.exercise}</div><div class="pvs"><span class="pp">${ps.weight}kg×${ps.reps}回</span><span style="color:var(--g4)">→</span><span class="pc">${s.weight}kg×${s.reps}回</span><span class="pu">${dw>0?'+'+dw.toFixed(1)+'kg':''}${dr>0?' +'+dr+'回':''}</span></div>`;cmp.appendChild(div);});
+}
+
+rCal();
+loadGasMembers();
+</script>
+</body>
+</html>
