@@ -65,7 +65,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
         <div class="error-msg" id="error-msg"></div>
         <div class="time-grid" id="time-grid"></div>
         <div class="selected-info" id="selected-info"></div>
-        <button class="btn" id="submit-btn" onclick="submitForm()" disabled>予約リクエストを送る</button>
+        <button class="btn" id="submit-btn" onclick="submitForm()" disabled>予約する</button>
       </div>
       <div class="note">キャンセルはセッション前日までにご連絡ください。</div>
     </div>
@@ -151,11 +151,11 @@ async function submitForm(){
       document.getElementById('success-area').style.display='block';
     }else{
       alert(data.message||'予約に失敗しました。再度お試しください。');
-      btn.disabled=false;btn.textContent='予約リクエストを送る';
+      btn.disabled=false;btn.textContent='予約する';
     }
   }catch(err){
     alert('送信に失敗しました。再度お試しください。');
-    btn.disabled=false;btn.textContent='予約リクエストを送る';
+    btn.disabled=false;btn.textContent='予約する';
   }
 }
 </script>
