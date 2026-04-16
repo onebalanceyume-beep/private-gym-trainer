@@ -13,7 +13,7 @@
       "type": "image/jpeg"
     }
   ],
-  "start_url": "./one_tre_member.html",
+  "start_url": "https://onebalanceyume-beep.github.io/private-gym-trainer/one_tre_member.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#f0a0b8"
