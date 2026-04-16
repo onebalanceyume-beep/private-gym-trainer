@@ -1,0 +1,20 @@
+{
+  "name": "マイページ",
+  "short_name": "マイページ",
+  "icons": [
+    {
+      "src": "https://onebalanceyume-beep.github.io/private-gym-trainer/ONE-TRE_%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://onebalanceyume-beep.github.io/private-gym-trainer/ONE-TRE_%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "start_url": "./one_tre_member.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f0a0b8"
+}
