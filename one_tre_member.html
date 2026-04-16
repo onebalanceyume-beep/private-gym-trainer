@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/logo.jpg">
+<link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/ONE-TRE_%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201.jpg">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="マイページ">
@@ -191,7 +191,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 </div>
 
 <script>
-const urlId=new URLSearchParams(location.search).get('id');
+const urlId=(()=>{
+  const fromUrl=new URLSearchParams(location.search).get('id');
+  if(fromUrl){localStorage.setItem('onetreLastId',fromUrl);return fromUrl;}
+  return localStorage.getItem('onetreLastId');
+})();
 const GAS_URL='https://script.google.com/macros/s/AKfycbx0eSsQMErPrb415aWGVSJnfPCvKLsgokqXeoXOIE2pRSzBMOfZ65xF671TI5VAh-zb/exec';
 let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
 let mem=null,mts=[];let C={};
