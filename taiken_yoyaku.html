@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — 体験予約</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
+.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#222;letter-spacing:.32em}
+.logo-sub{font-size:7px;color:#ccc;letter-spacing:.22em;margin-top:3px}
+.logo-catch{font-size:11px;color:var(--pink);margin-top:4px}
+.body{padding:20px}
+.title{font-size:18px;color:#222;font-weight:700;margin-bottom:24px}
+.card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
+.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fg label{font-size:10px;color:#888;font-weight:500}
+.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
+.choice-label{font-size:10px;color:#888;font-weight:500;margin-bottom:8px}
+.radio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.radio-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:12px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:center;transition:all 0.15s}
+.radio-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.check-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.check-btn{padding:10px 14px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:12px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:left;transition:all 0.15s}
+.check-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.time-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:center;transition:all 0.15s}
+.time-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--pink2);text-align:center;font-weight:500}
+.kiyaku-box{background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;font-size:11px;color:#555;line-height:1.8}
+.kiyaku-box strong{color:#e8608a;display:block;margin-bottom:6px}
+.agree-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.agree-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--pink2);cursor:pointer;flex-shrink:0}
+.agree-row label{font-size:12px;color:#555;cursor:pointer}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.loading{text-align:center;padding:16px;font-size:12px;color:#aaa;display:none}
+.error-msg{font-size:12px;color:#e86060;text-align:center;padding:12px;display:none}
+.note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
+.success{display:none;text-align:center;padding:40px 20px}
+.success-icon{font-size:60px;margin-bottom:16px}
+.success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
+.success-sub{font-size:12px;color:#888;line-height:1.6}
+.back-btn{display:inline-block;margin-top:20px;padding:10px 24px;background:var(--pink-bg);color:var(--pink2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hd">
+    <div class="logo">ONE TRE</div>
+    <div class="logo-sub">PERSONAL TRAINING GYM</div>
+    <div class="logo-catch">私は私</div>
+  </div>
+  <div class="body">
+    <div id="form-area">
+      <div class="title">体験予約フォーム</div>
+
+      <!-- 1. 基本情報 -->
+      <div class="card">
+        <div class="card-title">基本情報</div>
+        <div class="fg">
+          <label>お名前 *</label>
+          <input type="text" id="name" placeholder="長尾 儀弘">
+        </div>
+        <div class="fg">
+          <label>電話番号 *</label>
+          <input type="tel" id="phone" placeholder="09012345678">
+        </div>
+        <div class="fg" style="margin-bottom:0">
+          <label>住所 *</label>
+          <input type="text" id="address" placeholder="米子市車尾6丁目8-59">
+        </div>
+      </div>
+
+      <!-- 2. 希望日時 -->
+      <div class="card">
+        <div class="card-title">希望日時</div>
+        <div class="fg">
+          <label>希望日</label>
+          <input type="date" id="date" onchange="loadSlots()">
+        </div>
+        <div class="choice-label">希望時間帯</div>
+        <div class="loading" id="loading">空き時間を確認中...</div>
+        <div class="error-msg" id="error-msg"></div>
+        <div class="time-grid" id="time-grid"></div>
+        <div class="selected-info" id="selected-info"></div>
+      </div>
+
+      <!-- 3. プロフィール -->
+      <div class="card">
+        <div class="card-title">プロフィール</div>
+        <div class="choice-label">性別 *</div>
+        <div class="radio-grid">
+          <button class="radio-btn" onclick="selectRadio('gender','男性',this)">男性</button>
+          <button class="radio-btn" onclick="selectRadio('gender','女性',this)">女性</button>
+          <button class="radio-btn" onclick="selectRadio('gender','どちらでもない',this)">どちらでもない</button>
+        </div>
+        <div class="choice-label">年代 *</div>
+        <div class="radio-grid" style="margin-bottom:0">
+          <button class="radio-btn" onclick="selectRadio('age','10代',this)">10代</button>
+          <button class="radio-btn" onclick="selectRadio('age','20代',this)">20代</button>
+          <button class="radio-btn" onclick="selectRadio('age','30代',this)">30代</button>
+          <button class="radio-btn" onclick="selectRadio('age','40代',this)">40代</button>
+          <button class="radio-btn" onclick="selectRadio('age','50代',this)">50代</button>
+          <button class="radio-btn" onclick="selectRadio('age','60代',this)">60代</button>
+          <button class="radio-btn" onclick="selectRadio('age','70代以上',this)">70代以上</button>
+        </div>
+      </div>
+
+      <!-- 4. 知ったキッカケ -->
+      <div class="card">
+        <div class="card-title">知ったキッカケ *（複数選択可）</div>
+        <div class="check-grid" style="margin-bottom:0">
+          <button class="check-btn" onclick="toggleCheck('kikkake','Instagram',this)">Instagram</button>
+          <button class="check-btn" onclick="toggleCheck('kikkake','YouTube',this)">YouTube</button>
+          <button class="check-btn" onclick="toggleCheck('kikkake','Google検索',this)">Google検索</button>
+          <button class="check-btn" onclick="toggleCheck('kikkake','友人の紹介',this)">友人の紹介</button>
+          <button class="check-btn" onclick="toggleCheck('kikkake','看板・通りがかり',this)">看板・通りがかり</button>
+          <button class="check-btn" onclick="toggleCheck('kikkake','その他',this)" style="margin-bottom:0">その他</button>
+        </div>
+      </div>
+
+      <!-- 5. 運動経験 -->
+      <div class="card">
+        <div class="card-title">運動経験（これまで） *</div>
+        <div class="check-grid" style="margin-bottom:0">
+          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','ない',this)">ない</button>
+          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','少しある',this)">少しある</button>
+          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','部活経験がある',this)">部活経験がある</button>
+          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','スポーツジム経験がある',this)">スポーツジム経験がある</button>
+          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','現在運動している',this)">現在運動している</button>
+        </div>
+      </div>
+
+      <!-- 6. 体験規約 -->
+      <div class="card">
+        <div class="card-title">体験規約</div>
+        <div class="kiyaku-box">
+          <strong>▼ 体験利用規約</strong>
+          ■ 原則として体験は1度だけとなります。<br>
+          ■ 体験中に万が一、ケガや体調不良等が発生した場合は自己責任となります。
+        </div>
+        <div class="agree-row">
+          <input type="checkbox" id="agree">
+          <label for="agree">上記の体験利用規約をすべて読み、内容に同意します</label>
+        </div>
+        <button class="btn" id="submit-btn" onclick="submitForm()">体験を予約する</button>
+      </div>
+
+      <div class="note">ご不明な点はお気軽にご連絡ください。</div>
+    </div>
+
+    <div class="success" id="success-area">
+      <div class="success-icon">🎉</div>
+      <div class="success-msg">体験予約を受け付けました！</div>
+      <div class="success-sub">トレーナーより折り返しご連絡いたします。<br>しばらくお待ちください。</div>
+      <a href="javascript:history.back()" class="back-btn">トップに戻る</a>
+    </div>
+  </div>
+</div>
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbxpSDB4OvYmmSml-Lsdrnl50mEtz1W_8UGCxgUzJi85v7Ts40lgVrbDmruMZ8XLFNX_/exec';
+const selected={gender:'',age:'',undou:''};
+const checked={kikkake:[]};
+let selectedStart=null,selectedEnd=null;
+
+const today=new Date();
+const tomorrow=new Date(today);
+tomorrow.setDate(tomorrow.getDate()+1);
+document.getElementById('date').setAttribute('min',tomorrow.toISOString().slice(0,10));
+document.getElementById('date').value=tomorrow.toISOString().slice(0,10);
+
+function selectRadio(key,val,btn){
+  selected[key]=val;
+  const grid=btn.parentElement;
+  grid.querySelectorAll('.radio-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function toggleCheck(key,val,btn){
+  const arr=checked[key];
+  const idx=arr.indexOf(val);
+  if(idx>=0){arr.splice(idx,1);btn.classList.remove('selected');}
+  else{arr.push(val);btn.classList.add('selected');}
+}
+
+async function loadSlots(){
+  const date=document.getElementById('date').value;
+  if(!date)return;
+  const sel=new Date(date+'T00:00:00');
+  const tod=new Date();tod.setHours(0,0,0,0);
+  if(sel<=tod)return;
+  const grid=document.getElementById('time-grid');
+  const loading=document.getElementById('loading');
+  const errMsg=document.getElementById('error-msg');
+  grid.innerHTML='';
+  selectedStart=null;selectedEnd=null;
+  document.getElementById('selected-info').style.display='none';
+  loading.style.display='block';
+  errMsg.style.display='none';
+  try{
+    const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    loading.style.display='none';
+    if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';return;}
+    if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';return;}
+    data.slots.forEach(slot=>{
+      const btn=document.createElement('button');
+      btn.className='time-btn';
+      btn.textContent=slot.label;
+      btn.onclick=()=>{
+        document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedStart=slot.start;selectedEnd=slot.end;
+        const endDate=new Date(slot.end);
+        const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
+        const info=document.getElementById('selected-info');
+        info.style.display='block';
+        info.textContent='予約時間：'+slot.label+' 〜 '+endLabel;
+      };
+      grid.appendChild(btn);
+    });
+  }catch(err){
+    loading.style.display='none';
+    errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
+    errMsg.style.display='block';
+  }
+}
+
+async function submitForm(){
+  const name=document.getElementById('name').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const address=document.getElementById('address').value.trim();
+  const date=document.getElementById('date').value;
+  const agree=document.getElementById('agree').checked;
+  if(!name||!phone||!address){alert('お名前・電話番号・住所を入力してください');return;}
+  if(!selected.gender){alert('性別を選択してください');return;}
+  if(!selected.age){alert('年代を選択してください');return;}
+  if(checked.kikkake.length===0){alert('知ったキッカケを選択してください');return;}
+  if(!selected.undou){alert('運動経験を選択してください');return;}
+  if(!date||!selectedStart){alert('希望日と時間を選択してください');return;}
+  if(!agree){alert('体験規約に同意してください');return;}
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='送信中...';
+  const params=new URLSearchParams({
+    action:'saveTaiken',
+    name,phone,address,
+    gender:selected.gender,
+    age:selected.age,
+    kikkake:checked.kikkake.join('・'),
+    undou:selected.undou,
+    start:selectedStart,
+    end:selectedEnd
+  });
+  try{
+    await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
+    document.getElementById('form-area').style.display='none';
+    document.getElementById('success-area').style.display='block';
+  }catch(err){
+    document.getElementById('form-area').style.display='none';
+    document.getElementById('success-area').style.display='block';
+  }
+}
+
+loadSlots();
+</script>
+</body>
+</html>
