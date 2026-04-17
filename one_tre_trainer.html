@@ -28,7 +28,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .page{display:none;padding:20px}.page.active{display:block}
 .sec{font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .sec::after{content:'';flex:1;height:.5px;background:var(--g6)}
-/* メトリクス - 3列（平均年齢削除） */
 .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:20px;background:var(--g5)}
 .metric{background:var(--bg);padding:20px 16px}
 .ml{font-size:12px;color:var(--g2);letter-spacing:.06em;margin-bottom:10px;font-weight:400}
@@ -113,7 +112,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
   </div>
 
   <div id="page-dashboard" class="page active">
-    <!-- 平均年齢削除・ラベル日本語化・数字大きく -->
     <div class="metrics">
       <div class="metric"><div class="ml">会員数</div><div class="mv" id="mt">0</div><div class="ms">名</div></div>
       <div class="metric"><div class="ml">女性</div><div class="mv" id="mf">0</div><div class="ms" id="mfp">-%</div></div>
@@ -257,13 +255,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 const NAME_KEY='お名前（長尾儀弘）';
-let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
-let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
+let T=[];
 let gasMembers=[];
 let cY=new Date().getFullYear(),cM2=new Date().getMonth();
 let C={};
 
-function sv(){localStorage.setItem('onetreM',JSON.stringify(M));localStorage.setItem('onetreT',JSON.stringify(T));}
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
 function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
 function daysSince(dateStr){if(!dateStr)return null;return Math.floor((new Date()-new Date(dateStr))/(1000*60*60*24));}
@@ -275,8 +271,8 @@ function getMemberUrl(id){
 
 let gasCache=null;
 
-async function fetchGasData(){
-  if(gasCache)return gasCache;
+async function fetchGasData(forceRefresh){
+  if(gasCache && !forceRefresh)return gasCache;
   try{
     const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
     if(!res.ok)throw new Error('HTTP '+res.status);
@@ -285,9 +281,9 @@ async function fetchGasData(){
   }catch(e){console.error('GAS fetch error:',e);return null;}
 }
 
-async function loadGasMembers(){
-  const data=await fetchGasData();
-  if(!data){gasMembers=[...M];pSel();rMem();rDash();return;}
+async function loadGasMembers(forceRefresh){
+  const data=await fetchGasData(forceRefresh);
+  if(!data){pSel();rMem();rDash();return;}
   const members=Array.isArray(data)?data:(data.members||[]);
   gasMembers=[];
   members.forEach(row=>{
@@ -299,26 +295,19 @@ async function loadGasMembers(){
       gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true});
     }
   });
-  M.forEach(m=>{if(!gasMembers.find(g=>g.id===m.id))gasMembers.push(m);});
 
-  // GASからトレーニング記録を読み込んでTに反映
+  T=[];
   if(data.training&&data.training.length){
     const grouped={};
     data.training.forEach(r=>{
       const key=r.memberId+'_'+r.date;
-      if(!grouped[key])grouped[key]={id:'gas_'+key,memberId:r.memberId,date:r.date,sets:[]};
+      if(!grouped[key])grouped[key]={id:key,memberId:r.memberId,date:r.date,sets:[]};
       grouped[key].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
     });
-    const gasT=Object.values(grouped);
-    gasT.forEach(gt=>{
-      if(!T.find(t=>t.memberId===gt.memberId&&t.date===gt.date)){
-        T.push(gt);
-      }
-    });
-    localStorage.setItem('onetreT',JSON.stringify(T));
+    T=Object.values(grouped);
   }
 
-  pSel();rMem();rDash();
+  pSel();rMem();rDash();rRec();
 }
 
 let salesCache=null;
@@ -441,7 +430,6 @@ function saveBodyScore(){
   const a=parseInt(document.getElementById('sc-agility').value)||0;
   const f=parseInt(document.getElementById('sc-flex').value)||0;
   const score={strength:s,core:c,agility:a,flex:f};
-  // localStorageに保存
   localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
   const params=new URLSearchParams({action:'saveBodyScore',memberId:mid,strength:s,core:c,agility:a,flex:f});
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
@@ -461,7 +449,7 @@ function sp(name,btn){
   if(name==='progress')pSel();
 }
 
-function getAllMembers(){return gasMembers.length>0?gasMembers:M;}
+function getAllMembers(){return gasMembers;}
 
 function rDash(){
   const all=getAllMembers();
@@ -478,7 +466,6 @@ function rDash(){
   }else{fbox.style.display='none';}
   dc('g');dc('a');
   C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#DB444C','#5BB9CD'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:12,boxWidth:10}}}}});
-  // 年代別グラフ - カラー
   const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
   const ageColors=['#e8a0bf','#b4a0e8','#DB444C','#5BB9CD'];
   const allData=(gasCache&&gasCache.all)?gasCache.all:[];
@@ -543,11 +530,14 @@ function saveTr(){
   const setsArr=[];
   document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});});
   if(!setsArr.length){alert('種目を入力してください');return;}
-  T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets:setsArr});sv();
   const params=new URLSearchParams({action:'saveTraining',memberId:mid,date:dt,sets:JSON.stringify(setsArr)});
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-  .then(()=>{document.getElementById('sw').innerHTML='';rRec();alert('保存しました。会員のマイページを開き直すと反映されます。');})
-  .catch(()=>{document.getElementById('sw').innerHTML='';rRec();alert('保存しました（オフラインモード）。');});
+  .then(()=>{
+    document.getElementById('sw').innerHTML='';
+    alert('保存しました。最新データを読み込みます。');
+    loadGasMembers(true);
+  })
+  .catch(()=>alert('保存に失敗しました。通信を確認してください。'));
 }
 
 function rRec(){
@@ -564,8 +554,8 @@ function rRec(){
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
         <div class="pn">${t.date}${m?' — '+m.name:''}</div>
         <div style="display:flex;gap:6px">
-          <button onclick="editRec('${t.id||t.date+t.memberId}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #5BB9CD;color:#5BB9CD;background:#fff;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif">修正</button>
-          <button onclick="deleteRec('${t.id||t.date+t.memberId}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #e86060;color:#e86060;background:#fff;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif">削除</button>
+          <button onclick="editRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #5BB9CD;color:#5BB9CD;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">修正</button>
+          <button onclick="deleteRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #e86060;color:#e86060;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">削除</button>
         </div>
       </div>
       <div style="font-size:11px;color:var(--g3);width:100%">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回'+(s.sets&&s.sets>1?' ×'+s.sets+'セット':'')).join('<br>')}</div>
@@ -574,21 +564,21 @@ function rRec(){
   });
 }
 
-function deleteRec(recId){
-  if(!confirm('この記録を削除しますか？')) return;
-  const idx=T.findIndex(t=>(t.id||t.date+t.memberId)===recId);
-  if(idx===-1){alert('記録が見つかりません');return;}
-  T.splice(idx,1);
-  localStorage.setItem('onetreT',JSON.stringify(T));
-  rRec();
-  alert('削除しました');
+function deleteRec(memberId,date){
+  if(!confirm('この日の記録を全て削除しますか？')) return;
+  const params=new URLSearchParams({action:'deleteTraining',memberId:memberId,date:date});
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+  .then(()=>{
+    alert('削除しました。最新データを読み込みます。');
+    loadGasMembers(true);
+  })
+  .catch(()=>alert('削除に失敗しました。'));
 }
 
-function editRec(recId){
-  const rec=T.find(t=>(t.id||t.date+t.memberId)===recId);
+function editRec(memberId,date){
+  const rec=T.find(t=>t.memberId===memberId&&t.date===date);
   if(!rec){alert('記録が見つかりません');return;}
 
-  // モーダルで編集
   const modal=document.createElement('div');
   modal.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px';
   
@@ -600,44 +590,56 @@ function editRec(recId){
   
   let setsHtml=rec.sets.map((s,i)=>`
     <div class="edit-set-row" style="display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center">
-      <input type="text" value="${s.exercise}" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'M PLUS Rounded 1c',sans-serif">
-      <input type="number" value="${s.weight}" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'M PLUS Rounded 1c',sans-serif">
-      <input type="number" value="${s.reps}" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'M PLUS Rounded 1c',sans-serif">
-      <input type="number" value="${s.sets||1}" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'M PLUS Rounded 1c',sans-serif">
+      <input type="text" value="${s.exercise}" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+      <input type="number" value="${s.weight}" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+      <input type="number" value="${s.reps}" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+      <input type="number" value="${s.sets||1}" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
       <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
     </div>
   `).join('');
 
   box.innerHTML=`
     <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#222">トレーニング記録を修正</div>
+    <input type="hidden" id="edit-old-member" value="${rec.memberId}">
+    <input type="hidden" id="edit-old-date" value="${rec.date}">
     <div style="margin-bottom:12px">
       <div style="font-size:10px;color:#888;margin-bottom:4px">会員</div>
-      <select id="edit-member" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'M PLUS Rounded 1c',sans-serif">${memberOptions}</select>
+      <select id="edit-member" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">${memberOptions}</select>
     </div>
     <div style="margin-bottom:12px">
       <div style="font-size:10px;color:#888;margin-bottom:4px">日付</div>
-      <input type="date" id="edit-date" value="${rec.date}" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'M PLUS Rounded 1c',sans-serif">
+      <input type="date" id="edit-date" value="${rec.date}" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
     </div>
     <div style="font-size:10px;color:#888;margin-bottom:8px">種目</div>
     <div id="edit-sets">${setsHtml}</div>
-    <button onclick="
-      const row=document.createElement('div');
-      row.className='edit-set-row';
-      row.style.cssText='display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center';
-      row.innerHTML='<input type=\'text\' placeholder=\'種目名\' style=\'font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:\'M PLUS Rounded 1c\',sans-serif\'><input type=\'number\' placeholder=\'重量kg\' style=\'font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:\'M PLUS Rounded 1c\',sans-serif\'><input type=\'number\' placeholder=\'回数\' style=\'font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:\'M PLUS Rounded 1c\',sans-serif\'><input type=\'number\' value=\'1\' placeholder=\'セット\' style=\'font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:\'M PLUS Rounded 1c\',sans-serif\'><button onclick=\'this.parentElement.remove()\' style=\'background:none;border:none;color:#e86060;font-size:18px;cursor:pointer\'>×</button>';
-      document.getElementById('edit-sets').appendChild(row);
-    " style="font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;margin-bottom:16px;font-family:'M PLUS Rounded 1c',sans-serif">+ 種目追加</button>
+    <button onclick="addEditRow()" style="font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;margin-bottom:16px;font-family:'Noto Sans JP',sans-serif">+ 種目追加</button>
     <div style="display:flex;gap:8px">
-      <button onclick="saveEditRec('${recId}',this)" style="flex:1;padding:12px;background:#222;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif">保存</button>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:12px;background:#f5f5f5;color:#555;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif">キャンセル</button>
+      <button onclick="saveEditRec(this)" style="flex:1;padding:12px;background:#222;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif">保存</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:12px;background:#f5f5f5;color:#555;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif">キャンセル</button>
     </div>
   `;
   modal.appendChild(box);
   document.body.appendChild(modal);
 }
 
-function saveEditRec(recId, btn){
+function addEditRow(){
+  const row=document.createElement('div');
+  row.className='edit-set-row';
+  row.style.cssText='display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center';
+  row.innerHTML=`
+    <input type="text" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+    <input type="number" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+    <input type="number" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+    <input type="number" value="1" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
+  `;
+  document.getElementById('edit-sets').appendChild(row);
+}
+
+function saveEditRec(btn){
   const modal=btn.closest('[style*=fixed]');
+  const oldMid=document.getElementById('edit-old-member').value;
+  const oldDate=document.getElementById('edit-old-date').value;
   const newMid=document.getElementById('edit-member').value;
   const newDate=document.getElementById('edit-date').value;
   if(!newMid||!newDate){alert('会員と日付を入力してください');return;}
@@ -654,22 +656,29 @@ function saveEditRec(recId, btn){
   });
   if(!setsArr.length){alert('種目を入力してください');return;}
 
-  // 元の記録を削除
-  const idx=T.findIndex(t=>(t.id||t.date+t.memberId)===recId);
-  if(idx!==-1) T.splice(idx,1);
-
-  // 新しい記録を追加
-  T.push({id:'t'+Date.now(),memberId:newMid,date:newDate,sets:setsArr});
-  localStorage.setItem('onetreT',JSON.stringify(T));
-
-  // GASに保存
-  const params=new URLSearchParams({action:'saveTraining',memberId:newMid,date:newDate,sets:JSON.stringify(setsArr)});
-  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-    .then(()=>alert('保存しました！'))
-    .catch(()=>alert('保存しました（オフラインモード）'));
-
-  modal.remove();
-  rRec();
+  if(oldMid===newMid){
+    const params=new URLSearchParams({action:'updateTraining',memberId:newMid,oldDate:oldDate,date:newDate,sets:JSON.stringify(setsArr)});
+    fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+    .then(()=>{
+      modal.remove();
+      alert('修正しました。最新データを読み込みます。');
+      loadGasMembers(true);
+    })
+    .catch(()=>alert('修正に失敗しました。'));
+  }else{
+    const delParams=new URLSearchParams({action:'deleteTraining',memberId:oldMid,date:oldDate});
+    fetch(GAS_URL+'?'+delParams.toString(),{method:'GET',mode:'cors'})
+    .then(()=>{
+      const addParams=new URLSearchParams({action:'saveTraining',memberId:newMid,date:newDate,sets:JSON.stringify(setsArr)});
+      return fetch(GAS_URL+'?'+addParams.toString(),{method:'GET',mode:'cors'});
+    })
+    .then(()=>{
+      modal.remove();
+      alert('修正しました。最新データを読み込みます。');
+      loadGasMembers(true);
+    })
+    .catch(()=>alert('修正に失敗しました。'));
+  }
 }
 
 function rCal(){
@@ -692,13 +701,11 @@ function rPro(){
   const mid=document.getElementById('spro').value;if(!mid)return;
   const all=getAllMembers(),mem=all.find(m=>m.id===mid);if(!mem)return;
   const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
-  dc('cf');dc('cv');dc('ce');
+  dc('cf');dc('cv');
   const freq=calcFreq(mts);
   C.cf=new Chart(document.getElementById('cf'),{type:'bar',data:{labels:freq.map(f=>f[0].slice(5)),datasets:[{data:freq.map(f=>f[1]),backgroundColor:'#DB444C',borderRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f0f0f0'}}}}});
   const vols=calcVolumes(mts);
   C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#5BB9CD',backgroundColor:'rgba(91,185,205,0.08)',tension:0.4,pointRadius:4,pointBackgroundColor:'#5BB9CD',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
-  const em={};mts.forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]={dates:[],weights:[]};em[s.exercise].dates.push(t.date);em[s.exercise].weights.push(s.weight);}));
-  C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set(mts.map(t=>t.date))].map(d=>d.slice(5)),datasets:Object.entries(em).slice(0,5).map(([ex,d],i)=>({label:ex,data:d.weights,borderColor:['#e8a0bf','#b4a0e8','#80c8aa','#f0b870','#DB444C'][i],tension:0.4,pointRadius:4,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
   const prs=calcPRs(mts),pl=document.getElementById('pr-list');pl.innerHTML='';
   if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--g3)">記録がありません</p>';return;}
   Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${pr.date}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
