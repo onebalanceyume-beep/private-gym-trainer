@@ -18,9 +18,16 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .title{font-size:18px;color:#222;font-weight:700;margin-bottom:24px}
 .card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
 .card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
+.mochimono-list{background:#fff;border-radius:10px;padding:14px 16px}
+.mochimono-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:#444;border-bottom:1px dashed #f0d0dc}
+.mochimono-item:last-child{border-bottom:none}
+.mochimono-icon{flex-shrink:0;font-size:16px}
+.mochimono-text{flex:1;line-height:1.5}
+.mochimono-note{font-size:10px;color:var(--pink2);font-weight:500;margin-left:4px}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .fg label{font-size:10px;color:#888;font-weight:500}
-.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
+.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;max-width:100%;outline:none;-webkit-appearance:none;appearance:none}
+.fg input[type=date]{min-height:44px;display:block}
 .choice-label{font-size:10px;color:#888;font-weight:500;margin-bottom:8px}
 .radio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .radio-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:12px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:center;transition:all 0.15s}
@@ -59,6 +66,29 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   <div class="body">
     <div id="form-area">
       <div class="title">体験予約フォーム</div>
+
+      <!-- 0. 持ってくるもの -->
+      <div class="card">
+        <div class="card-title">体験当日に持ってくるもの</div>
+        <div class="mochimono-list">
+          <div class="mochimono-item">
+            <span class="mochimono-icon">🧺</span>
+            <span class="mochimono-text">タオル</span>
+          </div>
+          <div class="mochimono-item">
+            <span class="mochimono-icon">🥤</span>
+            <span class="mochimono-text">飲み物<span class="mochimono-note">（販売有り）</span></span>
+          </div>
+          <div class="mochimono-item">
+            <span class="mochimono-icon">👟</span>
+            <span class="mochimono-text">室内シューズ</span>
+          </div>
+          <div class="mochimono-item">
+            <span class="mochimono-icon">👕</span>
+            <span class="mochimono-text">運動できる格好<span class="mochimono-note">（何でもOK）</span></span>
+          </div>
+        </div>
+      </div>
 
       <!-- 1. 基本情報 -->
       <div class="card">
@@ -164,7 +194,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   </div>
 </div>
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbxIoaqotp-jfKSp7fdTFp7a_lYqXxIUsnkVPJD3192Iv3Yd54UKUSCgmcZm1RIw7C4Alw/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 const selected={gender:'',age:'',undou:''};
 const checked={kikkake:[]};
 let selectedStart=null,selectedEnd=null;
@@ -204,7 +234,7 @@ async function loadSlots(){
   loading.style.display='block';
   errMsg.style.display='none';
   try{
-    const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const res=await fetch(GAS_URL+'?action=getTaikenSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
     loading.style.display='none';
     if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';return;}
