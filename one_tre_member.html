@@ -3,10 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/ONE-TRE_%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201.jpg">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="マイページ">
-<link rel="manifest" href="manifest_member.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ONE TRE — My Page</title>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
@@ -196,7 +192,7 @@ const urlId=(()=>{
   if(fromUrl){localStorage.setItem('onetreLastId',fromUrl);return fromUrl;}
   return localStorage.getItem('onetreLastId');
 })();
-const GAS_URL='https://script.google.com/macros/s/AKfycbx0eSsQMErPrb415aWGVSJnfPCvKLsgokqXeoXOIE2pRSzBMOfZ65xF671TI5VAh-zb/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
 let mem=null,mts=[];let C={};
 const now=new Date();const cY=now.getFullYear(),cM=now.getMonth();
