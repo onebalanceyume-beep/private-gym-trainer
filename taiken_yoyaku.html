@@ -38,6 +38,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .fg label{font-size:10px;color:#888;font-weight:500}
 .fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;max-width:100%;outline:none;-webkit-appearance:none;appearance:none}
 .fg input[type=date]{min-height:44px;display:block}
+.fg-note{font-size:10px;color:var(--pink2);margin-top:4px;line-height:1.5}
 .choice-label{font-size:10px;color:#888;font-weight:500;margin-bottom:8px}
 .radio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .radio-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:12px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:center;transition:all 0.15s}
@@ -133,6 +134,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
           <label>電話番号 *</label>
           <input type="tel" id="phone" placeholder="09012345678">
         </div>
+        <div class="fg">
+          <label>メールアドレス *</label>
+          <input type="email" id="email" placeholder="your-email@example.com">
+          <div class="fg-note">※ 予約確認メール・キャンセルURLをお送りします</div>
+        </div>
         <div class="fg" style="margin-bottom:0">
           <label>住所 *</label>
           <input type="text" id="address" placeholder="米子市車尾6丁目8-59">
@@ -189,7 +195,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 
       <!-- 5. 運動経験 -->
       <div class="card">
-        <div class="card-title">運動経験（これまで） *</div>
+        <div class="card-title">運動経験(これまで) *</div>
         <div class="check-grid" style="margin-bottom:0">
           <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','ない',this)">ない</button>
           <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','少しある',this)">少しある</button>
@@ -205,7 +211,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
         <div class="kiyaku-box">
           <strong>▼ 体験利用規約</strong>
           ■ 原則として体験は1度だけとなります。<br>
-          ■ 体験中に万が一、ケガや体調不良等が発生した場合は自己責任となります。
+          ■ 体験中に万が一、ケガや体調不良等が発生した場合は自己責任となります。<br>
+          ■ キャンセルは予約日時の24時間前までにお願いします。24時間を過ぎる場合はお電話にてご連絡ください。
         </div>
         <div class="agree-row">
           <input type="checkbox" id="agree">
@@ -220,7 +227,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
     <div class="success" id="success-area">
       <div class="success-icon">🎉</div>
       <div class="success-msg">体験予約を受け付けました！</div>
-      <div class="success-sub" style="font-size:11px;color:#aaa;margin-top:6px">予約完了</div>
+      <div class="success-sub">ご登録のメールアドレスに<br>予約確認とキャンセルURLを送信しました。<br>ご確認ください。</div>
       <a href="javascript:history.back()" class="back-btn">トップに戻る</a>
     </div>
   </div>
@@ -294,13 +301,19 @@ async function loadSlots(){
   }
 }
 
+function isValidEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 async function submitForm(){
   const name=document.getElementById('name').value.trim();
   const phone=document.getElementById('phone').value.trim();
+  const email=document.getElementById('email').value.trim();
   const address=document.getElementById('address').value.trim();
   const date=document.getElementById('date').value;
   const agree=document.getElementById('agree').checked;
-  if(!name||!phone||!address){alert('お名前・電話番号・住所を入力してください');return;}
+  if(!name||!phone||!email||!address){alert('お名前・電話番号・メールアドレス・住所を入力してください');return;}
+  if(!isValidEmail(email)){alert('メールアドレスの形式が正しくありません');return;}
   if(!selected.gender){alert('性別を選択してください');return;}
   if(!selected.age){alert('年代を選択してください');return;}
   if(checked.kikkake.length===0){alert('知ったキッカケを選択してください');return;}
@@ -311,7 +324,7 @@ async function submitForm(){
   btn.disabled=true;btn.textContent='送信中...';
   const params=new URLSearchParams({
     action:'saveTaiken',
-    name,phone,address,
+    name,phone,email,address,
     gender:selected.gender,
     age:selected.age,
     kikkake:checked.kikkake.join('・'),
