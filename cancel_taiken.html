@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — 体験予約キャンセル</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;--red:#e86060;}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
+.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#222;letter-spacing:.32em}
+.logo-sub{font-size:7px;color:#ccc;letter-spacing:.22em;margin-top:3px}
+.logo-catch{font-size:11px;color:var(--pink);margin-top:4px}
+.body{padding:20px}
+.title{font-size:18px;color:#222;font-weight:700;margin-bottom:6px}
+.subtitle{font-size:12px;color:#888;margin-bottom:24px;line-height:1.6}
+.card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
+.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
+.info-box{background:#fff;border-radius:10px;padding:14px 16px}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px dashed #f0d0dc;gap:10px}
+.info-row:last-child{border-bottom:none}
+.info-label{font-size:11px;color:#888;flex-shrink:0}
+.info-value{font-size:13px;color:#222;text-align:right;font-weight:500;word-break:break-all}
+.warn-box{background:#fff3f3;border:1.5px solid var(--red);border-radius:10px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--red);line-height:1.7}
+.warn-box strong{display:block;font-size:13px;margin-bottom:4px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-bottom:10px}
+.btn-cancel{background:var(--red);color:#fff}
+.btn-back{background:#f5f5f5;color:#555}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.loading{text-align:center;padding:32px;font-size:13px;color:#aaa}
+.error-state{background:#fff3f3;border:1.5px solid var(--red);border-radius:10px;padding:20px;text-align:center;color:var(--red);font-size:13px;line-height:1.6}
+.success-state{text-align:center;padding:40px 20px}
+.success-icon{font-size:60px;margin-bottom:16px}
+.success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
+.success-sub{font-size:12px;color:#888;line-height:1.6;margin-bottom:20px}
+.back-link{display:inline-block;margin-top:10px;padding:10px 24px;background:var(--pink-bg);color:var(--pink2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hd">
+    <div class="logo">ONE TRE</div>
+    <div class="logo-sub">PERSONAL TRAINING GYM</div>
+    <div class="logo-catch">私は私</div>
+  </div>
+  <div class="body">
+
+    <div id="loading-area" class="loading">予約情報を確認中...</div>
+
+    <div id="form-area" style="display:none">
+      <div class="title">体験予約キャンセル</div>
+      <div class="subtitle">以下の予約内容でキャンセルを受け付けます。内容をご確認ください。</div>
+
+      <div class="card">
+        <div class="card-title">予約内容</div>
+        <div class="info-box">
+          <div class="info-row">
+            <span class="info-label">お名前</span>
+            <span class="info-value" id="info-name">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">予約日時</span>
+            <span class="info-value" id="info-date">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">電話番号</span>
+            <span class="info-value" id="info-phone">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">メール</span>
+            <span class="info-value" id="info-email">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <strong>⚠ キャンセル前にご確認ください</strong>
+        ・キャンセルは予約日時の24時間前まで受け付けます<br>
+        ・24時間を過ぎている場合はお電話にてご連絡ください<br>
+        ・一度キャンセルすると元に戻せません
+      </div>
+
+      <button class="btn btn-cancel" id="cancel-btn" onclick="doCancel()">この予約をキャンセルする</button>
+      <a href="javascript:history.back()" class="btn btn-back" style="display:block;text-align:center;text-decoration:none;padding:14px">戻る</a>
+    </div>
+
+    <div id="error-area" style="display:none">
+      <div class="error-state" id="error-msg">
+        予約が見つかりません。
+      </div>
+    </div>
+
+    <div id="success-area" class="success-state" style="display:none">
+      <div class="success-icon">✓</div>
+      <div class="success-msg">キャンセルを承りました</div>
+      <div class="success-sub">ご登録のメールアドレスに<br>キャンセル確認メールを送信しました。<br><br>またのご利用を<br>心よりお待ちしております。</div>
+      <a href="https://onebalanceyume-beep.github.io/private-gym-trainer/taiken_yoyaku.html" class="back-link">体験予約ページへ</a>
+    </div>
+
+  </div>
+</div>
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+
+function getToken(){
+  const params=new URLSearchParams(window.location.search);
+  return params.get('token');
+}
+
+async function init(){
+  const token=getToken();
+  if(!token){showError('キャンセル用のURLが正しくありません。');return;}
+  try{
+    const res=await fetch(GAS_URL+'?action=getTaikenByToken&token='+encodeURIComponent(token)+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(!data.ok){showError(data.error||'予約情報が見つかりませんでした。');return;}
+    document.getElementById('loading-area').style.display='none';
+    document.getElementById('form-area').style.display='block';
+    document.getElementById('info-name').textContent=data.name||'-';
+    document.getElementById('info-date').textContent=data.reserveDate||'-';
+    document.getElementById('info-phone').textContent=data.phone||'-';
+    document.getElementById('info-email').textContent=data.email||'-';
+  }catch(err){
+    showError('通信エラーが発生しました。時間をおいて再度お試しください。');
+  }
+}
+
+function showError(msg){
+  document.getElementById('loading-area').style.display='none';
+  document.getElementById('form-area').style.display='none';
+  document.getElementById('error-area').style.display='block';
+  document.getElementById('error-msg').textContent=msg;
+}
+
+async function doCancel(){
+  if(!confirm('本当にキャンセルしますか？\nこの操作は取り消せません。'))return;
+  const btn=document.getElementById('cancel-btn');
+  btn.disabled=true;btn.textContent='キャンセル処理中...';
+  const token=getToken();
+  try{
+    const res=await fetch(GAS_URL+'?action=cancelTaikenByUser&token='+encodeURIComponent(token)+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(data.ok){
+      document.getElementById('form-area').style.display='none';
+      document.getElementById('success-area').style.display='block';
+    }else{
+      alert('キャンセルできませんでした：\n'+(data.error||'不明なエラー'));
+      btn.disabled=false;btn.textContent='この予約をキャンセルする';
+    }
+  }catch(err){
+    alert('通信エラーが発生しました。時間をおいて再度お試しください。');
+    btn.disabled=false;btn.textContent='この予約をキャンセルする';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
