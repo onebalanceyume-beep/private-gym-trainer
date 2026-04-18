@@ -26,8 +26,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .nbtn{font-size:10px;padding:12px 14px;border:none;background:transparent;color:var(--g4);cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;border-bottom:1.5px solid transparent;flex-shrink:0;letter-spacing:.12em;transition:all .2s}
 .nbtn.active{color:var(--black);border-bottom-color:var(--black)}
 .page{display:none;padding:20px}.page.active{display:block}
-.sec{font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
-.sec::after{content:'';flex:1;height:.5px;background:var(--g6)}
 .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:20px;background:var(--g5)}
 .metric{background:var(--bg);padding:20px 16px}
 .ml{font-size:12px;color:var(--g2);letter-spacing:.06em;margin-bottom:10px;font-weight:400}
@@ -46,7 +44,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .fg label{font-size:10px;color:var(--g2);letter-spacing:.06em;font-weight:400}
 .fg input,.fg select{font-size:13px;padding:9px 12px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .2s}
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--black)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .btn-black{background:var(--black);color:#fff;border:1px solid var(--black);padding:10px 22px;border-radius:0;font-size:11px;cursor:pointer;letter-spacing:.14em;margin-top:12px;font-family:'Noto Sans JP',sans-serif}
 .btn-ghost{background:transparent;border:.5px solid var(--g4);padding:7px 14px;border-radius:0;font-size:11px;cursor:pointer;color:var(--g1);font-family:'Noto Sans JP',sans-serif;letter-spacing:.06em}
 .btn-ghost:hover{border-color:var(--black);color:var(--black)}
@@ -55,7 +52,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;flex-shrink:0;background:var(--black);color:#fff}
 .av-warn{background:var(--g5);color:var(--g3)}
 .mname{font-size:13px;color:var(--black);font-weight:400;letter-spacing:.04em}
-.mmeta{font-size:11px;color:var(--g2);margin-top:2px}
 .mbadge{font-size:9px;padding:2px 8px;border:.5px solid var(--g4);letter-spacing:.06em;color:var(--g2);white-space:nowrap;flex-shrink:0;margin-top:2px}
 .mbadge-warn{border-color:var(--g5);color:var(--g4)}
 .url-box{display:flex;align-items:center;gap:6px;margin-top:8px;background:var(--g6);padding:8px 10px}
@@ -90,6 +86,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .course-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)}
 .course-count{font-size:10px;color:var(--g3);margin-top:2px}
 .loading{text-align:center;padding:32px;color:var(--g3);font-size:13px;letter-spacing:.1em}
+.taiken-item{border:.5px solid var(--g5);padding:14px;margin-bottom:10px;background:var(--bg)}
+.taiken-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.taiken-name{font-size:14px;font-weight:500;color:var(--black)}
+.taiken-date{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black);margin-top:2px}
+.taiken-meta{display:grid;grid-template-columns:1fr;gap:4px;font-size:11px;color:var(--g2);margin-top:8px}
+@media(min-width:600px){.taiken-meta{grid-template-columns:1fr 1fr}}
+.taiken-meta span{word-break:break-all}
+.taiken-cancel{font-size:10px;padding:6px 14px;background:#fff;border:1px solid #e86060;color:#e86060;cursor:pointer;font-family:'Noto Sans JP',sans-serif;letter-spacing:.04em}
+.taiken-cancel:hover{background:#e86060;color:#fff}
 </style>
 </head>
 <body>
@@ -105,6 +110,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
   <div class="nav">
     <button class="nbtn active" onclick="sp('dashboard',this)">ダッシュボード</button>
     <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
+    <button class="nbtn" onclick="sp('taiken',this)">体験予約</button>
     <button class="nbtn" onclick="sp('members',this)">会員管理</button>
     <button class="nbtn" onclick="sp('training',this)">トレーニング</button>
     <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
@@ -155,6 +161,17 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <div id="sales-error" style="display:none;padding:20px;color:var(--g3);font-size:13px;text-align:center">データの取得に失敗しました。GASのデプロイ設定を確認してください。</div>
   </div>
 
+  <div id="page-taiken" class="page">
+    <div class="card">
+      <div class="ctitle">体験予約一覧</div>
+      <div style="font-size:11px;color:var(--g2);margin-bottom:12px;line-height:1.6">予約された体験のリストです。キャンセルボタンでGoogleカレンダーから自動で削除、予約者にキャンセル通知メールが送信されます。</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn-ghost" onclick="loadTaikenList()">&#8634; 更新</button>
+      </div>
+      <div id="taiken-list">読み込み中...</div>
+    </div>
+  </div>
+
   <div id="page-members" class="page">
     <div class="card">
       <div class="ctitle">ボディバランス スコア設定</div>
@@ -197,7 +214,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
       <div id="score-total" style="font-size:13px;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">合計: 0 / 100</div>
       <button class="btn-black" onclick="saveBodyScore()">スコアを保存 → 会員マイページに反映</button>
     </div>
-
     <div class="card">
       <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
       <div style="font-size:11px;color:var(--g2);margin-bottom:12px;font-weight:400;line-height:1.6">Googleフォームから申し込まれた会員が自動で表示されます。URLをコピーしてLINEで送ってください。</div>
@@ -295,7 +311,6 @@ async function loadGasMembers(forceRefresh){
       gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true});
     }
   });
-
   T=[];
   if(data.training&&data.training.length){
     const grouped={};
@@ -306,7 +321,6 @@ async function loadGasMembers(forceRefresh){
     });
     T=Object.values(grouped);
   }
-
   pSel();rMem();rDash();rRec();
 }
 
@@ -400,6 +414,58 @@ async function rSales(){
   renderSales();
 }
 
+async function loadTaikenList(){
+  const listEl=document.getElementById('taiken-list');
+  listEl.innerHTML='<p style="font-size:13px;color:var(--g3)">読み込み中...</p>';
+  try{
+    const res=await fetch(GAS_URL+'?action=getTaikenList&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(!data.ok){listEl.innerHTML='<p style="font-size:13px;color:#e86060">取得に失敗しました</p>';return;}
+    if(!data.list||data.list.length===0){listEl.innerHTML='<p style="font-size:13px;color:var(--g3)">予約はありません</p>';return;}
+    listEl.innerHTML='';
+    data.list.forEach(item=>{
+      const div=document.createElement('div');
+      div.className='taiken-item';
+      div.innerHTML=`
+        <div class="taiken-header">
+          <div>
+            <div class="taiken-name">${item.name} 様</div>
+            <div class="taiken-date">${item.reserveDate||'日時未設定'}</div>
+          </div>
+          <button class="taiken-cancel" onclick="cancelTaiken('${item.token}','${item.name.replace(/'/g,"\\'")}','${item.reserveDate.replace(/'/g,"\\'")}')">キャンセル</button>
+        </div>
+        <div class="taiken-meta">
+          <span>📞 ${item.phone||'-'}</span>
+          <span>✉️ ${item.email||'-'}</span>
+          <span>👤 ${item.gender||'-'} / ${item.age||'-'}</span>
+          <span>📍 ${item.address||'-'}</span>
+          <span>🔎 キッカケ: ${item.kikkake||'-'}</span>
+          <span>🏃 運動: ${item.undou||'-'}</span>
+        </div>
+      `;
+      listEl.appendChild(div);
+    });
+  }catch(err){
+    listEl.innerHTML='<p style="font-size:13px;color:#e86060">通信エラーが発生しました</p>';
+  }
+}
+
+async function cancelTaiken(token,name,reserveDate){
+  if(!confirm(name+' 様の「'+reserveDate+'」の予約をキャンセルします。\n\n予約者にキャンセル通知メールが送信されます。\nよろしいですか？'))return;
+  try{
+    const res=await fetch(GAS_URL+'?action=cancelTaikenByTrainer&token='+encodeURIComponent(token)+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(data.ok){
+      alert('キャンセル完了しました。予約者に通知メールを送信しました。');
+      loadTaikenList();
+    }else{
+      alert('エラー：'+(data.error||'不明なエラー'));
+    }
+  }catch(err){
+    alert('通信エラーが発生しました');
+  }
+}
+
 function loadBodyScore(){
   const mid=document.getElementById('score-member').value;
   if(!mid)return;
@@ -443,6 +509,7 @@ function sp(name,btn){
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
   if(name==='dashboard')rDash();
   if(name==='sales')rSales();
+  if(name==='taiken')loadTaikenList();
   if(name==='members')rMem();
   if(name==='training'){pSel();rRec();}
   if(name==='calendar'){pSel();rCal();}
@@ -578,16 +645,12 @@ function deleteRec(memberId,date){
 function editRec(memberId,date){
   const rec=T.find(t=>t.memberId===memberId&&t.date===date);
   if(!rec){alert('記録が見つかりません');return;}
-
   const modal=document.createElement('div');
   modal.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px';
-  
   const box=document.createElement('div');
   box.style.cssText='background:#fff;border-radius:16px;padding:20px;width:100%;max-width:480px;margin:auto';
-  
   const all=getAllMembers();
   const memberOptions=all.map(m=>`<option value="${m.id}" ${m.id===rec.memberId?'selected':''}>${m.name}</option>`).join('');
-  
   let setsHtml=rec.sets.map((s,i)=>`
     <div class="edit-set-row" style="display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center">
       <input type="text" value="${s.exercise}" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
@@ -597,7 +660,6 @@ function editRec(memberId,date){
       <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
     </div>
   `).join('');
-
   box.innerHTML=`
     <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#222">トレーニング記録を修正</div>
     <input type="hidden" id="edit-old-member" value="${rec.memberId}">
@@ -643,7 +705,6 @@ function saveEditRec(btn){
   const newMid=document.getElementById('edit-member').value;
   const newDate=document.getElementById('edit-date').value;
   if(!newMid||!newDate){alert('会員と日付を入力してください');return;}
-  
   const rows=document.querySelectorAll('#edit-sets .edit-set-row');
   const setsArr=[];
   rows.forEach(row=>{
@@ -655,15 +716,10 @@ function saveEditRec(btn){
     if(ex) setsArr.push({exercise:ex,weight:wt,reps:rp,sets:st});
   });
   if(!setsArr.length){alert('種目を入力してください');return;}
-
   if(oldMid===newMid){
     const params=new URLSearchParams({action:'updateTraining',memberId:newMid,oldDate:oldDate,date:newDate,sets:JSON.stringify(setsArr)});
     fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-    .then(()=>{
-      modal.remove();
-      alert('修正しました。最新データを読み込みます。');
-      loadGasMembers(true);
-    })
+    .then(()=>{modal.remove();alert('修正しました。最新データを読み込みます。');loadGasMembers(true);})
     .catch(()=>alert('修正に失敗しました。'));
   }else{
     const delParams=new URLSearchParams({action:'deleteTraining',memberId:oldMid,date:oldDate});
@@ -672,11 +728,7 @@ function saveEditRec(btn){
       const addParams=new URLSearchParams({action:'saveTraining',memberId:newMid,date:newDate,sets:JSON.stringify(setsArr)});
       return fetch(GAS_URL+'?'+addParams.toString(),{method:'GET',mode:'cors'});
     })
-    .then(()=>{
-      modal.remove();
-      alert('修正しました。最新データを読み込みます。');
-      loadGasMembers(true);
-    })
+    .then(()=>{modal.remove();alert('修正しました。最新データを読み込みます。');loadGasMembers(true);})
     .catch(()=>alert('修正に失敗しました。'));
   }
 }
