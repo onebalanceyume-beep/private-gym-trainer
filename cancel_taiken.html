@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;--red:#e86060;}
+:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;--red:#e86060;--line:#06C755;}
 body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh}
 .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
 .hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff}
@@ -26,12 +26,16 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .info-value{font-size:13px;color:#222;text-align:right;font-weight:500;word-break:break-all}
 .warn-box{background:#fff3f3;border:1.5px solid var(--red);border-radius:10px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--red);line-height:1.7}
 .warn-box strong{display:block;font-size:13px;margin-bottom:4px}
+.line-box{background:#f0faf3;border:1.5px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.line-box-title{font-size:12px;color:var(--line);font-weight:700;margin-bottom:8px}
+.line-box-text{font-size:11px;color:#555;line-height:1.6;margin-bottom:10px}
+.line-btn{display:block;width:100%;padding:12px;background:var(--line);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;text-align:center;text-decoration:none;font-family:'M PLUS Rounded 1c',sans-serif}
 .btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-bottom:10px}
 .btn-cancel{background:var(--red);color:#fff}
 .btn-back{background:#f5f5f5;color:#555}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
 .loading{text-align:center;padding:32px;font-size:13px;color:#aaa}
-.error-state{background:#fff3f3;border:1.5px solid var(--red);border-radius:10px;padding:20px;text-align:center;color:var(--red);font-size:13px;line-height:1.6}
+.error-state{background:#fff3f3;border:1.5px solid var(--red);border-radius:10px;padding:20px;text-align:center;color:var(--red);font-size:13px;line-height:1.6;margin-bottom:14px}
 .success-state{text-align:center;padding:40px 20px}
 .success-icon{font-size:60px;margin-bottom:16px}
 .success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
@@ -79,8 +83,14 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
       <div class="warn-box">
         <strong>⚠ キャンセル前にご確認ください</strong>
         ・キャンセルは予約日時の24時間前まで受け付けます<br>
-        ・24時間を過ぎている場合はお電話にてご連絡ください<br>
+        ・24時間を過ぎている場合は下記LINEからご連絡ください<br>
         ・一度キャンセルすると元に戻せません
+      </div>
+
+      <div class="line-box">
+        <div class="line-box-title">💬 24時間を過ぎた場合</div>
+        <div class="line-box-text">キャンセル受付期限を過ぎた場合は、下記の公式LINEからお気軽にお問い合わせください。</div>
+        <a href="https://lin.ee/QuZegDI" target="_blank" class="line-btn">公式LINEで問い合わせる</a>
       </div>
 
       <button class="btn btn-cancel" id="cancel-btn" onclick="doCancel()">この予約をキャンセルする</button>
@@ -88,8 +98,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
     </div>
 
     <div id="error-area" style="display:none">
-      <div class="error-state" id="error-msg">
-        予約が見つかりません。
+      <div class="error-state" id="error-msg">予約が見つかりません。</div>
+      <div class="line-box">
+        <div class="line-box-title">💬 お問い合わせはこちら</div>
+        <div class="line-box-text">ご不明な点がございましたら、公式LINEからお気軽にお問い合わせください。</div>
+        <a href="https://lin.ee/QuZegDI" target="_blank" class="line-btn">公式LINEで問い合わせる</a>
       </div>
     </div>
 
@@ -110,6 +123,22 @@ function getToken(){
   return params.get('token');
 }
 
+function formatDateJp(str){
+  if(!str)return '-';
+  if(/^\d{4}-\d{2}-\d{2}T/.test(str)){
+    const d=new Date(str);
+    if(!isNaN(d.getTime())){
+      const yyyy=d.getFullYear();
+      const mm=String(d.getMonth()+1).padStart(2,'0');
+      const dd=String(d.getDate()).padStart(2,'0');
+      const hh=String(d.getHours()).padStart(2,'0');
+      const min=String(d.getMinutes()).padStart(2,'0');
+      return yyyy+'年'+mm+'月'+dd+'日 '+hh+':'+min;
+    }
+  }
+  return str;
+}
+
 async function init(){
   const token=getToken();
   if(!token){showError('キャンセル用のURLが正しくありません。');return;}
@@ -120,7 +149,7 @@ async function init(){
     document.getElementById('loading-area').style.display='none';
     document.getElementById('form-area').style.display='block';
     document.getElementById('info-name').textContent=data.name||'-';
-    document.getElementById('info-date').textContent=data.reserveDate||'-';
+    document.getElementById('info-date').textContent=formatDateJp(data.reserveDate);
     document.getElementById('info-phone').textContent=data.phone||'-';
     document.getElementById('info-email').textContent=data.email||'-';
   }catch(err){
@@ -147,7 +176,7 @@ async function doCancel(){
       document.getElementById('form-area').style.display='none';
       document.getElementById('success-area').style.display='block';
     }else{
-      alert('キャンセルできませんでした：\n'+(data.error||'不明なエラー'));
+      alert('キャンセルできませんでした：\n'+(data.error||'不明なエラー')+'\n\n24時間を過ぎている場合は公式LINEからご連絡ください。');
       btn.disabled=false;btn.textContent='この予約をキャンセルする';
     }
   }catch(err){
