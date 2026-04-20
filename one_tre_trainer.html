@@ -720,7 +720,8 @@ function sp(name,btn){
   if(name==='members')rMem();
   if(name==='training'){pSel();rRec();}
   if(name==='calendar'){pSel();rCal();}
-  if(name==='progress')pSel();
+ if(name==='progress')pSel();
+if(name==='counseling')pSel();
 }
 
 function getAllMembers(){return gasMembers;}
@@ -783,7 +784,7 @@ function cpUrl(url,btn){
 
 function pSel(){
   const all=getAllMembers();
-  ['str','scal','spro','score-member'].forEach(id=>{
+ ['str','scal','spro','score-member','counsel-member'].forEach(id=>{
     const s=document.getElementById(id);if(!s)return;
     const ha=s.options[0]&&s.options[0].value==='';
     while(s.options.length>(ha?1:0))s.remove(ha?1:0);
@@ -939,7 +940,94 @@ function saveEditRec(btn){
     .catch(()=>alert('修正に失敗しました。'));
   }
 }
+// ===== カウンセリング機能 =====
+function toggleDietSection(){
+  const sec=document.getElementById('diet-section');
+  const btn=document.getElementById('diet-toggle');
+  if(sec.style.display==='none'||!sec.style.display){
+    sec.style.display='block';
+    btn.textContent='− ダイエット項目を閉じる';
+  }else{
+    sec.style.display='none';
+    btn.textContent='＋ ダイエット項目を追加する';
+  }
+}
 
+async function loadCounseling(){
+  const mid=document.getElementById('counsel-member').value;
+  const form=document.getElementById('counsel-form');
+  if(!mid){form.style.display='none';return;}
+  form.style.display='block';
+  // 既存データ読込
+  try{
+    const res=await fetch(GAS_URL+'?action=getCounseling&memberId='+encodeURIComponent(mid)+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    const fields=['purpose','goal','deadline','gymexp','exercisehabit','exerciseexp','injury','medication','pain','concern','sleep','bedtime','work','stress','selfeval','message','ng','height','goalweight','ddeadline','dpast','dmethods','meal','breakfast','eatout','alcohol','motivation'];
+    fields.forEach(f=>{
+      const el=document.getElementById('c-'+f);
+      if(el)el.value='';
+    });
+    if(data && data.ok && data.record){
+      const r=data.record;
+      const map={purpose:'目的',goal:'目標',deadline:'達成期限',gymexp:'過去のジム経験',exercisehabit:'運動習慣',exerciseexp:'過去の運動経験',injury:'ケガ手術歴',medication:'通院服薬',pain:'痛みのある箇所',concern:'気になる箇所',sleep:'睡眠時間',bedtime:'就寝時刻',work:'仕事形態',stress:'ストレスレベル',selfeval:'自己評価',message:'伝えたいこと',ng:'NGなこと',height:'ダイエット_身長',goalweight:'ダイエット_目標減量',ddeadline:'ダイエット_達成期限',dpast:'ダイエット_過去経験',dmethods:'ダイエット_試した方法',meal:'ダイエット_食事回数',breakfast:'ダイエット_朝食頻度',eatout:'ダイエット_外食頻度',alcohol:'ダイエット_お酒頻度',motivation:'ダイエット_モチベーション'};
+      Object.entries(map).forEach(([k,col])=>{
+        const el=document.getElementById('c-'+k);
+        if(el && r[col]!==undefined && r[col]!==null && r[col]!=='')el.value=r[col];
+      });
+      // ダイエット項目に値があれば自動で開く
+      const dietFields=['height','goalweight','ddeadline','dpast','dmethods','meal','breakfast','eatout','alcohol','motivation'];
+      const hasDiet=dietFields.some(f=>{const v=r[map[f]];return v!==undefined&&v!==null&&v!=='';});
+      if(hasDiet){
+        document.getElementById('diet-section').style.display='block';
+        document.getElementById('diet-toggle').textContent='− ダイエット項目を閉じる';
+      }
+    }
+  }catch(e){console.log('カウンセリング読込エラー:',e);}
+}
+
+function saveCounseling(){
+  const mid=document.getElementById('counsel-member').value;
+  if(!mid){alert('会員を選択してください');return;}
+  const getVal=(id)=>{const el=document.getElementById(id);return el?el.value.trim():'';};
+  const params=new URLSearchParams({
+    action:'saveCounseling',
+    memberId:mid,
+    purpose:getVal('c-purpose'),
+    goal:getVal('c-goal'),
+    deadline:getVal('c-deadline'),
+    gymexp:getVal('c-gymexp'),
+    exercisehabit:getVal('c-exercisehabit'),
+    exerciseexp:getVal('c-exerciseexp'),
+    injury:getVal('c-injury'),
+    medication:getVal('c-medication'),
+    pain:getVal('c-pain'),
+    concern:getVal('c-concern'),
+    sleep:getVal('c-sleep'),
+    bedtime:getVal('c-bedtime'),
+    work:getVal('c-work'),
+    stress:getVal('c-stress'),
+    selfeval:getVal('c-selfeval'),
+    message:getVal('c-message'),
+    ng:getVal('c-ng'),
+    height:getVal('c-height'),
+    goalweight:getVal('c-goalweight'),
+    ddeadline:getVal('c-ddeadline'),
+    dpast:getVal('c-dpast'),
+    dmethods:getVal('c-dmethods'),
+    meal:getVal('c-meal'),
+    breakfast:getVal('c-breakfast'),
+    eatout:getVal('c-eatout'),
+    alcohol:getVal('c-alcohol'),
+    motivation:getVal('c-motivation')
+  });
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+  .then(r=>r.json())
+  .then(data=>{
+    if(data && data.ok)alert('カウンセリングを保存しました。');
+    else alert('保存に失敗しました：'+(data.error||'不明'));
+  })
+  .catch(()=>alert('通信エラーが発生しました。'));
+}
 function rCal(){
   const mid=document.getElementById('scal').value;
   document.getElementById('ctitle').textContent=cY+'年'+(cM2+1)+'月';
