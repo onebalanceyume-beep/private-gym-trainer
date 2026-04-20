@@ -967,8 +967,8 @@ async function loadCounseling(){
       const el=document.getElementById('c-'+f);
       if(el)el.value='';
     });
-    if(data && data.ok && data.record){
-      const r=data.record;
+    if(data && data.ok && data.data){
+      const r=data.data;
       const map={purpose:'目的',goal:'目標',deadline:'達成期限',gymexp:'過去のジム経験',exercisehabit:'運動習慣',exerciseexp:'過去の運動経験',injury:'ケガ手術歴',medication:'通院服薬',pain:'痛みのある箇所',concern:'気になる箇所',sleep:'睡眠時間',bedtime:'就寝時刻',work:'仕事形態',stress:'ストレスレベル',selfeval:'自己評価',message:'伝えたいこと',ng:'NGなこと',height:'ダイエット_身長',goalweight:'ダイエット_目標減量',ddeadline:'ダイエット_達成期限',dpast:'ダイエット_過去経験',dmethods:'ダイエット_試した方法',meal:'ダイエット_食事回数',breakfast:'ダイエット_朝食頻度',eatout:'ダイエット_外食頻度',alcohol:'ダイエット_お酒頻度',motivation:'ダイエット_モチベーション'};
       Object.entries(map).forEach(([k,col])=>{
         const el=document.getElementById('c-'+k);
@@ -989,42 +989,47 @@ function saveCounseling(){
   const mid=document.getElementById('counsel-member').value;
   if(!mid){alert('会員を選択してください');return;}
   const getVal=(id)=>{const el=document.getElementById(id);return el?el.value.trim():'';};
-  const params=new URLSearchParams({
-    action:'saveCounseling',
-    memberId:mid,
+  const today=new Date().toISOString().slice(0,10);
+  const data={
+    recordDate:today,
     purpose:getVal('c-purpose'),
     goal:getVal('c-goal'),
     deadline:getVal('c-deadline'),
-    gymexp:getVal('c-gymexp'),
-    exercisehabit:getVal('c-exercisehabit'),
-    exerciseexp:getVal('c-exerciseexp'),
-    injury:getVal('c-injury'),
+    gymExp:getVal('c-gymexp'),
+    exerciseHabit:getVal('c-exercisehabit'),
+    exerciseExp:getVal('c-exerciseexp'),
+    injuryHistory:getVal('c-injury'),
     medication:getVal('c-medication'),
-    pain:getVal('c-pain'),
-    concern:getVal('c-concern'),
-    sleep:getVal('c-sleep'),
+    painArea:getVal('c-pain'),
+    concernArea:getVal('c-concern'),
+    sleepHours:getVal('c-sleep'),
     bedtime:getVal('c-bedtime'),
-    work:getVal('c-work'),
-    stress:getVal('c-stress'),
-    selfeval:getVal('c-selfeval'),
+    workStyle:getVal('c-work'),
+    stressLevel:getVal('c-stress'),
+    selfEval:getVal('c-selfeval'),
     message:getVal('c-message'),
-    ng:getVal('c-ng'),
-    height:getVal('c-height'),
-    goalweight:getVal('c-goalweight'),
-    ddeadline:getVal('c-ddeadline'),
-    dpast:getVal('c-dpast'),
-    dmethods:getVal('c-dmethods'),
-    meal:getVal('c-meal'),
-    breakfast:getVal('c-breakfast'),
-    eatout:getVal('c-eatout'),
-    alcohol:getVal('c-alcohol'),
-    motivation:getVal('c-motivation')
+    ngItems:getVal('c-ng'),
+    dHeight:getVal('c-height'),
+    dGoalWeight:getVal('c-goalweight'),
+    dDeadline:getVal('c-ddeadline'),
+    dPastExp:getVal('c-dpast'),
+    dMethods:getVal('c-dmethods'),
+    dMealCount:getVal('c-meal'),
+    dBreakfast:getVal('c-breakfast'),
+    dEatOut:getVal('c-eatout'),
+    dAlcohol:getVal('c-alcohol'),
+    dMotivation:getVal('c-motivation')
+  };
+  const params=new URLSearchParams({
+    action:'saveCounseling',
+    memberId:mid,
+    data:JSON.stringify(data)
   });
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
   .then(r=>r.json())
-  .then(data=>{
-    if(data && data.ok)alert('カウンセリングを保存しました。');
-    else alert('保存に失敗しました：'+(data.error||'不明'));
+  .then(result=>{
+    if(result && result.ok)alert('カウンセリングを保存しました。');
+    else alert('保存に失敗しました：'+(result.error||'不明'));
   })
   .catch(()=>alert('通信エラーが発生しました。'));
 }
