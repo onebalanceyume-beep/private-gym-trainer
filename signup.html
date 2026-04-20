@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ONE TRE 入会">
+<meta name="theme-color" content="#fdf6fb">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
+<link rel="icon" type="image/png" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
+<title>ONE TRE 入会申込み</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:#fdf6fb;font-family:'Hiragino Sans','Yu Gothic',sans-serif;color:#222;-webkit-text-size-adjust:100%;overflow-x:hidden;}
+  body{min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);}
+  .wrap{max-width:480px;margin:0 auto;padding:20px 16px 40px;}
+  .logo-head{text-align:center;padding:20px 0 24px;}
+  .logo-head img{max-width:140px;height:auto;}
+  .logo-head .sub{font-size:10px;letter-spacing:0.3em;color:#aaa;margin-top:8px;}
+  .card{background:#fff;border-radius:20px;overflow:hidden;border:1px solid #f0d0dc;box-shadow:0 4px 20px rgba(232,96,138,0.08);}
+  .hero{padding:44px 24px;text-align:center;transition:background .4s ease;}
+  .hero.women{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);}
+  .hero.men{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);}
+  .hero .eyebrow{font-size:11px;letter-spacing:0.35em;margin-bottom:16px;transition:color .4s;}
+  .hero.women .eyebrow{color:#99355680;}
+  .hero.men .eyebrow{color:#ffffff70;}
+  .hero .title{font-family:'Times New Roman',serif;font-size:32px;letter-spacing:0.15em;margin-bottom:14px;transition:color .4s;}
+  .hero.women .title{color:#4b1528;}
+  .hero.men .title{color:#fff;}
+  .hero .divider{width:30px;height:1px;margin:0 auto 18px;transition:background .4s;}
+  .hero.women .divider{background:#99355660;}
+  .hero.men .divider{background:#b8a06c;}
+  .hero .catch{font-size:14px;line-height:1.9;transition:color .4s;}
+  .hero.women .catch{color:#4b1528;}
+  .hero.men .catch{color:#fff;}
+  .hero .accent{font-size:12px;letter-spacing:0.08em;margin-top:12px;transition:color .4s;}
+  .hero.women .accent{color:#d4537e;}
+  .hero.men .accent{color:#b8a06c;}
+  .body{padding:28px 22px 32px;}
+  .step{text-align:center;margin-bottom:18px;}
+  .step .lbl{font-size:10px;letter-spacing:0.3em;color:#888;margin-bottom:6px;}
+  .step .nm{font-size:14px;font-weight:500;color:#333;}
+  .gender-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
+  .gender-card{padding:18px 12px;border-radius:14px;text-align:center;cursor:pointer;transition:all .3s;background:#fff;border:2px solid #eee;}
+  .gender-card.active.women{border-color:#e8608a;background:#fde8f0;}
+  .gender-card.active.men{border-color:#1a1a1a;background:#f5f5f5;}
+  .gender-card .gc-title{font-family:serif;font-size:15px;letter-spacing:0.1em;margin-bottom:4px;color:#888;}
+  .gender-card.active.women .gc-title{color:#4b1528;}
+  .gender-card.active.men .gc-title{color:#1a1a1a;}
+  .gender-card .gc-sub{font-size:11px;color:#aaa;}
+  .gender-card.active.women .gc-sub{color:#99355680;}
+  .gender-card.active.men .gc-sub{color:#666;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;color:#666;margin-bottom:6px;font-weight:500;}
+  .field label .req{color:#e8608a;margin-left:4px;}
+  .field input,.field textarea,.field select{width:100%;padding:12px 14px;border:1px solid #e0d0d8;border-radius:10px;font-size:15px;background:#fff;color:#222;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#e8608a;box-shadow:0 0 0 3px rgba(232,96,138,0.1);}
+  .field textarea{resize:vertical;min-height:70px;}
+  .radio-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .radio-chip{flex:1;min-width:70px;padding:10px 8px;text-align:center;border:1px solid #e0d0d8;border-radius:10px;font-size:13px;cursor:pointer;background:#fff;transition:all .2s;color:#555;}
+  .radio-chip.active{border-color:#e8608a;background:#fde8f0;color:#99355680;color:#4b1528;font-weight:500;}
+  .section-ttl{text-align:center;margin:24px 0 16px;}
+  .section-ttl .lbl{font-size:10px;letter-spacing:0.3em;color:#888;margin-bottom:4px;}
+  .section-ttl .nm{font-family:serif;font-size:22px;color:#222;letter-spacing:0.05em;}
+  .section-ttl .sub{font-size:12px;color:#888;margin-top:4px;}
+  .course-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .course-card{border:1px solid #e0d0d8;border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .3s;background:#fff;position:relative;}
+  .course-card.selected{border-color:#e8608a;border-width:2px;padding:15px 17px;background:#fde8f010;}
+  .course-card .row{display:flex;justify-content:space-between;align-items:center;}
+  .course-card .c-name{font-size:16px;color:#222;}
+  .course-card .c-price{font-family:serif;font-size:22px;color:#222;}
+  .course-card.recommend{margin-top:8px;border-color:#b8860b;border-width:2px;padding:15px 17px;}
+  .recommend-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#fff;padding:2px 14px;font-size:10px;letter-spacing:0.2em;color:#b8860b;border:1px solid #b8860b;border-radius:10px;}
+  .course-card .c-origin{font-size:12px;color:#999;text-decoration:line-through;margin-right:6px;}
+  .course-card .c-discount-price{color:#e8608a;font-weight:500;}
+  .entry-fee{text-align:center;font-size:13px;color:#666;margin:14px 0 4px;}
+  .entry-fee .strike{text-decoration:line-through;color:#aaa;margin:0 4px;}
+  .entry-fee .free{color:#b8860b;font-weight:500;}
+  .entry-sub{text-align:center;font-size:11px;color:#aaa;letter-spacing:0.1em;margin-bottom:22px;}
+  .auto-discount{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);border-radius:12px;padding:16px;margin-bottom:22px;text-align:center;transition:all .3s;display:none;}
+  .auto-discount.men{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);}
+  .auto-discount.show{display:block;}
+  .auto-discount .ad-lbl{font-size:10px;letter-spacing:0.25em;color:#993556;margin-bottom:4px;}
+  .auto-discount.men .ad-lbl{color:#b8a06c;}
+  .auto-discount .ad-main{font-size:14px;font-weight:500;color:#4b1528;}
+  .auto-discount.men .ad-main{color:#fff;}
+  .auto-discount .ad-sub{font-size:11px;color:#99355680;margin-top:4px;}
+  .auto-discount.men .ad-sub{color:#b8a06c;}
+  .price-summary{background:#faf5f8;border-radius:12px;padding:16px;margin-bottom:22px;}
+  .price-summary .ps-row{display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;}
+  .price-summary .ps-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:10px;border-top:1px dashed #e0d0d8;}
+  .price-summary .ps-total .l{font-size:13px;color:#333;font-weight:500;}
+  .price-summary .ps-total .r{font-family:serif;font-size:26px;color:#e8608a;font-weight:500;}
+  .regulations{background:#faf5f8;border-radius:12px;padding:14px 16px;margin-bottom:18px;font-size:12px;line-height:1.8;color:#666;}
+  .regulations .rt{font-size:12px;font-weight:500;color:#333;margin-bottom:10px;letter-spacing:0.05em;}
+  .regulations label{display:flex;align-items:flex-start;margin-bottom:10px;cursor:pointer;gap:8px;}
+  .regulations label:last-child{margin-bottom:0;}
+  .regulations label span{flex:1;line-height:1.7;}
+  .regulations input[type=checkbox]{margin:4px 0 0;flex-shrink:0;}
+  .submit-btn{width:100%;padding:18px;border:none;border-radius:12px;background:linear-gradient(135deg,#f0a0b8,#e8608a);color:#fff;font-size:15px;font-weight:500;letter-spacing:0.15em;cursor:pointer;transition:all .3s;font-family:inherit;}
+  .submit-btn:active{transform:scale(0.98);}
+  .submit-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .submit-btn.men{background:linear-gradient(135deg,#2d2d2d,#1a1a1a);}
+  .loading{display:none;text-align:center;padding:20px;color:#888;font-size:13px;}
+  .loading.show{display:block;}
+  .complete{display:none;text-align:center;padding:36px 22px 40px;}
+  .complete.show{display:block;}
+  .complete .check{width:64px;height:64px;border-radius:50%;background:#fde8f0;color:#e8608a;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px;font-weight:500;}
+  .complete .msg{font-size:18px;color:#222;margin-bottom:10px;font-weight:500;letter-spacing:0.05em;}
+  .complete .sub{font-size:13px;color:#666;line-height:1.9;margin-bottom:24px;}
+  .complete a{color:#e8608a;text-decoration:none;font-weight:500;}
+  .payment-box{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);border:2px solid #e8608a;border-radius:18px;padding:26px 20px 24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(232,96,138,0.15);}
+  .payment-box.men{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);border-color:#b8a06c;box-shadow:0 4px 16px rgba(184,160,108,0.2);}
+  .pb-lbl{font-size:11px;letter-spacing:0.3em;color:#993556;margin-bottom:10px;font-weight:500;}
+  .payment-box.men .pb-lbl{color:#b8a06c;}
+  .pb-amount{font-family:'Times New Roman',serif;font-size:44px;color:#e8608a;font-weight:500;letter-spacing:0.02em;line-height:1.1;margin-bottom:8px;}
+  .payment-box.men .pb-amount{color:#fff;}
+  .pb-course{font-size:14px;color:#4b1528;font-weight:500;}
+  .payment-box.men .pb-course{color:#fff;}
+  .pb-discount{font-size:11px;color:#99355680;margin-top:6px;letter-spacing:0.05em;}
+  .payment-box.men .pb-discount{color:#b8a06c;}
+  .staff-note{background:#fffbe6;border:1px dashed #e8c86a;border-radius:10px;padding:14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:22px;text-align:left;}
+  .sn-icon{font-size:22px;flex-shrink:0;}
+  .sn-text{font-size:12px;color:#6a5a2a;line-height:1.6;}
+  .sn-text strong{display:block;font-size:13px;color:#4a3a1a;margin-bottom:2px;}
+  .mypage-link{margin-bottom:20px;}
+  .mypage-link a{display:inline-block;padding:10px 24px;background:#fff;border:1px solid #e0d0d8;border-radius:20px;font-size:13px;color:#e8608a;text-decoration:none;font-weight:500;}
+  .complete-footer{font-size:11px;color:#888;line-height:1.8;padding-top:14px;border-top:1px solid #f0d0dc;}
+  .footer{text-align:center;margin-top:20px;padding:20px;}
+  .footer .brand{font-family:serif;font-size:13px;letter-spacing:0.2em;color:#222;margin-bottom:4px;}
+  .footer .addr{font-size:11px;color:#888;line-height:1.6;}
+  .footer a{color:#06C755;text-decoration:none;font-weight:500;}
+  .menu-list{font-size:13px;line-height:1.9;color:#555;padding-left:18px;margin:10px 0 0;}
+  .coupon-section{text-align:center;margin:18px 0;}
+  .coupon-toggle{font-size:11px;color:#999;background:none;border:none;cursor:pointer;padding:6px 12px;letter-spacing:0.1em;text-decoration:underline;font-family:inherit;}
+  .coupon-input-wrap{display:none;margin-top:10px;}
+  .coupon-input-wrap.show{display:block;}
+  .coupon-input-wrap input{width:100%;padding:10px 14px;border:1px solid #e0d0d8;border-radius:8px;font-size:13px;font-family:inherit;}
+  @media (max-width:380px){
+    .wrap{padding:12px 10px 30px;}
+    .body{padding:22px 16px 28px;}
+    .hero{padding:36px 20px;}
+    .hero .title{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="logo-head">
+    <img src="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png" alt="ONE TRE">
+    <div class="sub">PERSONAL TRAINING GYM</div>
+  </div>
+
+  <div class="card" id="app-card">
+
+    <div class="hero women" id="hero">
+      <div class="eyebrow" id="hero-eyebrow">FOR WOMEN</div>
+      <div class="title" id="hero-title">ONE TRE</div>
+      <div class="divider"></div>
+      <div class="catch" id="hero-catch">私は私</div>
+      <div class="accent" id="hero-accent">— 女性が、安心して通えるジム。—</div>
+    </div>
+
+    <div class="body" id="form-body">
+
+      <div class="step">
+        <div class="lbl">STEP 1</div>
+        <div class="nm">性別を選択</div>
+      </div>
+
+      <div class="gender-grid">
+        <div class="gender-card active women" data-gender="female" id="gc-female">
+          <div class="gc-title">FOR WOMEN</div>
+          <div class="gc-sub">女性メニュー</div>
+        </div>
+        <div class="gender-card" data-gender="male" id="gc-male">
+          <div class="gc-title">FOR MEN</div>
+          <div class="gc-sub">男性メニュー</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>お名前<span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="長尾 儀弘">
+      </div>
+
+      <div class="field">
+        <label>ふりがな<span class="req">*</span></label>
+        <input type="text" id="f-kana" placeholder="ながお よしひろ">
+      </div>
+
+      <div class="field">
+        <label>メールアドレス<span class="req">*</span></label>
+        <input type="email" id="f-email" placeholder="example@mail.com" inputmode="email" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label>電話番号<span class="req">*</span></label>
+        <input type="tel" id="f-phone" placeholder="09012345678" inputmode="tel">
+      </div>
+
+      <div class="field">
+        <label>住所<span class="req">*</span></label>
+        <textarea id="f-address" placeholder="鳥取県米子市車尾6丁目8-59"></textarea>
+      </div>
+
+      <div class="field">
+        <label>年代<span class="req">*</span></label>
+        <div class="radio-row" id="age-group">
+          <div class="radio-chip" data-val="10代">10代</div>
+          <div class="radio-chip" data-val="20代">20代</div>
+          <div class="radio-chip" data-val="30代">30代</div>
+          <div class="radio-chip" data-val="40代">40代</div>
+          <div class="radio-chip" data-val="50代">50代</div>
+          <div class="radio-chip" data-val="60代以上">60代以上</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>トレーニングの目的・目標</label>
+        <input type="text" id="f-goal" placeholder="健康な体づくり / ダイエット など">
+      </div>
+
+      <div class="section-ttl">
+        <div class="lbl">PRICE</div>
+        <div class="nm">料金プラン</div>
+        <div class="sub">1回50分／男女共通</div>
+      </div>
+
+      <div class="auto-discount" id="auto-discount">
+        <div class="ad-lbl">AUTO APPLIED</div>
+        <div class="ad-main" id="discount-label">モニター価格 20%OFF 自動適用</div>
+        <div class="ad-sub" id="discount-sub">初めての方限定特典</div>
+      </div>
+
+      <div class="course-list" id="course-list">
+        <div class="course-card" data-course="8" data-price="49800">
+          <div class="row">
+            <div class="c-name">8回</div>
+            <div class="c-price"><span class="c-origin" style="display:none;">¥49,800</span><span class="c-display">¥49,800</span></div>
+          </div>
+        </div>
+        <div class="course-card recommend" data-course="16" data-price="94800">
+          <div class="recommend-badge">RECOMMEND</div>
+          <div class="row">
+            <div class="c-name">16回</div>
+            <div class="c-price"><span class="c-origin" style="display:none;">¥94,800</span><span class="c-display">¥94,800</span></div>
+          </div>
+        </div>
+        <div class="course-card" data-course="32" data-price="178000">
+          <div class="row">
+            <div class="c-name">32回</div>
+            <div class="c-price"><span class="c-origin" style="display:none;">¥178,000</span><span class="c-display">¥178,000</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry-fee">入会金 <span class="strike">¥11,000</span> <span class="free">今なら0円</span></div>
+      <div class="entry-sub">— 無理な勧誘は、一切ありません。—</div>
+
+      <div class="price-summary" id="price-summary" style="display:none;">
+        <div class="ps-row"><span>定価</span><span id="ps-original">¥0</span></div>
+        <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">割引</span><span id="ps-discount-amount">-¥0</span></div>
+        <div class="ps-total">
+          <span class="l">お支払い金額</span>
+          <span class="r" id="ps-total">¥0</span>
+        </div>
+      </div>
+
+      <div class="regulations">
+        <div class="rt">ご確認ください</div>
+        <label><input type="checkbox" class="reg" data-val="受付時間"> <span>パーソナル受付時間は月〜土 10:00-22:00<br>日祝はお休みです。</span></label>
+        <label><input type="checkbox" class="reg" data-val="5分前"> <span>予約時間5分前には必ずお越しください。</span></label>
+        <label><input type="checkbox" class="reg" data-val="遅れる場合"> <span>予約時間に遅れる場合はご連絡下さい。<br>ご連絡がない場合は1カウント扱いになります。</span></label>
+        <label><input type="checkbox" class="reg" data-val="変更"> <span>予約の変更はセッション１日前までとなります。</span></label>
+        <label><input type="checkbox" class="reg" data-val="ケガ"> <span>ケガについては自己責任となります。</span></label>
+        <label><input type="checkbox" class="reg" data-val="返金"> <span>一度支払ったお金は返金できません。</span></label>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" disabled>お申し込みを送信</button>
+
+      <div class="loading" id="loading">送信しています...</div>
+
+    </div>
+
+    <div class="complete" id="complete">
+      <div class="check">✓</div>
+      <div class="msg">お申し込みありがとうございます</div>
+      <div class="sub">
+        下記の金額をスタッフにお見せください。<br>
+        当日、店頭にてお支払いをお願いいたします。
+      </div>
+
+      <div class="payment-box" id="payment-box">
+        <div class="pb-lbl">お支払い金額</div>
+        <div class="pb-amount" id="pb-amount">¥0</div>
+        <div class="pb-course" id="pb-course">— 回コース</div>
+        <div class="pb-discount" id="pb-discount"></div>
+      </div>
+
+      <div class="staff-note">
+        <div class="sn-icon">📱</div>
+        <div class="sn-text">
+          <strong>スタッフにこの画面を見せてください</strong><br>
+          お支払い確認後、次回セッションのご予約に進めます
+        </div>
+      </div>
+
+      <div class="mypage-link">
+        <a href="#" id="mypage-btn">マイページを開く →</a>
+      </div>
+
+      <div class="complete-footer">
+        ご不明な点は<a href="https://lin.ee/QuZegDI" target="_blank">公式LINE</a>へ<br>
+        確認メールもお送りしました
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="brand">ONE TRE</div>
+    <div class="addr">
+      鳥取県米子市車尾6丁目8−59<br>
+      <a href="https://lin.ee/QuZegDI" target="_blank">📱 公式LINE</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ========== 設定（デプロイ時にGAS URLを書き換える）==========
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+
+// ========== キャッシュクリア ==========
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
+}
+if (window.caches) {
+  caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+}
+
+// ========== 状態 ==========
+let state = {
+  gender: 'female',
+  course: null,
+  coursePrice: 0,
+  memberType: 'new', // new / monitor / continue
+  discountRate: 0.20, // 初回は自動で20%OFF
+  age: '',
+  emailCheckedFor: ''
+};
+
+// ========== DOM参照 ==========
+const $ = id => document.getElementById(id);
+const hero = $('hero');
+const heroEyebrow = $('hero-eyebrow');
+const heroCatch = $('hero-catch');
+const heroAccent = $('hero-accent');
+const submitBtn = $('submit-btn');
+const autoDisc = $('auto-discount');
+const discountLabel = $('discount-label');
+const discountSub = $('discount-sub');
+const priceSummary = $('price-summary');
+
+// ========== 性別切替 ==========
+document.querySelectorAll('.gender-card').forEach(el => {
+  el.addEventListener('click', () => {
+    const g = el.dataset.gender;
+    state.gender = g;
+    document.querySelectorAll('.gender-card').forEach(c => {
+      c.classList.remove('active','women','men');
+    });
+    el.classList.add('active');
+    el.classList.add(g === 'female' ? 'women' : 'men');
+    updateGenderUI();
+  });
+});
+
+function updateGenderUI(){
+  const isW = state.gender === 'female';
+  hero.classList.remove('women','men');
+  hero.classList.add(isW ? 'women' : 'men');
+  autoDisc.classList.toggle('men', !isW);
+  submitBtn.classList.toggle('men', !isW);
+  if(isW){
+    heroEyebrow.textContent = 'FOR WOMEN';
+    heroCatch.textContent = '私は私';
+    heroAccent.textContent = '— 女性が、安心して通えるジム。—';
+  } else {
+    heroEyebrow.textContent = 'FOR MEN';
+    heroCatch.textContent = '挑戦した道が人の通り道になる';
+    heroAccent.textContent = '— ブレない身体を、創る。—';
+  }
+}
+
+// ========== 年代選択 ==========
+document.querySelectorAll('#age-group .radio-chip').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('#age-group .radio-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    state.age = el.dataset.val;
+    validate();
+  });
+});
+
+// ========== コース選択 ==========
+document.querySelectorAll('.course-card').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.course-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    state.course = el.dataset.course;
+    state.coursePrice = parseInt(el.dataset.price);
+    updatePrice();
+    validate();
+  });
+});
+
+// ========== 金額計算 ==========
+function updatePrice(){
+  if(!state.course) { priceSummary.style.display='none'; return; }
+  const orig = state.coursePrice;
+  const rate = state.discountRate;
+  const discount = Math.round(orig * rate);
+  const total = orig - discount;
+  $('ps-original').textContent = '¥' + orig.toLocaleString();
+  $('ps-total').textContent = '¥' + total.toLocaleString();
+  if(rate > 0){
+    $('ps-discount-row').style.display = 'flex';
+    $('ps-discount-lbl').textContent = state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF';
+    $('ps-discount-amount').textContent = '-¥' + discount.toLocaleString();
+  } else {
+    $('ps-discount-row').style.display = 'none';
+  }
+  priceSummary.style.display = 'block';
+  // 各コースカードの価格表示を更新
+  document.querySelectorAll('.course-card').forEach(card => {
+    const origin = parseInt(card.dataset.price);
+    const disc = Math.round(origin * rate);
+    const final = origin - disc;
+    const origSpan = card.querySelector('.c-origin');
+    const dispSpan = card.querySelector('.c-display');
+    if(rate > 0){
+      origSpan.style.display = 'inline';
+      origSpan.textContent = '¥' + origin.toLocaleString();
+      dispSpan.textContent = '¥' + final.toLocaleString();
+      dispSpan.classList.add('c-discount-price');
+    } else {
+      origSpan.style.display = 'none';
+      dispSpan.textContent = '¥' + origin.toLocaleString();
+      dispSpan.classList.remove('c-discount-price');
+    }
+  });
+}
+
+// ========== メールアドレスで会員種別判定 ==========
+let emailCheckTimer = null;
+$('f-email').addEventListener('input', e => {
+  clearTimeout(emailCheckTimer);
+  const email = e.target.value.trim();
+  if(!email || email === state.emailCheckedFor) return;
+  emailCheckTimer = setTimeout(() => checkMemberType(email), 700);
+});
+$('f-email').addEventListener('blur', e => {
+  const email = e.target.value.trim();
+  if(email && email !== state.emailCheckedFor) checkMemberType(email);
+});
+
+async function checkMemberType(email){
+  if(!email || !email.includes('@')) return;
+  state.emailCheckedFor = email;
+  try{
+    const res = await fetch(GAS_URL + '?action=checkMember&email=' + encodeURIComponent(email));
+    const data = await res.json();
+    if(data.isExisting){
+      state.memberType = 'continue';
+      state.discountRate = 0.10;
+      discountLabel.textContent = '継続割引 10%OFF 自動適用';
+      discountSub.textContent = 'いつもありがとうございます';
+    } else {
+      state.memberType = 'new';
+      state.discountRate = 0.20;
+      discountLabel.textContent = 'モニター価格 20%OFF 自動適用';
+      discountSub.textContent = '初めての方限定特典';
+    }
+    autoDisc.classList.add('show');
+    updatePrice();
+  } catch(err) {
+    console.log('check failed', err);
+  }
+}
+
+// ========== バリデーション ==========
+const fields = ['f-name','f-kana','f-email','f-phone','f-address'];
+fields.forEach(id => $(id).addEventListener('input', validate));
+document.querySelectorAll('.reg').forEach(el => el.addEventListener('change', validate));
+
+function validate(){
+  const allFilled = fields.every(id => $(id).value.trim().length > 0);
+  const ageOk = !!state.age;
+  const courseOk = !!state.course;
+  const regsAllChecked = Array.from(document.querySelectorAll('.reg')).every(el => el.checked);
+  submitBtn.disabled = !(allFilled && ageOk && courseOk && regsAllChecked);
+}
+
+// ========== 送信 ==========
+submitBtn.addEventListener('click', async () => {
+  if(submitBtn.disabled) return;
+  submitBtn.disabled = true;
+  submitBtn.style.display = 'none';
+  $('loading').classList.add('show');
+  const payload = {
+    action: 'signup',
+    gender: state.gender === 'female' ? '女性' : '男性',
+    name: $('f-name').value.trim(),
+    kana: $('f-kana').value.trim(),
+    email: $('f-email').value.trim(),
+    phone: $('f-phone').value.trim(),
+    address: $('f-address').value.trim(),
+    age: state.age,
+    goal: $('f-goal').value.trim(),
+    course: state.course,
+    coursePrice: state.coursePrice,
+    memberType: state.memberType,
+    discountRate: state.discountRate,
+    regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(',')
+  };
+  try {
+    const formData = new URLSearchParams();
+    Object.keys(payload).forEach(k => formData.append(k, payload[k]));
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body: formData.toString()
+    });
+    const data = await res.json();
+    $('loading').classList.remove('show');
+    if(data.ok){
+      // 支払い金額を完了画面に反映
+      const finalPrice = Math.round(state.coursePrice * (1 - state.discountRate));
+      $('pb-amount').textContent = '¥' + finalPrice.toLocaleString();
+      $('pb-course').textContent = state.course + '回コース';
+      if(state.discountRate > 0){
+        const label = state.memberType === 'continue' ? '継続割引 10%OFF 適用' : 'モニター価格 20%OFF 適用';
+        $('pb-discount').textContent = label + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
+      } else {
+        $('pb-discount').textContent = '';
+      }
+      // 男性モードなら黒背景に
+      if(state.gender === 'male'){
+        $('payment-box').classList.add('men');
+      }
+      // マイページURL
+      if(data.memberUrl){
+        $('mypage-btn').href = data.memberUrl;
+      }
+      $('form-body').style.display = 'none';
+      $('complete').classList.add('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else {
+      alert('送信エラー：' + (data.error || '不明なエラー'));
+      submitBtn.disabled = false;
+      submitBtn.style.display = 'block';
+    }
+  } catch(err) {
+    $('loading').classList.remove('show');
+    alert('通信エラーが発生しました。もう一度お試しください。');
+    submitBtn.disabled = false;
+    submitBtn.style.display = 'block';
+  }
+});
+
+// ========== 初期化 ==========
+updateGenderUI();
+// 初期状態でモニター価格表示
+autoDisc.classList.add('show');
+</script>
+
+</body>
+</html>
