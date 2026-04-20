@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-  <link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
+<link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
 <link rel="icon" type="image/png" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ONE TRE">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -24,6 +24,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .logo-sub{font-size:7px;color:var(--g3);letter-spacing:.22em;margin-top:3px;font-weight:300}
 .logo-catch{font-size:11px;color:var(--pink);margin-top:4px;font-weight:400}
 .member-name{font-size:16px;color:var(--black);margin-top:8px;font-weight:700}
+.admin-badge{display:inline-block;background:linear-gradient(135deg,#333,#666);color:#fff;font-size:9px;padding:3px 10px;border-radius:10px;margin-left:6px;letter-spacing:0.1em;font-weight:700;vertical-align:middle}
 .nav{display:flex;gap:6px;padding:10px;background:var(--bg2);position:sticky;top:0;z-index:10}
 .nb{flex:1;padding:8px 0;font-size:10px;text-align:center;border:none;border-radius:20px;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:500;transition:all .2s;color:#bbb;background:#fff}
 .nb-attend{background:var(--pink-bg);color:var(--pink2)}
@@ -33,6 +34,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .nb-training.a{background:var(--blue-bg);color:var(--blue)}
 .nb-growth{color:#bbb;background:#fff}
 .nb-growth.a{background:var(--orange-bg);color:var(--orange)}
+.nb-renew{color:#bbb;background:#fff}
+.nb-renew.a{background:#fff4e6;color:#c88040}
 .nb-attend.a{background:var(--pink-bg);color:var(--pink2)}
 .pg{display:none;padding:16px}.pg.active{display:block}
 .st{font-size:9px;color:var(--g3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-weight:500}
@@ -82,6 +85,65 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .wt-input-label{font-size:9px;color:var(--pink2);letter-spacing:.1em;margin-bottom:8px;font-weight:700}
 .wt-input{border:1.5px solid rgba(232,96,138,0.3);border-radius:10px;padding:10px 12px;background:#fff;font-family:'M PLUS Rounded 1c',sans-serif;font-size:22px;color:var(--black);font-weight:700;outline:none;width:100%}
 .wt-save-btn{background:linear-gradient(135deg,var(--pink),#c0a0e8);border:none;border-radius:10px;padding:10px 14px;font-size:11px;color:#fff;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:700;white-space:nowrap}
+
+.renew-hero{background:linear-gradient(135deg,#fff4e6,#ffe8d0);border-radius:16px;padding:18px;margin-bottom:14px;text-align:center}
+.renew-hero-ttl{font-size:12px;color:#c88040;letter-spacing:.15em;font-weight:700;margin-bottom:6px}
+.renew-hero-sub{font-size:11px;color:var(--g1);line-height:1.7;font-weight:400}
+.course-opt{border:2px solid var(--g5);border-radius:14px;padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:all .2s;background:#fff}
+.course-opt.sel{border-color:var(--pink2);background:#fde8f010}
+.course-opt-row{display:flex;justify-content:space-between;align-items:center}
+.course-opt-name{font-size:15px;color:var(--black);font-weight:700}
+.course-opt-price{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--pink2);font-weight:500}
+.course-opt-orig{font-size:11px;color:var(--g3);text-decoration:line-through;margin-right:4px}
+.course-opt.rec{border-color:#d4a56a}
+.course-opt-badge{display:inline-block;font-size:8px;padding:2px 8px;background:#d4a56a;color:#fff;border-radius:10px;margin-bottom:4px;font-weight:700;letter-spacing:.1em}
+.pair-toggle-row{background:#fff;border:1.5px solid var(--g5);border-radius:12px;padding:14px;margin:12px 0;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s}
+.pair-toggle-row.on{border-color:var(--pink2);background:var(--pink-bg)}
+.pair-ico{font-size:20px;flex-shrink:0}
+.pair-body{flex:1}
+.pair-title{font-size:13px;color:var(--black);font-weight:700;margin-bottom:2px}
+.pair-toggle-row.on .pair-title{color:#4b1528}
+.pair-desc{font-size:10px;color:var(--g2);line-height:1.5}
+.pair-sw{width:40px;height:22px;background:#ddd;border-radius:11px;position:relative;flex-shrink:0;transition:background .2s}
+.pair-toggle-row.on .pair-sw{background:var(--pink2)}
+.pair-sw::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.pair-toggle-row.on .pair-sw::after{transform:translateX(18px)}
+.renew-summary{background:#faf5f8;border-radius:12px;padding:14px;margin:12px 0}
+.rs-row{display:flex;justify-content:space-between;font-size:12px;color:var(--g1);margin-bottom:4px}
+.rs-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:8px;border-top:1px dashed var(--g4)}
+.rs-total-lbl{font-size:12px;color:var(--black);font-weight:700}
+.rs-total-val{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--pink2);font-weight:500}
+.renew-submit{width:100%;background:linear-gradient(135deg,var(--pink),#c0a0e8);color:#fff;border:none;border-radius:14px;padding:16px;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;cursor:pointer;margin-top:6px}
+.renew-submit:active{transform:scale(0.98)}
+.renew-submit:disabled{opacity:0.4;cursor:not-allowed}
+.renew-done{text-align:center;padding:30px 16px}
+.renew-done-ic{width:56px;height:56px;background:var(--pink-bg);color:var(--pink2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;font-weight:700}
+.renew-done-ttl{font-size:15px;color:var(--black);font-weight:700;margin-bottom:8px}
+.renew-done-msg{font-size:12px;color:var(--g1);line-height:1.7;margin-bottom:16px}
+.pay-box{background:linear-gradient(135deg,#fde8f0,#fbeaf0);border:2px solid var(--pink2);border-radius:14px;padding:20px 16px;margin-bottom:16px}
+.pay-lbl{font-size:10px;letter-spacing:.3em;color:#993556;margin-bottom:8px;font-weight:700}
+.pay-amt{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--pink2);font-weight:500;line-height:1.1;margin-bottom:4px}
+.pay-crs{font-size:12px;color:#4b1528;font-weight:700}
+.staff-note{background:#fffbe6;border:1px dashed #e8c86a;border-radius:10px;padding:12px;margin-bottom:16px;display:flex;gap:8px;align-items:flex-start;text-align:left}
+.staff-note-ic{font-size:18px;flex-shrink:0}
+.staff-note-txt{font-size:11px;color:#6a5a2a;line-height:1.6}
+.staff-note-txt strong{display:block;font-size:12px;color:#4a3a1a;margin-bottom:2px}
+
+.admin-page{padding:16px}
+.admin-ttl{font-size:13px;color:var(--black);font-weight:700;margin-bottom:10px;letter-spacing:.05em}
+.admin-card{background:#fff;border:1px solid var(--g5);border-radius:12px;padding:14px;margin-bottom:10px}
+.admin-mem-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:1px solid var(--g5);border-radius:10px;margin-bottom:6px}
+.admin-mem-info{flex:1;min-width:0}
+.admin-mem-name{font-size:13px;color:var(--black);font-weight:700;margin-bottom:2px}
+.admin-mem-sub{font-size:10px;color:var(--g2)}
+.admin-btn{background:linear-gradient(135deg,#333,#555);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0}
+.admin-btn-sm{background:#fff;color:#333;border:1px solid #333;padding:6px 10px;border-radius:8px;font-family:inherit;font-size:10px;font-weight:700;cursor:pointer}
+
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-ttl{font-size:15px;font-weight:700;color:var(--black);margin-bottom:14px;text-align:center}
+.modal-close{background:#fff;color:var(--g2);border:1px solid var(--g4);padding:8px 14px;border-radius:8px;font-family:inherit;font-size:11px;cursor:pointer;margin-top:10px;width:100%}
 </style>
 </head>
 <body>
@@ -92,11 +154,12 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <div class="logo-catch">私は私</div>
     <div class="member-name" id="member-name">...</div>
   </div>
-  <div class="nav">
+  <div class="nav" id="nav-bar">
     <button class="nb nb-attend a" onclick="sw('attend',this)">通う</button>
     <button class="nb nb-body" onclick="sw('body',this)">体重</button>
     <button class="nb nb-training" onclick="sw('training',this)">記録</button>
     <button class="nb nb-growth" onclick="sw('growth',this)">成長</button>
+    <button class="nb nb-renew" onclick="sw('renew',this)">継続</button>
   </div>
 
   <div id="pg-attend" class="pg active">
@@ -191,27 +254,129 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <div class="st" style="margin-top:16px">exercise progress</div>
     <div class="ch-wrap" style="height:160px"><canvas id="ce"></canvas></div>
   </div>
+
+  <div id="pg-renew" class="pg">
+    <div id="renew-form">
+      <div class="renew-hero">
+        <div class="renew-hero-ttl">COURSE RENEWAL</div>
+        <div class="renew-hero-sub">継続割引 10%OFF が自動適用されます<br>いつもありがとうございます</div>
+      </div>
+
+      <div class="st">コースを選択</div>
+      <div id="renew-courses">
+        <div class="course-opt" data-course="8" data-price="49800" onclick="selRenewCourse(this)">
+          <div class="course-opt-row">
+            <div class="course-opt-name">8回コース</div>
+            <div><span class="course-opt-orig">¥49,800</span><span class="course-opt-price" data-basic>¥44,820</span></div>
+          </div>
+        </div>
+        <div class="course-opt rec" data-course="16" data-price="94800" onclick="selRenewCourse(this)">
+          <div class="course-opt-badge">RECOMMEND</div>
+          <div class="course-opt-row">
+            <div class="course-opt-name">16回コース</div>
+            <div><span class="course-opt-orig">¥94,800</span><span class="course-opt-price" data-basic>¥85,320</span></div>
+          </div>
+        </div>
+        <div class="course-opt" data-course="32" data-price="178000" onclick="selRenewCourse(this)">
+          <div class="course-opt-row">
+            <div class="course-opt-name">32回コース</div>
+            <div><span class="course-opt-orig">¥178,000</span><span class="course-opt-price" data-basic>¥160,200</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pair-toggle-row" id="pair-toggle" onclick="togglePair()">
+        <div class="pair-ico">👫</div>
+        <div class="pair-body">
+          <div class="pair-title">ペアで受ける（1回あたり価格が割引）</div>
+          <div class="pair-desc">お友達・ご家族と2人同時受講の場合に適用<br>1回あたり ¥1,500引き</div>
+        </div>
+        <div class="pair-sw"></div>
+      </div>
+
+      <div class="renew-summary" id="renew-summary" style="display:none">
+        <div class="rs-row"><span>定価</span><span id="rs-orig">¥0</span></div>
+        <div class="rs-row"><span>継続割引 10%OFF</span><span id="rs-disc">-¥0</span></div>
+        <div class="rs-row" id="rs-pair-row" style="display:none"><span id="rs-pair-lbl">ペア割</span><span id="rs-pair">-¥0</span></div>
+        <div class="rs-total">
+          <span class="rs-total-lbl">お支払い金額</span>
+          <span class="rs-total-val" id="rs-total">¥0</span>
+        </div>
+      </div>
+
+      <button class="renew-submit" id="renew-submit" onclick="submitRenew()" disabled>継続申込みを送信</button>
+    </div>
+
+    <div id="renew-complete" style="display:none">
+      <div class="renew-done">
+        <div class="renew-done-ic">✓</div>
+        <div class="renew-done-ttl">継続お申込みありがとうございます</div>
+        <div class="renew-done-msg">下記の金額をスタッフにお見せください。<br>当日、店頭にてお支払いをお願いいたします。</div>
+        <div class="pay-box">
+          <div class="pay-lbl">お支払い金額</div>
+          <div class="pay-amt" id="done-amt">¥0</div>
+          <div class="pay-crs" id="done-crs">—</div>
+        </div>
+        <div class="staff-note">
+          <div class="staff-note-ic">📱</div>
+          <div class="staff-note-txt">
+            <strong>スタッフにこの画面を見せてください</strong>
+            お支払い確認後、次回セッションのご予約に進めます
+          </div>
+        </div>
+        <button class="modal-close" onclick="resetRenew()">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pg-admin" class="pg">
+    <div class="admin-ttl">会員一覧（管理モード）</div>
+    <div id="admin-member-list" class="nodata">読み込み中...</div>
+  </div>
+</div>
+
+<div class="modal-bg" id="admin-renew-modal">
+  <div class="modal">
+    <div class="modal-ttl" id="adm-modal-ttl">継続契約を代行入力</div>
+    <div id="adm-renew-body"></div>
+    <button class="modal-close" onclick="closeAdminModal()">キャンセル</button>
+  </div>
 </div>
 
 <script>
-const urlId=(()=>{
-  const fromUrl=new URLSearchParams(location.search).get('id');
-  if(fromUrl){localStorage.setItem('onetreLastId',fromUrl);return fromUrl;}
+const urlParams = new URLSearchParams(location.search);
+const urlId = (() => {
+  const fromUrl = urlParams.get('id');
+  if (fromUrl) { localStorage.setItem('onetreLastId', fromUrl); return fromUrl; }
   return localStorage.getItem('onetreLastId');
 })();
-const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
-let mem=null,mts=[];let C={};
-const now=new Date();const cY=now.getFullYear(),cM=now.getMonth();
-function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
-function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/(1000*60*60*24));}
+const IS_ADMIN = urlParams.get('admin') === '1';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+let T = JSON.parse(localStorage.getItem('onetreT') || '[]');
+let mem = null, mts = [], allMembers = [], allData = null;
+let C = {};
+const now = new Date();
+const cY = now.getFullYear(), cM = now.getMonth();
+
+let renewState = { course: null, coursePrice: 0, pair: false };
+let adminRenewState = { memberId: null, memberName: '', course: null, coursePrice: 0, pair: false };
+
+function dc(k){ if(C[k]){ C[k].destroy(); delete C[k]; } }
+function daysSince(d){ if(!d)return null; return Math.floor((new Date()-new Date(d))/(1000*60*60*24)); }
+
 async function init(){
-  if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
+  if (IS_ADMIN) {
+    document.body.classList.add('admin-mode');
+    initAdminMode();
+    return;
+  }
+  if(!urlId){ showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。'); return; }
   document.getElementById('member-name').textContent='読み込み中...';
   const nameMap={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','DDD4DF':'長尾 儀弘','CZVX34':'古志野 佳恵'};
   try{
     const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
+    allData = data;
     const gasMem=(data.members||[]).find(m=>String(m.id)===urlId);
     mem={id:urlId,name:gasMem?gasMem.name:(nameMap[urlId]||'会員'),weights:[],dob:'',gender:'f'};
     if(data.training&&data.training.length){
@@ -239,7 +404,246 @@ async function init(){
   document.getElementById('member-name').textContent=mem.name+' さん';
   document.title='ONE TRE — '+mem.name;
   renderAttend();renderBody();renderWeightHistory();renderGoal();renderTraining();renderGrowth();
+  updateRenewSummary();
 }
+
+async function initAdminMode(){
+  document.getElementById('member-name').innerHTML = 'トレーナー管理画面<span class="admin-badge">ADMIN</span>';
+  document.getElementById('nav-bar').style.display = 'none';
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('active'));
+  document.getElementById('pg-admin').classList.add('active');
+  try {
+    const res = await fetch(GAS_URL + '?t=' + Date.now(), { method:'GET', mode:'cors' });
+    const data = await res.json();
+    allMembers = data.members || [];
+    allData = data;
+    renderAdminList();
+  } catch(e) {
+    document.getElementById('admin-member-list').innerHTML = '<div class="nodata">読み込み失敗</div>';
+  }
+}
+
+function renderAdminList(){
+  const el = document.getElementById('admin-member-list');
+  if (!allMembers.length) { el.innerHTML = '<div class="nodata">会員がいません</div>'; return; }
+  el.className = '';
+  el.innerHTML = allMembers.map(m => {
+    const url = 'https://onebalanceyume-beep.github.io/private-gym-trainer/member_' + m.id + '.html';
+    return '<div class="admin-mem-row">'
+      + '<div class="admin-mem-info">'
+      + '<div class="admin-mem-name">' + escHtml(m.name) + '</div>'
+      + '<div class="admin-mem-sub">ID: ' + m.id + (m.gender ? ' / ' + m.gender : '') + (m.ageGroup ? ' / ' + m.ageGroup : '') + '</div>'
+      + '</div>'
+      + '<button class="admin-btn-sm" onclick="openMemberPage(\'' + m.id + '\')">マイページ</button>'
+      + '<button class="admin-btn" onclick="openAdminRenew(\'' + m.id + '\',\'' + escHtml(m.name).replace(/'/g,"\\'") + '\')">継続契約</button>'
+      + '</div>';
+  }).join('');
+}
+
+function escHtml(s){ if(!s)return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function openMemberPage(id){ window.open('https://onebalanceyume-beep.github.io/private-gym-trainer/member_'+id+'.html', '_blank'); }
+
+function openAdminRenew(memberId, memberName){
+  adminRenewState = { memberId: memberId, memberName: memberName, course: null, coursePrice: 0, pair: false };
+  document.getElementById('adm-modal-ttl').textContent = memberName + ' さんの継続契約';
+  const body = document.getElementById('adm-renew-body');
+  body.innerHTML = `
+    <div style="font-size:11px;color:var(--g2);margin-bottom:12px;text-align:center">継続割引 10%OFF 自動適用</div>
+    <div id="adm-course-list">
+      <div class="course-opt" data-course="8" data-price="49800" onclick="selAdmCourse(this)">
+        <div class="course-opt-row"><div class="course-opt-name">8回</div><div><span class="course-opt-orig">¥49,800</span><span class="course-opt-price">¥44,820</span></div></div>
+      </div>
+      <div class="course-opt rec" data-course="16" data-price="94800" onclick="selAdmCourse(this)">
+        <div class="course-opt-badge">RECOMMEND</div>
+        <div class="course-opt-row"><div class="course-opt-name">16回</div><div><span class="course-opt-orig">¥94,800</span><span class="course-opt-price">¥85,320</span></div></div>
+      </div>
+      <div class="course-opt" data-course="32" data-price="178000" onclick="selAdmCourse(this)">
+        <div class="course-opt-row"><div class="course-opt-name">32回</div><div><span class="course-opt-orig">¥178,000</span><span class="course-opt-price">¥160,200</span></div></div>
+      </div>
+    </div>
+    <div class="pair-toggle-row" id="adm-pair" onclick="toggleAdmPair()">
+      <div class="pair-ico">👫</div>
+      <div class="pair-body">
+        <div class="pair-title">ペアで受ける</div>
+        <div class="pair-desc">1回あたり ¥1,500引き</div>
+      </div>
+      <div class="pair-sw"></div>
+    </div>
+    <div class="renew-summary" id="adm-summary" style="display:none">
+      <div class="rs-row"><span>定価</span><span id="adm-orig">¥0</span></div>
+      <div class="rs-row"><span>継続割引 10%OFF</span><span id="adm-disc">-¥0</span></div>
+      <div class="rs-row" id="adm-pair-row" style="display:none"><span>ペア割</span><span id="adm-pair-val">-¥0</span></div>
+      <div class="rs-total"><span class="rs-total-lbl">お支払い金額</span><span class="rs-total-val" id="adm-total">¥0</span></div>
+    </div>
+    <button class="renew-submit" id="adm-submit" onclick="submitAdminRenew()" disabled style="margin-top:10px">契約を登録</button>
+  `;
+  document.getElementById('admin-renew-modal').classList.add('show');
+}
+
+function closeAdminModal(){ document.getElementById('admin-renew-modal').classList.remove('show'); }
+
+function selAdmCourse(el){
+  document.querySelectorAll('#adm-course-list .course-opt').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  adminRenewState.course = el.dataset.course;
+  adminRenewState.coursePrice = parseInt(el.dataset.price);
+  updateAdmSummary();
+}
+
+function toggleAdmPair(){
+  adminRenewState.pair = !adminRenewState.pair;
+  document.getElementById('adm-pair').classList.toggle('on', adminRenewState.pair);
+  updateAdmSummary();
+}
+
+function updateAdmSummary(){
+  if (!adminRenewState.course) return;
+  const orig = adminRenewState.coursePrice;
+  const disc = Math.round(orig * 0.1);
+  const afterDisc = orig - disc;
+  const sessions = parseInt(adminRenewState.course) || 0;
+  const pairAmt = adminRenewState.pair ? (1500 * sessions) : 0;
+  const total = afterDisc - pairAmt;
+  document.getElementById('adm-orig').textContent = '¥' + orig.toLocaleString();
+  document.getElementById('adm-disc').textContent = '-¥' + disc.toLocaleString();
+  if (adminRenewState.pair) {
+    document.getElementById('adm-pair-row').style.display = 'flex';
+    document.getElementById('adm-pair-val').textContent = '-¥' + pairAmt.toLocaleString();
+  } else {
+    document.getElementById('adm-pair-row').style.display = 'none';
+  }
+  document.getElementById('adm-total').textContent = '¥' + total.toLocaleString();
+  document.getElementById('adm-summary').style.display = 'block';
+  document.getElementById('adm-submit').disabled = false;
+}
+
+async function submitAdminRenew(){
+  const btn = document.getElementById('adm-submit');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  try {
+    const params = new URLSearchParams({
+      action: 'renewMembership',
+      memberId: adminRenewState.memberId,
+      course: adminRenewState.course,
+      coursePrice: adminRenewState.coursePrice,
+      pair: adminRenewState.pair ? '1' : '0'
+    });
+    const res = await fetch(GAS_URL + '?' + params.toString(), { method: 'GET', mode: 'cors' });
+    const data = await res.json();
+    if (data.ok) {
+      alert('継続契約を登録しました');
+      closeAdminModal();
+    } else {
+      alert('エラー: ' + (data.error || '不明'));
+      btn.disabled = false;
+      btn.textContent = '契約を登録';
+    }
+  } catch(e) {
+    alert('通信エラー: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '契約を登録';
+  }
+}
+
+function selRenewCourse(el){
+  document.querySelectorAll('#renew-courses .course-opt').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  renewState.course = el.dataset.course;
+  renewState.coursePrice = parseInt(el.dataset.price);
+  updateRenewSummary();
+}
+
+function togglePair(){
+  renewState.pair = !renewState.pair;
+  document.getElementById('pair-toggle').classList.toggle('on', renewState.pair);
+  updateRenewSummary();
+}
+
+function updateRenewSummary(){
+  if (!renewState.course) {
+    document.getElementById('renew-summary').style.display = 'none';
+    document.getElementById('renew-submit').disabled = true;
+    return;
+  }
+  const orig = renewState.coursePrice;
+  const disc = Math.round(orig * 0.1);
+  const afterDisc = orig - disc;
+  const sessions = parseInt(renewState.course) || 0;
+  const pairAmt = renewState.pair ? (1500 * sessions) : 0;
+  const total = afterDisc - pairAmt;
+  document.getElementById('rs-orig').textContent = '¥' + orig.toLocaleString();
+  document.getElementById('rs-disc').textContent = '-¥' + disc.toLocaleString();
+  if (renewState.pair) {
+    document.getElementById('rs-pair-row').style.display = 'flex';
+    document.getElementById('rs-pair-lbl').textContent = 'ペア割（¥1,500×' + sessions + '回）';
+    document.getElementById('rs-pair').textContent = '-¥' + pairAmt.toLocaleString();
+  } else {
+    document.getElementById('rs-pair-row').style.display = 'none';
+  }
+  document.getElementById('rs-total').textContent = '¥' + total.toLocaleString();
+  document.getElementById('renew-summary').style.display = 'block';
+  document.getElementById('renew-submit').disabled = false;
+  document.querySelectorAll('#renew-courses .course-opt').forEach(card => {
+    const o = parseInt(card.dataset.price);
+    const s = parseInt(card.dataset.course);
+    const d = Math.round(o * 0.1);
+    const pa = renewState.pair ? (1500 * s) : 0;
+    const f = o - d - pa;
+    card.querySelector('[data-basic]').textContent = '¥' + f.toLocaleString();
+  });
+}
+
+async function submitRenew(){
+  const btn = document.getElementById('renew-submit');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  try {
+    const params = new URLSearchParams({
+      action: 'renewMembership',
+      memberId: urlId,
+      course: renewState.course,
+      coursePrice: renewState.coursePrice,
+      pair: renewState.pair ? '1' : '0'
+    });
+    const res = await fetch(GAS_URL + '?' + params.toString(), { method: 'GET', mode: 'cors' });
+    const data = await res.json();
+    if (data.ok) {
+      const orig = renewState.coursePrice;
+      const disc = Math.round(orig * 0.1);
+      const afterDisc = orig - disc;
+      const sessions = parseInt(renewState.course) || 0;
+      const pairAmt = renewState.pair ? (1500 * sessions) : 0;
+      const total = afterDisc - pairAmt;
+      document.getElementById('done-amt').textContent = '¥' + total.toLocaleString();
+      document.getElementById('done-crs').textContent = renewState.course + '回コース' + (renewState.pair ? '（ペア）' : '');
+      document.getElementById('renew-form').style.display = 'none';
+      document.getElementById('renew-complete').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert('エラー: ' + (data.error || '不明'));
+      btn.disabled = false;
+      btn.textContent = '継続申込みを送信';
+    }
+  } catch(e) {
+    alert('通信エラー: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '継続申込みを送信';
+  }
+}
+
+function resetRenew(){
+  renewState = { course: null, coursePrice: 0, pair: false };
+  document.querySelectorAll('#renew-courses .course-opt').forEach(c => c.classList.remove('sel'));
+  document.getElementById('pair-toggle').classList.remove('on');
+  document.getElementById('renew-summary').style.display = 'none';
+  document.getElementById('renew-submit').disabled = true;
+  document.getElementById('renew-submit').textContent = '継続申込みを送信';
+  document.getElementById('renew-form').style.display = 'block';
+  document.getElementById('renew-complete').style.display = 'none';
+  updateRenewSummary();
+}
+
 function showError(msg){
   document.getElementById('member-name').textContent='';
   document.querySelector('.nav').style.display='none';
@@ -255,7 +659,7 @@ function renderAttend(){
   const last=mts.length?mts[0].date:null;const days=daysSince(last);
   const box=document.getElementById('att-status');
   if(last){
-    const isWarn=days>=7;let msg='';
+    let msg='';
     if(days===0)msg='今日もお疲れさまでした！';
     else if(days<=3)msg='いいペースです。この調子で！';
     else if(days<=6)msg='次のセッションが近づいています';
@@ -376,15 +780,20 @@ function renderGoal(){
   document.getElementById('goal-wt').value=goal;
 }
 init();
-  // ===== バージョン自動更新チェック =====
+
 (async function checkVersion(){
-  const GAS_URL_VER='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-  const CURRENT_VERSION='20260419-001';
+  const VERSION_KEY='onetreMemberPageVersion';
   try{
-    const res=await fetch(GAS_URL_VER+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
+    const res=await fetch(GAS_URL+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
-    if(data.version && data.version!==CURRENT_VERSION){
-      console.log('新バージョン検出: '+CURRENT_VERSION+' → '+data.version);
+    if(!data || !data.version) return;
+    const saved=localStorage.getItem(VERSION_KEY);
+    if(!saved){
+      localStorage.setItem(VERSION_KEY, data.version);
+      return;
+    }
+    if(saved !== data.version){
+      localStorage.setItem(VERSION_KEY, data.version);
       if(confirm('新しいバージョンがあります。更新しますか？')){
         location.reload(true);
       }
