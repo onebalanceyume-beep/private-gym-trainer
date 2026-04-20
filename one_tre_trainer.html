@@ -2,6 +2,9 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/ONE-TRE_%E3%82%A2%E3%83%BC%E3%83%88%E3%83%9C%E3%83%BC%E3%83%89%201.jpg">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -769,6 +772,21 @@ function rPro(){
 
 rCal();
 loadGasMembers();
+// ===== バージョン自動更新チェック =====
+(async function checkVersion(){
+  const GAS_URL_VER='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+  const CURRENT_VERSION='20260419-001';
+  try{
+    const res=await fetch(GAS_URL_VER+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(data.version && data.version!==CURRENT_VERSION){
+      console.log('新バージョン検出: '+CURRENT_VERSION+' → '+data.version);
+      if(confirm('新しいバージョンがあります。更新しますか？')){
+        location.reload(true);
+      }
+    }
+  }catch(e){console.log('バージョンチェック失敗:',e);}
+})();
 </script>
 </body>
 </html>
