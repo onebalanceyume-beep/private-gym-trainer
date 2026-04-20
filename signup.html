@@ -90,6 +90,20 @@
   .auto-discount.men .ad-main{color:#fff;}
   .auto-discount .ad-sub{font-size:11px;color:#99355680;margin-top:4px;}
   .auto-discount.men .ad-sub{color:#b8a06c;}
+  .pair-toggle{background:#fff;border:1px solid #e0d0d8;border-radius:12px;padding:14px 16px;margin-bottom:22px;cursor:pointer;transition:all .3s;}
+  .pair-toggle.active{border:2px solid #e8608a;padding:13px 15px;background:#fde8f010;}
+  .pt-row{display:flex;align-items:center;gap:12px;}
+  .pt-icon{font-size:22px;flex-shrink:0;}
+  .pt-body{flex:1;}
+  .pt-title{font-size:14px;font-weight:500;color:#333;margin-bottom:2px;}
+  .pair-toggle.active .pt-title{color:#e8608a;}
+  .pt-desc{font-size:11px;color:#888;line-height:1.5;}
+  .pt-switch{width:44px;height:24px;background:#ddd;border-radius:12px;position:relative;transition:background .3s;flex-shrink:0;}
+  .pair-toggle.active .pt-switch{background:#e8608a;}
+  .pt-switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+  .pair-toggle.active .pt-switch::after{transform:translateX(20px);}
+  .pair-detail{font-size:11px;color:#99355680;margin-top:8px;padding-top:8px;border-top:1px dashed #f0d0dc;display:none;}
+  .pair-toggle.active .pair-detail{display:block;}
   .price-summary{background:#faf5f8;border-radius:12px;padding:16px;margin-bottom:22px;}
   .price-summary .ps-row{display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;}
   .price-summary .ps-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:10px;border-top:1px dashed #e0d0d8;}
@@ -239,6 +253,20 @@
         <div class="ad-sub" id="discount-sub">初めての方限定特典</div>
       </div>
 
+      <div class="pair-toggle" id="pair-toggle">
+        <div class="pt-row">
+          <div class="pt-icon">👫</div>
+          <div class="pt-body">
+            <div class="pt-title">ペアで受ける（1回あたり価格が割引）</div>
+            <div class="pt-desc">お友達・ご家族と2人同時受講の場合に適用</div>
+          </div>
+          <div class="pt-switch"></div>
+        </div>
+        <div class="pair-detail" id="pair-detail">
+          <span id="pair-detail-text">モニター適用時：1回あたり ¥1,200引き</span>
+        </div>
+      </div>
+
       <div class="course-list" id="course-list">
         <div class="course-card" data-course="8" data-price="49800">
           <div class="row">
@@ -267,6 +295,7 @@
       <div class="price-summary" id="price-summary" style="display:none;">
         <div class="ps-row"><span>定価</span><span id="ps-original">¥0</span></div>
         <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">割引</span><span id="ps-discount-amount">-¥0</span></div>
+        <div class="ps-row" id="ps-pair-row" style="display:none;"><span id="ps-pair-lbl">ペア割</span><span id="ps-pair-amount">-¥0</span></div>
         <div class="ps-total">
           <span class="l">お支払い金額</span>
           <span class="r" id="ps-total">¥0</span>
@@ -354,7 +383,8 @@ let state = {
   memberType: 'new', // new / monitor / continue
   discountRate: 0.20, // 初回は自動で20%OFF
   age: '',
-  emailCheckedFor: ''
+  emailCheckedFor: '',
+  pair: false // ペア割
 };
 
 // ========== DOM参照 ==========
@@ -422,31 +452,62 @@ document.querySelectorAll('.course-card').forEach(el => {
   });
 });
 
+// ========== ペア割トグル ==========
+$('pair-toggle').addEventListener('click', () => {
+  state.pair = !state.pair;
+  $('pair-toggle').classList.toggle('active', state.pair);
+  updatePrice();
+});
+
 // ========== 金額計算 ==========
 function updatePrice(){
   if(!state.course) { priceSummary.style.display='none'; return; }
   const orig = state.coursePrice;
   const rate = state.discountRate;
-  const discount = Math.round(orig * rate);
-  const total = orig - discount;
+  const afterRateDiscount = Math.round(orig * (1 - rate));
+  const rateDiscountAmt = orig - afterRateDiscount;
+
+  // ペア割額を計算
+  const sessions = parseInt(state.course) || 0;
+  const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
+  const pairDiscountAmt = state.pair ? (pairPerSession * sessions) : 0;
+
+  const total = afterRateDiscount - pairDiscountAmt;
+
+  // サマリー更新
   $('ps-original').textContent = '¥' + orig.toLocaleString();
   $('ps-total').textContent = '¥' + total.toLocaleString();
+
+  // 通常割引の表示
   if(rate > 0){
     $('ps-discount-row').style.display = 'flex';
     $('ps-discount-lbl').textContent = state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF';
-    $('ps-discount-amount').textContent = '-¥' + discount.toLocaleString();
+    $('ps-discount-amount').textContent = '-¥' + rateDiscountAmt.toLocaleString();
   } else {
     $('ps-discount-row').style.display = 'none';
   }
+
+  // ペア割の表示
+  if(state.pair){
+    $('ps-pair-row').style.display = 'flex';
+    $('ps-pair-lbl').textContent = 'ペア割（¥' + pairPerSession.toLocaleString() + '×' + sessions + '回）';
+    $('ps-pair-amount').textContent = '-¥' + pairDiscountAmt.toLocaleString();
+  } else {
+    $('ps-pair-row').style.display = 'none';
+  }
+
   priceSummary.style.display = 'block';
+
   // 各コースカードの価格表示を更新
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
-    const disc = Math.round(origin * rate);
-    const final = origin - disc;
+    const sess = parseInt(card.dataset.course);
+    const afterRate = Math.round(origin * (1 - rate));
+    const pairAmt = state.pair ? (pairPerSession * sess) : 0;
+    const final = afterRate - pairAmt;
     const origSpan = card.querySelector('.c-origin');
     const dispSpan = card.querySelector('.c-display');
-    if(rate > 0){
+    if(rate > 0 || state.pair){
       origSpan.style.display = 'inline';
       origSpan.textContent = '¥' + origin.toLocaleString();
       dispSpan.textContent = '¥' + final.toLocaleString();
@@ -457,6 +518,12 @@ function updatePrice(){
       dispSpan.classList.remove('c-discount-price');
     }
   });
+
+  // ペア割の説明文を更新
+  const pairDetailText = state.memberType === 'new'
+    ? 'モニター適用時：1回あたり ¥1,200引き'
+    : '1回あたり ¥1,500引き';
+  $('pair-detail-text').textContent = pairDetailText;
 }
 
 // ========== メールアドレスで会員種別判定 ==========
@@ -529,6 +596,8 @@ submitBtn.addEventListener('click', async () => {
     coursePrice: state.coursePrice,
     memberType: state.memberType,
     discountRate: state.discountRate,
+    pair: state.pair ? '1' : '0',
+    pairDiscount: state.pair ? ((state.memberType === 'new' ? 1200 : 1500) * parseInt(state.course)) : 0,
     regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(',')
   };
   try {
@@ -542,13 +611,22 @@ submitBtn.addEventListener('click', async () => {
     const data = await res.json();
     $('loading').classList.remove('show');
     if(data.ok){
-      // 支払い金額を完了画面に反映
-      const finalPrice = Math.round(state.coursePrice * (1 - state.discountRate));
+      // 支払い金額を完了画面に反映（ペア割も加味）
+      const sessions = parseInt(state.course) || 0;
+      const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
+      const pairAmt = state.pair ? (pairPerSession * sessions) : 0;
+      const finalPrice = Math.round(state.coursePrice * (1 - state.discountRate)) - pairAmt;
       $('pb-amount').textContent = '¥' + finalPrice.toLocaleString();
-      $('pb-course').textContent = state.course + '回コース';
+      $('pb-course').textContent = state.course + '回コース' + (state.pair ? '（ペア）' : '');
+      const parts = [];
       if(state.discountRate > 0){
-        const label = state.memberType === 'continue' ? '継続割引 10%OFF 適用' : 'モニター価格 20%OFF 適用';
-        $('pb-discount').textContent = label + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
+        parts.push(state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF');
+      }
+      if(state.pair){
+        parts.push('ペア割 ¥' + pairAmt.toLocaleString() + '引き');
+      }
+      if(parts.length > 0){
+        $('pb-discount').textContent = parts.join(' + ') + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
       } else {
         $('pb-discount').textContent = '';
       }
