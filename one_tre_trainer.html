@@ -1069,15 +1069,24 @@ function rPro(){
 
 rCal();
 loadGasMembers();
-// ===== バージョン自動更新チェック =====
+// ===== バージョン自動更新チェック（localStorage保存式 / ループ対策済み） =====
 (async function checkVersion(){
   const GAS_URL_VER='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-  const CURRENT_VERSION='20260419-001';
+  const VERSION_KEY='onetreTrainerVersion';
   try{
     const res=await fetch(GAS_URL_VER+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
-    if(data.version && data.version!==CURRENT_VERSION){
-      console.log('新バージョン検出: '+CURRENT_VERSION+' → '+data.version);
+    if(!data || !data.version) return;
+    const saved=localStorage.getItem(VERSION_KEY);
+    if(!saved){
+      // 初回アクセス：現在のバージョンを保存してダイアログは出さない
+      localStorage.setItem(VERSION_KEY, data.version);
+      return;
+    }
+    if(saved !== data.version){
+      // 先に新バージョンを保存してからリロード（ループ防止）
+      localStorage.setItem(VERSION_KEY, data.version);
+      console.log('新バージョン検出: '+saved+' → '+data.version);
       if(confirm('新しいバージョンがあります。更新しますか？')){
         location.reload(true);
       }
