@@ -115,6 +115,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <button class="nbtn active" onclick="sp('dashboard',this)">ダッシュボード</button>
     <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
     <button class="nbtn" onclick="sp('taiken',this)">体験予約</button>
+    <button class="nbtn" onclick="sp('counseling',this)">カウンセリング</button>
     <button class="nbtn" onclick="sp('members',this)">会員管理</button>
     <button class="nbtn" onclick="sp('training',this)">トレーニング</button>
     <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
@@ -175,7 +176,209 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
       <div id="taiken-list">読み込み中...</div>
     </div>
   </div>
+<div id="page-counseling" class="page">
+  <div class="card">
+    <div class="ctitle">カウンセリング記録</div>
+    <div style="font-size:11px;color:var(--g2);margin-bottom:12px;line-height:1.6">ヒアリングしながら入力します。空欄は「該当なし」扱いです。</div>
+    <div class="msel" style="margin-bottom:16px">
+      <select id="counsel-member" onchange="loadCounseling()" style="min-width:200px"><option value="">会員を選択</option></select>
+    </div>
+    <div id="counsel-form" style="display:none">
 
+      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
+        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">① 目的・目標</div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>ジム入会の目的</label>
+          <select id="c-purpose" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>ダイエット</option><option>筋力アップ</option><option>健康維持</option>
+            <option>姿勢改善</option><option>ストレス解消</option><option>大会出場</option>
+            <option>リハビリ</option><option>その他</option>
+          </select>
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>具体的な目標</label>
+          <input id="c-goal" type="text" placeholder="例：夏までに水着が似合う体型">
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>達成期限（あれば）</label>
+          <input id="c-deadline" type="date">
+        </div>
+        <div class="fg">
+          <label>過去のトレーニングジム経験</label>
+          <select id="c-gymexp" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>初めて</option><option>通ったことある</option><option>通ってる</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
+        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">② 運動経験・現状</div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>現在の運動習慣</label>
+          <select id="c-exercisehabit" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>週3以上</option><option>週1-2</option><option>月数回</option><option>ほぼなし</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>過去の運動経験（なければ空欄）</label>
+          <input id="c-exerciseexp" type="text" placeholder="例：学生時代にバスケ部">
+        </div>
+      </div>
+
+      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
+        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">③ 身体の状態・ケガ歴</div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>過去のケガ手術歴</label>
+          <input id="c-injury" type="text" placeholder="例：右膝半月板損傷">
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>現在の通院・服薬</label>
+          <input id="c-medication" type="text" placeholder="例：高血圧の薬">
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>現在痛みのある箇所</label>
+          <input id="c-pain" type="text" placeholder="例：腰痛、肩こり（複数可）">
+        </div>
+        <div class="fg">
+          <label>気になる身体の箇所</label>
+          <input id="c-concern" type="text" placeholder="例：お腹、太もも（複数可）">
+        </div>
+      </div>
+
+      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
+        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">④ ライフスタイル</div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>平均睡眠時間</label>
+          <select id="c-sleep" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>4時間未満</option><option>4-5時間</option><option>6-7時間</option><option>8時間以上</option>
+          </select>
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>就寝時刻</label>
+          <select id="c-bedtime" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>22時前</option><option>22-24時</option><option>24-2時</option><option>2時以降</option>
+          </select>
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>仕事の形態</label>
+          <select id="c-work" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>デスクワーク</option><option>立ち仕事</option><option>肉体労働</option><option>主婦主夫</option><option>その他</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>ストレスレベル（1-5）</label>
+          <select id="c-stress" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
+        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">⑤ メンタル</div>
+        <div class="fg">
+          <label>自分の体に対する自己評価（1-10）</label>
+          <select id="c-selfeval" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+            <option value="">選択してください</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
+        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">⑥ その他</div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>トレーナーに事前に伝えたいこと</label>
+          <input id="c-message" type="text" placeholder="自由記述">
+        </div>
+        <div class="fg">
+          <label>NGなこと</label>
+          <input id="c-ng" type="text" placeholder="例：細かい指摘は苦手">
+        </div>
+      </div>
+
+      <button id="diet-toggle" class="btn-ghost" onclick="toggleDietSection()" style="width:100%;padding:12px;margin-bottom:12px;font-size:12px">＋ ダイエット項目を追加する</button>
+
+      <div id="diet-section" style="display:none">
+        <div style="background:#fff0f5;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #e8608a">
+          <div style="font-size:11px;color:#e8608a;font-weight:500;letter-spacing:.1em;margin-bottom:12px">ダイエット｜身体データ＆減量目標</div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>身長cm</label>
+            <input id="c-height" type="number" placeholder="例：165">
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>目標減量（kg）</label>
+            <input id="c-goalweight" type="number" placeholder="例：5">
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>達成希望期限（あれば）</label>
+            <input id="c-ddeadline" type="date">
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>過去のダイエット経験</label>
+            <select id="c-dpast" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+              <option value="">選択してください</option>
+              <option>初めて</option><option>何度か挑戦</option><option>毎回リバウンド</option><option>成功経験あり</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>試したダイエット方法</label>
+            <input id="c-dmethods" type="text" placeholder="例：ケトン、ローファット">
+          </div>
+        </div>
+
+        <div style="background:#fff0f5;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #e8608a">
+          <div style="font-size:11px;color:#e8608a;font-weight:500;letter-spacing:.1em;margin-bottom:12px">ダイエット｜食生活</div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>1日の食事回数</label>
+            <select id="c-meal" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+              <option value="">選択してください</option>
+              <option>1回</option><option>2回</option><option>3回</option><option>4回以上</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>朝食を食べる頻度</label>
+            <select id="c-breakfast" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+              <option value="">選択してください</option>
+              <option>毎日</option><option>週4-5</option><option>週2-3</option><option>ほぼなし</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>外食の頻度</label>
+            <select id="c-eatout" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+              <option value="">選択してください</option>
+              <option>ほぼ毎日</option><option>週3-4</option><option>週1-2</option><option>ほぼなし</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>お酒の頻度</label>
+            <select id="c-alcohol" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
+              <option value="">選択してください</option>
+              <option>毎日</option><option>週3-4</option><option>週1-2</option><option>たまに</option><option>飲まない</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:#fff0f5;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #e8608a">
+          <div style="font-size:11px;color:#e8608a;font-weight:500;letter-spacing:.1em;margin-bottom:12px">ダイエット｜モチベーション</div>
+          <div class="fg">
+            <label>ダイエットのモチベーション</label>
+            <input id="c-motivation" type="text" placeholder="例：結婚式のため、健康診断で引っかかった">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-black" onclick="saveCounseling()" style="width:100%;padding:14px;font-size:13px;margin-top:8px">カウンセリングを保存</button>
+    </div>
+  </div>
+</div>
   <div id="page-members" class="page">
     <div class="card">
       <div class="ctitle">ボディバランス スコア設定</div>
