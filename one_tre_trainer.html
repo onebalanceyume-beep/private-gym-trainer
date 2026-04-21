@@ -99,9 +99,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .taiken-meta span{word-break:break-all}
 .taiken-cancel{font-size:10px;padding:6px 14px;background:#fff;border:1px solid #e86060;color:#e86060;cursor:pointer;font-family:'Noto Sans JP',sans-serif;letter-spacing:.04em}
 .taiken-cancel:hover{background:#e86060;color:#fff}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(120%);background:#222;color:#fff;padding:12px 24px;border-radius:30px;font-size:13px;font-family:'Noto Sans JP',sans-serif;font-weight:500;z-index:10000;transition:transform .3s ease,opacity .3s;box-shadow:0 4px 20px rgba(0,0,0,0.3);opacity:0;letter-spacing:.04em;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.error{background:#c83030}
+.toast.success{background:#2e7d32}
+.cday.has{background:var(--black);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px;position:relative}
+.cday.has-multi{background:#c8a030;color:#fff}
+.cday-badge{position:absolute;top:-3px;right:-6px;background:#c83030;color:#fff;font-size:7px;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;font-weight:700}
+
 </style>
 </head>
 <body>
+<div class="toast" id="toast"></div>
 <div class="app">
   <div class="topbar">
     <div>
@@ -477,6 +486,52 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+
+// ===== トースト通知 =====
+function showToast(msg, type){
+  const el = document.getElementById('toast');
+  if(!el) return;
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(el._tid);
+  el._tid = setTimeout(()=>{ el.className = 'toast'; }, 1500);
+}
+
+// ===== 日本語日付フォーマット =====
+// 2026-04-17 → 4月17日（金）
+function formatJpDate(dateStr){
+  if(!dateStr) return '';
+  const s = String(dateStr).trim();
+  // Dateに変換を試みる
+  let d;
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)){
+    d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
+  } else {
+    d = new Date(s);
+  }
+  if(isNaN(d.getTime())) return s;
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const wd = ['日','月','火','水','木','金','土'][d.getDay()];
+  return m + '月' + day + '日（' + wd + '）';
+}
+function formatJpDateYear(dateStr){
+  if(!dateStr) return '';
+  const s = String(dateStr).trim();
+  let d;
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)){
+    d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
+  } else {
+    d = new Date(s);
+  }
+  if(isNaN(d.getTime())) return s;
+  const y = d.getFullYear();
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const wd = ['日','月','火','水','木','金','土'][d.getDay()];
+  return y + '年' + m + '月' + day + '日（' + wd + '）';
+}
+
 const NAME_KEY='お名前（長尾儀弘）';
 let T=[];
 let gasMembers=[];
@@ -597,7 +652,7 @@ function renderSales(){
   const fl=document.getElementById('form-list');fl.innerHTML='';
   [...data].filter(row=>{const ts=row['タイムスタンプ'];if(!ts)return false;return new Date(ts).getFullYear()===salesViewYear;}).reverse().slice(0,10).forEach(row=>{
     const div=document.createElement('div');div.className='pi';
-    const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
+    const ts=row['タイムスタンプ']?formatJpDate(new Date(row['タイムスタンプ']).toISOString().slice(0,10)):'';
     const name=row[NAME_KEY]||row['お名前']||'-';
     const course=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
     const actual=parseFloat(row['実際の金額']||0);
@@ -663,13 +718,13 @@ async function cancelTaiken(token,name,reserveDate){
     const res=await fetch(GAS_URL+'?action=cancelTaikenByTrainer&token='+encodeURIComponent(token)+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
     if(data.ok){
-      alert('キャンセル完了しました。予約者に通知メールを送信しました。');
-      loadTaikenList();
+      showToast('✓ キャンセル完了（通知メール送信済）','success');
+      setTimeout(()=>loadTaikenList(), 500);
     }else{
-      alert('エラー：'+(data.error||'不明なエラー'));
+      showToast('エラー: '+(data.error||'不明'),'error');
     }
   }catch(err){
-    alert('通信エラーが発生しました');
+    showToast('通信エラー','error');
   }
 }
 
@@ -706,8 +761,8 @@ function saveBodyScore(){
   localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
   const params=new URLSearchParams({action:'saveBodyScore',memberId:mid,strength:s,core:c,agility:a,flex:f});
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-  .then(()=>alert('スコアを保存しました。会員のマイページを開き直すと反映されます。'))
-  .catch(()=>alert('スコアを保存しました（オフラインモード）。'));
+  .then(()=>showToast('✓ スコアを保存しました','success'))
+  .catch(()=>showToast('スコア保存（オフライン）','success'));
 }
 
 function sp(name,btn){
@@ -809,10 +864,10 @@ function saveTr(){
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
   .then(()=>{
     document.getElementById('sw').innerHTML='';
-    alert('保存しました。最新データを読み込みます。');
-    loadGasMembers(true);
+    showToast('✓ 保存しました','success');
+    setTimeout(()=>loadGasMembers(true), 500);
   })
-  .catch(()=>alert('保存に失敗しました。通信を確認してください。'));
+  .catch(()=>showToast('保存に失敗しました','error'));
 }
 
 function rRec(){
@@ -827,7 +882,7 @@ function rRec(){
     d.style.cssText='flex-direction:column;align-items:flex-start;gap:8px';
     d.innerHTML=`
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
-        <div class="pn">${t.date}${m?' — '+m.name:''}</div>
+        <div class="pn">${formatJpDate(t.date)}${m?' — '+m.name:''}</div>
         <div style="display:flex;gap:6px">
           <button onclick="editRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #5BB9CD;color:#5BB9CD;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">修正</button>
           <button onclick="deleteRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #e86060;color:#e86060;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">削除</button>
@@ -844,10 +899,10 @@ function deleteRec(memberId,date){
   const params=new URLSearchParams({action:'deleteTraining',memberId:memberId,date:date});
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
   .then(()=>{
-    alert('削除しました。最新データを読み込みます。');
-    loadGasMembers(true);
+    showToast('✓ 削除しました','success');
+    setTimeout(()=>loadGasMembers(true), 500);
   })
-  .catch(()=>alert('削除に失敗しました。'));
+  .catch(()=>showToast('削除に失敗しました','error'));
 }
 
 function editRec(memberId,date){
@@ -927,8 +982,8 @@ function saveEditRec(btn){
   if(oldMid===newMid){
     const params=new URLSearchParams({action:'updateTraining',memberId:newMid,oldDate:oldDate,date:newDate,sets:JSON.stringify(setsArr)});
     fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-    .then(()=>{modal.remove();alert('修正しました。最新データを読み込みます。');loadGasMembers(true);})
-    .catch(()=>alert('修正に失敗しました。'));
+    .then(()=>{modal.remove();showToast('✓ 修正しました','success');setTimeout(()=>loadGasMembers(true), 500);})
+    .catch(()=>showToast('修正に失敗しました','error'));
   }else{
     const delParams=new URLSearchParams({action:'deleteTraining',memberId:oldMid,date:oldDate});
     fetch(GAS_URL+'?'+delParams.toString(),{method:'GET',mode:'cors'})
@@ -936,8 +991,8 @@ function saveEditRec(btn){
       const addParams=new URLSearchParams({action:'saveTraining',memberId:newMid,date:newDate,sets:JSON.stringify(setsArr)});
       return fetch(GAS_URL+'?'+addParams.toString(),{method:'GET',mode:'cors'});
     })
-    .then(()=>{modal.remove();alert('修正しました。最新データを読み込みます。');loadGasMembers(true);})
-    .catch(()=>alert('修正に失敗しました。'));
+    .then(()=>{modal.remove();showToast('✓ 修正しました','success');setTimeout(()=>loadGasMembers(true), 500);})
+    .catch(()=>showToast('修正に失敗しました','error'));
   }
 }
 // ===== カウンセリング機能 =====
@@ -1028,19 +1083,61 @@ function saveCounseling(){
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
   .then(r=>r.json())
   .then(result=>{
-    if(result && result.ok)alert('カウンセリングを保存しました。');
-    else alert('保存に失敗しました：'+(result.error||'不明'));
+    if(result && result.ok)showToast('✓ カウンセリングを保存しました','success');
+    else showToast('保存に失敗: '+(result.error||'不明'),'error');
   })
-  .catch(()=>alert('通信エラーが発生しました。'));
+  .catch(()=>showToast('通信エラー','error'));
 }
 function rCal(){
   const mid=document.getElementById('scal').value;
   document.getElementById('ctitle').textContent=cY+'年'+(cM2+1)+'月';
   document.getElementById('chdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>`<div class="cday hdr">${d}</div>`).join('');
   const first=new Date(cY,cM2,1).getDay(),days=new Date(cY,cM2+1,0).getDate(),today=new Date().toISOString().slice(0,10);
+  // 日付ごとの実施人数をカウント（会員未選択=全員、選択時=その人だけ）
+  const dayStats={};
+  T.forEach(t=>{
+    if(mid && t.memberId!==mid) return;
+    if(!t.date || !t.date.startsWith(`${cY}-${String(cM2+1).padStart(2,'0')}-`)) return;
+    const dayKey=t.date.slice(0,10);
+    if(!dayStats[dayKey]) dayStats[dayKey]=new Set();
+    dayStats[dayKey].add(t.memberId);
+  });
   let html=Array(first).fill('<div class="cday"></div>').join('');
-  for(let d=1;d<=days;d++){const ds=`${cY}-${String(cM2+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const has=T.some(t=>t.date===ds&&(!mid||t.memberId===mid));const isT=ds===today;html+=`<div class="cday${has?' has':''}${isT&&!has?' today':''}">${d}</div>`;}
+  for(let d=1;d<=days;d++){
+    const ds=`${cY}-${String(cM2+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const memberSet=dayStats[ds];
+    const count=memberSet?memberSet.size:0;
+    const hasTraining=count>0;
+    const isMulti=count>=2;
+    const isT=ds===today;
+    const badge=(!mid && count>=2)?`<span class="cday-badge">${count}</span>`:'';
+    let cls='cday';
+    if(hasTraining){
+      cls+=' has';
+      if(isMulti) cls+=' has-multi';
+    }else if(isT){
+      cls+=' today';
+    }
+    html+=`<div class="${cls}">${d}${badge}</div>`;
+  }
   document.getElementById('cbody').innerHTML=html;
+  // 会員未選択時の下部サマリー
+  const totalDays=Object.keys(dayStats).length;
+  const totalSessions=Object.values(dayStats).reduce((a,s)=>a+s.size,0);
+  let summaryEl=document.getElementById('cal-summary');
+  if(!summaryEl){
+    summaryEl=document.createElement('div');
+    summaryEl.id='cal-summary';
+    summaryEl.style.cssText='margin-top:16px;padding:12px 14px;background:#fafafa;border:.5px solid var(--g5);font-size:11px;color:var(--g1);line-height:1.8';
+    document.getElementById('cbody').parentElement.appendChild(summaryEl);
+  }
+  if(mid){
+    const allMems=getAllMembers();
+    const memName=(allMems.find(m=>m.id===mid)||{}).name||'';
+    summaryEl.innerHTML=`<strong style="color:var(--black)">${memName} さん</strong> の ${cY}年${cM2+1}月<br>実施日数：${totalDays}日`;
+  }else{
+    summaryEl.innerHTML=`<strong style="color:var(--black)">${cY}年${cM2+1}月</strong> のパーソナルトレーニング実施状況<br>実施日数：${totalDays}日 / 延べセッション数：${totalSessions}回`;
+  }
 }
 function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
 function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
@@ -1060,7 +1157,7 @@ function rPro(){
   C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#5BB9CD',backgroundColor:'rgba(91,185,205,0.08)',tension:0.4,pointRadius:4,pointBackgroundColor:'#5BB9CD',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
   const prs=calcPRs(mts),pl=document.getElementById('pr-list');pl.innerHTML='';
   if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--g3)">記録がありません</p>';return;}
-  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${pr.date}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
+  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${formatJpDate(pr.date)}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
   const cmp=document.getElementById('pcmp');cmp.innerHTML='';
   if(mts.length<2){cmp.innerHTML='<p style="font-size:13px;color:var(--g3)">2回以上記録すると比較が表示されます</p>';return;}
   const last=mts[mts.length-1],prev=mts[mts.length-2];
@@ -1072,7 +1169,7 @@ loadGasMembers();
 // ===== バージョン自動更新チェック（localStorage保存式 / ループ対策済み） =====
 (async function checkVersion(){
   const GAS_URL_VER='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-  const VERSION_KEY='onetreTrainerVersion';
+  const VERSION_KEY='onetreTrainerVer_v2';
   try{
     const res=await fetch(GAS_URL_VER+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
