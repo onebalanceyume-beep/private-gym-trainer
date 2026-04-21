@@ -201,12 +201,12 @@
 
       <div class="field">
         <label>お名前<span class="req">*</span></label>
-        <input type="text" id="f-name" placeholder="長尾 儀弘">
+        <input type="text" id="f-name" placeholder="長澤 まさみ">
       </div>
 
       <div class="field">
         <label>ふりがな<span class="req">*</span></label>
-        <input type="text" id="f-kana" placeholder="ながお よしひろ">
+        <input type="text" id="f-kana" placeholder="ながさわ まさみ">
       </div>
 
       <div class="field">
@@ -419,14 +419,21 @@ function updateGenderUI(){
   hero.classList.add(isW ? 'women' : 'men');
   autoDisc.classList.toggle('men', !isW);
   submitBtn.classList.toggle('men', !isW);
+  // 名前・ふりがなのプレースホルダーを男女で切替
+  const nameInput = document.getElementById('f-name');
+  const kanaInput = document.getElementById('f-kana');
   if(isW){
     heroEyebrow.textContent = 'FOR WOMEN';
     heroCatch.textContent = '私は私';
     heroAccent.textContent = '— 女性が、安心して通えるジム。—';
+    if(nameInput) nameInput.placeholder = '長澤 まさみ';
+    if(kanaInput) kanaInput.placeholder = 'ながさわ まさみ';
   } else {
     heroEyebrow.textContent = 'FOR MEN';
-    heroCatch.textContent = '挑戦した道が人の通り道になる';
+    heroCatch.textContent = '挑戦の先に成長がある';
     heroAccent.textContent = '— ブレない身体を、創る。—';
+    if(nameInput) nameInput.placeholder = '木村 拓哉';
+    if(kanaInput) kanaInput.placeholder = 'きむら たくや';
   }
 }
 
