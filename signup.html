@@ -189,6 +189,47 @@
   .coupon-input-wrap{display:none;margin-top:10px;}
   .coupon-input-wrap.show{display:block;}
   .coupon-input-wrap input{width:100%;padding:10px 14px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;}
+
+  /* ===== 隠しボタン発動時の特別割引モーダル ===== */
+  .staff-modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9998;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;backdrop-filter:blur(4px);}
+  .staff-modal-bg.show{display:flex;}
+  .staff-modal{background:linear-gradient(135deg,#1a1a1a,#3a3a3a);max-width:400px;width:100%;margin:auto;padding:22px;border-radius:16px;color:#fff;font-family:'Hiragino Sans','Yu Gothic',sans-serif;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .sm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #555;}
+  .sm-head-l .sm-eyebrow{font-size:9px;color:#c8b080;letter-spacing:0.2em;}
+  .sm-head-l .sm-ttl{font-size:15px;font-weight:500;margin-top:2px;}
+  .sm-close{font-size:24px;color:#888;cursor:pointer;background:none;border:none;padding:0 4px;line-height:1;}
+  .sm-sec{margin-bottom:14px;}
+  .sm-sec-lbl{font-size:10px;color:#aaa;letter-spacing:0.12em;margin-bottom:6px;}
+  .sm-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .sm-type{padding:10px;background:#3a3a3a;border:1px solid #555;border-radius:8px;text-align:center;font-size:12px;cursor:pointer;color:#ccc;transition:all .2s;}
+  .sm-type.sel{background:#c8b080;color:#1a1a1a;border-color:#c8b080;font-weight:500;}
+  .sm-value-wrap{display:flex;align-items:center;gap:8px;padding:12px;background:#3a3a3a;border-radius:8px;border:1px solid #555;}
+  .sm-value-wrap input{flex:1;background:transparent;border:none;color:#fff;font-size:26px;font-family:'Times New Roman',serif;outline:none;text-align:right;min-width:60px;font-weight:500;}
+  .sm-value-unit{font-size:16px;color:#c8b080;font-weight:500;}
+  .sm-memo{width:100%;padding:10px;background:#3a3a3a;border:1px solid #555;border-radius:8px;font-size:12px;color:#fff;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;}
+  .sm-memo::placeholder{color:#777;}
+  .sm-preview{background:#0a0a0a;border:1px solid #c8b080;border-radius:10px;padding:12px;margin-bottom:14px;}
+  .sm-prev-row{display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-bottom:4px;}
+  .sm-prev-row.disc{color:#c8b080;font-weight:500;}
+  .sm-prev-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;margin-top:6px;border-top:1px dashed #555;}
+  .sm-prev-total .l{font-size:11px;color:#fff;}
+  .sm-prev-total .r{font-family:'Times New Roman',serif;font-size:24px;color:#c8b080;font-weight:500;}
+  .sm-btn-row{display:flex;gap:6px;}
+  .sm-btn-cancel{flex:1;padding:11px;background:#3a3a3a;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;}
+  .sm-btn-apply{flex:2;padding:11px;background:#c8b080;color:#1a1a1a;border:none;border-radius:8px;font-size:12px;font-weight:500;letter-spacing:0.1em;cursor:pointer;font-family:inherit;}
+  .sm-btn-apply:disabled{opacity:0.4;cursor:not-allowed;}
+  .sm-btn-clear{padding:11px 16px;background:none;color:#888;border:1px solid #555;border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit;}
+  /* 特別割引適用中の表示 */
+  .staff-applied-badge{background:linear-gradient(135deg,#3a3a3a,#1a1a1a);color:#c8b080;padding:10px 14px;border-radius:10px;font-size:11px;margin-bottom:14px;display:none;align-items:center;justify-content:space-between;letter-spacing:0.05em;border:1px solid #c8b080;}
+  .staff-applied-badge.show{display:flex;}
+  .staff-applied-badge .sab-info{flex:1;}
+  .staff-applied-badge .sab-lbl{font-size:8px;color:#888;letter-spacing:0.2em;margin-bottom:2px;}
+  .staff-applied-badge .sab-main{color:#c8b080;font-weight:500;}
+  .staff-applied-badge .sab-clear{font-size:16px;color:#888;cursor:pointer;padding:0 4px;margin-left:8px;}
+  /* ロゴ長押し時のフィードバック */
+  .logo-head img{transition:all .3s;}
+  .logo-head img.pressing{opacity:0.5;transform:scale(0.95);}
+
   @media (max-width:380px){
     .wrap{padding:12px 10px 30px;}
     .body{padding:22px 16px 28px;}
@@ -198,6 +239,67 @@
 </style>
 </head>
 <body class="gender-women">
+
+<div class="staff-modal-bg" id="staff-modal-bg">
+  <div class="staff-modal">
+    <div class="sm-head">
+      <div class="sm-head-l">
+        <div class="sm-eyebrow">STAFF ONLY</div>
+        <div class="sm-ttl">特別割引パネル</div>
+      </div>
+      <button class="sm-close" onclick="closeStaffModal()">×</button>
+    </div>
+
+    <div class="sm-sec">
+      <div class="sm-sec-lbl">割引タイプ</div>
+      <div class="sm-type-grid">
+        <div class="sm-type" data-type="yen" onclick="selectStaffType('yen')">定額（円）</div>
+        <div class="sm-type sel" data-type="percent" onclick="selectStaffType('percent')">割引率（%）</div>
+      </div>
+    </div>
+
+    <div class="sm-sec">
+      <div class="sm-sec-lbl">値を入力</div>
+      <div class="sm-value-wrap">
+        <input type="number" id="staff-value" min="0" step="1" placeholder="15" oninput="updateStaffPreview()">
+        <div class="sm-value-unit" id="staff-unit">%OFF</div>
+      </div>
+    </div>
+
+    <div class="sm-sec">
+      <div class="sm-sec-lbl">割引理由（メモ）</div>
+      <input type="text" class="sm-memo" id="staff-memo" placeholder="例：友人紹介割" maxlength="60">
+    </div>
+
+    <div class="sm-preview" id="sm-preview" style="display:none">
+      <div class="sm-prev-row"><span id="sm-prev-course">16回コース定価</span><span id="sm-prev-orig">¥94,800</span></div>
+      <div class="sm-prev-row" id="sm-prev-auto-row"><span id="sm-prev-auto-lbl">モニター 20%OFF</span><span id="sm-prev-auto-amt">-¥18,960</span></div>
+      <div class="sm-prev-row disc"><span id="sm-prev-disc-lbl">特別割引</span><span id="sm-prev-disc-amt">-¥0</span></div>
+      <div class="sm-prev-total">
+        <span class="l">お客様価格</span>
+        <span class="r" id="sm-prev-total">¥0</span>
+      </div>
+    </div>
+
+    <div class="sm-btn-row">
+      <button class="sm-btn-clear" onclick="clearStaffDiscount()">解除</button>
+      <button class="sm-btn-apply" id="sm-btn-apply" onclick="applyStaffDiscount()" disabled>割引を適用</button>
+    </div>
+  </div>
+</div>
+
+<div class="staff-applied-badge" id="staff-applied-badge">
+  <div class="sab-info">
+    <div class="sab-lbl">STAFF ONLY — 特別割引適用中</div>
+    <div class="sab-main" id="sab-main-text">—</div>
+  </div>
+  <span class="sab-clear" onclick="clearStaffDiscount();updateStaffAppliedBadge();updatePrice();" title="解除">×</span>
+</div>
+
+<!-- スタッフ限定：割引パネル（ロゴ2秒長押しで開く） -->
+
+
+
 
 <div class="wrap">
 
@@ -517,7 +619,19 @@ function updatePrice(){
   const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
   const pairDiscountAmt = state.pair ? (pairPerSession * sessions) : 0;
 
-  const total = afterRateDiscount - pairDiscountAmt;
+  // ★特別割引（隠しボタン）
+  const sd = window.staffDiscount || {applied:false};
+  let staffDiscAmt = 0;
+  if(sd.applied && sd.value > 0){
+    const base = afterRateDiscount; // 通常割引適用後の金額が対象
+    if(sd.type === 'percent'){
+      staffDiscAmt = Math.round(base * (sd.value / 100));
+    } else if(sd.type === 'yen'){
+      staffDiscAmt = Math.min(sd.value, base);
+    }
+  }
+
+  const total = Math.max(0, afterRateDiscount - pairDiscountAmt - staffDiscAmt);
 
   // サマリー更新
   $('ps-original').textContent = '¥' + orig.toLocaleString();
@@ -541,18 +655,44 @@ function updatePrice(){
     $('ps-pair-row').style.display = 'none';
   }
 
+  // 特別割引の表示
+  let staffRow = $('ps-staff-row');
+  if(!staffRow){
+    staffRow = document.createElement('div');
+    staffRow.id = 'ps-staff-row';
+    staffRow.className = 'ps-row';
+    staffRow.style.color = '#c8b080';
+    staffRow.innerHTML = '<span id="ps-staff-lbl">特別割引</span><span id="ps-staff-amount">-¥0</span>';
+    const totalRow = document.querySelector('.price-summary .ps-total');
+    if(totalRow) totalRow.parentNode.insertBefore(staffRow, totalRow);
+  }
+  if(sd.applied && staffDiscAmt > 0){
+    staffRow.style.display = 'flex';
+    const lbl = sd.type === 'percent' ? ('特別 ' + sd.value + '%OFF') : ('特別 ¥' + sd.value.toLocaleString() + '引き');
+    $('ps-staff-lbl').textContent = lbl + (sd.memo ? '（' + sd.memo + '）' : '');
+    $('ps-staff-amount').textContent = '-¥' + staffDiscAmt.toLocaleString();
+  } else {
+    staffRow.style.display = 'none';
+  }
+
   priceSummary.style.display = 'block';
 
-  // 各コースカードの価格表示を更新
+  // 各コースカードの価格表示を更新（特別割引も反映）
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
     const sess = parseInt(card.dataset.course);
     const afterRate = Math.round(origin * (1 - rate));
     const pairAmt = state.pair ? (pairPerSession * sess) : 0;
-    const final = afterRate - pairAmt;
+    // このカード単位で特別割引も再計算
+    let cardStaffAmt = 0;
+    if(sd.applied && sd.value > 0){
+      if(sd.type === 'percent') cardStaffAmt = Math.round(afterRate * (sd.value / 100));
+      else if(sd.type === 'yen') cardStaffAmt = Math.min(sd.value, afterRate);
+    }
+    const final = Math.max(0, afterRate - pairAmt - cardStaffAmt);
     const origSpan = card.querySelector('.c-origin');
     const dispSpan = card.querySelector('.c-display');
-    if(rate > 0 || state.pair){
+    if(rate > 0 || state.pair || cardStaffAmt > 0){
       origSpan.style.display = 'inline';
       origSpan.textContent = '¥' + origin.toLocaleString();
       dispSpan.textContent = '¥' + final.toLocaleString();
@@ -643,7 +783,11 @@ submitBtn.addEventListener('click', async () => {
     discountRate: state.discountRate,
     pair: state.pair ? '1' : '0',
     pairDiscount: state.pair ? ((state.memberType === 'new' ? 1200 : 1500) * parseInt(state.course)) : 0,
-    regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(',')
+    regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(','),
+    // 特別割引（隠しボタン）
+    staffDiscountType: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.type : '',
+    staffDiscountValue: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.value : 0,
+    staffDiscountMemo: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.memo : ''
   };
   try {
     const formData = new URLSearchParams();
@@ -656,19 +800,41 @@ submitBtn.addEventListener('click', async () => {
     const data = await res.json();
     $('loading').classList.remove('show');
     if(data.ok){
-      // 支払い金額を完了画面に反映（ペア割も加味）
+      // 支払い金額を完了画面に反映（ペア割＋特別割引も加味）
       const sessions = parseInt(state.course) || 0;
       const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
       const pairAmt = state.pair ? (pairPerSession * sessions) : 0;
-      const finalPrice = Math.round(state.coursePrice * (1 - state.discountRate)) - pairAmt;
+
+      // 通常割引後
+      const afterAutoDisc = Math.round(state.coursePrice * (1 - state.discountRate));
+      const autoDiscAmt = state.coursePrice - afterAutoDisc;
+
+      // 特別割引（隠しボタン）
+      const sd = window.staffDiscount || {applied:false};
+      let staffAmt = 0;
+      if(sd.applied && sd.value > 0){
+        if(sd.type === 'percent') staffAmt = Math.round(afterAutoDisc * (sd.value / 100));
+        else if(sd.type === 'yen') staffAmt = Math.min(sd.value, afterAutoDisc);
+      }
+
+      const finalPrice = Math.max(0, afterAutoDisc - pairAmt - staffAmt);
+
+      // ラベル組み立て
+      let discountLabel = '';
+      if(state.discountRate > 0){
+        discountLabel = state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF';
+      }
+
       $('pb-amount').textContent = '¥' + finalPrice.toLocaleString();
       $('pb-course').textContent = state.course + '回コース' + (state.pair ? '（ペア）' : '');
       const parts = [];
-      if(state.discountRate > 0){
-        parts.push(state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF');
-      }
+      if(discountLabel) parts.push(discountLabel);
       if(state.pair){
         parts.push('ペア割 ¥' + pairAmt.toLocaleString() + '引き');
+      }
+      if(sd.applied && staffAmt > 0){
+        const sLabel = sd.type === 'percent' ? ('特別 ' + sd.value + '%OFF') : ('特別 ¥' + sd.value.toLocaleString() + '引き');
+        parts.push(sLabel + (sd.memo ? '（' + sd.memo + '）' : ''));
       }
       if(parts.length > 0){
         $('pb-discount').textContent = parts.join(' + ') + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
@@ -703,6 +869,184 @@ submitBtn.addEventListener('click', async () => {
 updateGenderUI();
 // 初期状態でモニター価格表示
 autoDisc.classList.add('show');
+
+
+
+
+
+// ===== 隠しボタン：ロゴ長押しで割引パネル起動 =====
+(function(){
+  const logoImg = document.querySelector('.logo-head img');
+  if(!logoImg) return;
+  let pressTimer = null;
+  let startTime = 0;
+  const LONG_PRESS_MS = 2000;
+
+  function startPress(ev){
+    startTime = Date.now();
+    logoImg.classList.add('pressing');
+    pressTimer = setTimeout(()=>{
+      logoImg.classList.remove('pressing');
+      openStaffModal();
+      // 触覚フィードバック（対応端末のみ）
+      if(navigator.vibrate) navigator.vibrate(50);
+    }, LONG_PRESS_MS);
+  }
+  function cancelPress(){
+    logoImg.classList.remove('pressing');
+    if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; }
+  }
+  // タッチ・マウス両対応
+  logoImg.addEventListener('touchstart', startPress, {passive:true});
+  logoImg.addEventListener('touchend', cancelPress);
+  logoImg.addEventListener('touchcancel', cancelPress);
+  logoImg.addEventListener('touchmove', cancelPress);
+  logoImg.addEventListener('mousedown', startPress);
+  logoImg.addEventListener('mouseup', cancelPress);
+  logoImg.addEventListener('mouseleave', cancelPress);
+  // 右クリック（長押し判定用の補助）無効化
+  logoImg.addEventListener('contextmenu', e=>e.preventDefault());
+})();
+
+// グローバルな特別割引state
+window.staffDiscount = {
+  type: '',        // '' / 'percent' / 'yen'
+  value: 0,
+  memo: '',
+  applied: false
+};
+
+function openStaffModal(){
+  // 現在の入力値を復元
+  document.querySelectorAll('.sm-type').forEach(el => {
+    el.classList.toggle('sel', el.dataset.type === (window.staffDiscount.type || 'percent'));
+  });
+  document.getElementById('staff-value').value = window.staffDiscount.value > 0 ? window.staffDiscount.value : '';
+  document.getElementById('staff-memo').value = window.staffDiscount.memo || '';
+  document.getElementById('staff-unit').textContent = (window.staffDiscount.type === 'yen') ? '円引き' : '%OFF';
+  updateStaffPreview();
+  document.getElementById('staff-modal-bg').classList.add('show');
+}
+
+function closeStaffModal(){
+  document.getElementById('staff-modal-bg').classList.remove('show');
+}
+
+function selectStaffType(type){
+  document.querySelectorAll('.sm-type').forEach(el => {
+    el.classList.toggle('sel', el.dataset.type === type);
+  });
+  document.getElementById('staff-unit').textContent = (type === 'yen') ? '円引き' : '%OFF';
+  updateStaffPreview();
+}
+
+function updateStaffPreview(){
+  const selType = document.querySelector('.sm-type.sel');
+  const type = selType ? selType.dataset.type : 'percent';
+  const val = parseFloat(document.getElementById('staff-value').value) || 0;
+  const applyBtn = document.getElementById('sm-btn-apply');
+  const prev = document.getElementById('sm-preview');
+
+  if(val <= 0){
+    prev.style.display = 'none';
+    applyBtn.disabled = true;
+    return;
+  }
+
+  // 現在のコース情報を取得（signup本体のstate.courseから）
+  const selectedCourse = document.querySelector('.course-card.selected');
+  if(!selectedCourse){
+    prev.style.display = 'none';
+    applyBtn.disabled = true;
+    return;
+  }
+  const orig = parseInt(selectedCourse.dataset.price) || 0;
+  const sessions = parseInt(selectedCourse.dataset.course) || 0;
+
+  // 通常割引率（モニター or 継続）を取得
+  const memberType = window.currentMemberType || 'new';
+  let autoRate = 0;
+  let autoLbl = '割引なし';
+  if(memberType === 'new'){ autoRate = 0.20; autoLbl = 'モニター 20%OFF'; }
+  else if(memberType === 'continue'){ autoRate = 0.10; autoLbl = '継続 10%OFF'; }
+  const autoAmt = Math.round(orig * autoRate);
+  const afterAuto = orig - autoAmt;
+
+  // 特別割引
+  let staffAmt = 0;
+  let discLbl = '';
+  if(type === 'percent'){
+    if(val > 100){ document.getElementById('staff-value').value = 100; return; }
+    staffAmt = Math.round(afterAuto * (val / 100));
+    discLbl = '特別 ' + val + '%OFF';
+  } else {
+    staffAmt = Math.min(val, afterAuto);
+    discLbl = '特別 ¥' + val.toLocaleString() + '引き';
+  }
+  const finalPrice = Math.max(0, afterAuto - staffAmt);
+
+  document.getElementById('sm-prev-course').textContent = sessions + '回コース定価';
+  document.getElementById('sm-prev-orig').textContent = '¥' + orig.toLocaleString();
+  document.getElementById('sm-prev-auto-lbl').textContent = autoLbl;
+  document.getElementById('sm-prev-auto-amt').textContent = autoAmt > 0 ? '-¥' + autoAmt.toLocaleString() : '¥0';
+  document.getElementById('sm-prev-auto-row').style.display = autoAmt > 0 ? 'flex' : 'none';
+  document.getElementById('sm-prev-disc-lbl').textContent = discLbl;
+  document.getElementById('sm-prev-disc-amt').textContent = '-¥' + staffAmt.toLocaleString();
+  document.getElementById('sm-prev-total').textContent = '¥' + finalPrice.toLocaleString();
+
+  prev.style.display = 'block';
+  applyBtn.disabled = false;
+}
+
+function applyStaffDiscount(){
+  const selType = document.querySelector('.sm-type.sel');
+  const type = selType ? selType.dataset.type : 'percent';
+  const val = parseFloat(document.getElementById('staff-value').value) || 0;
+  const memo = document.getElementById('staff-memo').value.trim();
+  if(val <= 0) return;
+
+  window.staffDiscount = {
+    type: type,
+    value: val,
+    memo: memo,
+    applied: true
+  };
+  closeStaffModal();
+  updateStaffAppliedBadge();
+  if(typeof updatePrice === 'function') updatePrice();
+}
+
+function clearStaffDiscount(){
+  window.staffDiscount = { type:'', value:0, memo:'', applied:false };
+  document.getElementById('staff-value').value = '';
+  document.getElementById('staff-memo').value = '';
+  closeStaffModal();
+  updateStaffAppliedBadge();
+  if(typeof updatePrice === 'function') updatePrice();
+}
+
+function updateStaffAppliedBadge(){
+  const badge = document.getElementById('staff-applied-badge');
+  if(!badge) return;
+  if(!window.staffDiscount.applied){
+    badge.classList.remove('show');
+    return;
+  }
+  const t = window.staffDiscount.type;
+  const v = window.staffDiscount.value;
+  const m = window.staffDiscount.memo;
+  let label = t === 'percent' ? ('特別 ' + v + '%OFF') : ('特別 ¥' + v.toLocaleString() + '引き');
+  if(m) label += '（' + m + '）';
+  document.getElementById('sab-main-text').textContent = label;
+  badge.classList.add('show');
+
+  // バッジを自動適用バナー（.auto-discount）の直後に移動
+  const autoDisc = document.querySelector('.auto-discount');
+  if(autoDisc && autoDisc.nextSibling !== badge){
+    autoDisc.parentNode.insertBefore(badge, autoDisc.nextSibling);
+  }
+}
+
 </script>
 
 </body>
