@@ -2,1581 +2,536 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
-<link rel="icon" type="image/png" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="トレーナー">
-<link rel="manifest" href="manifest_trainer.json">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ONE TRE — Trainer</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONE TRE Trainer — Design v2</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#fff;--bg2:#fafafa;--bg3:#f5f5f5;--black:#111;--g1:#444;--g2:#777;--g3:#aaa;--g4:#ccc;--g5:#e0e0e0;--g6:#f0f0f0;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--black);min-height:100vh}
-.app{max-width:960px;margin:0 auto;background:var(--bg)}
-.topbar{background:var(--bg);border-bottom:1px solid var(--g5);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:var(--black);letter-spacing:.3em}
-.logo-sub{font-size:7px;color:var(--g4);letter-spacing:.2em;margin-top:2px;font-weight:300}
-.logo-catch{font-family:'Cormorant Garamond',serif;font-size:10px;font-style:italic;color:var(--g3);margin-top:2px;letter-spacing:.06em}
-.mode-badge{font-size:9px;padding:4px 10px;border:1px solid var(--g5);color:var(--g2);letter-spacing:.1em;font-weight:300}
-.nav{background:var(--bg);border-bottom:1px solid var(--g5);padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
+:root{
+  --bg:#faf7fa;--bg2:#fff;--ink:#2d2433;--ink2:#5a4e6a;--ink3:#8a7e9a;
+  --line:#ece4f0;--line2:#f5eef8;
+  --pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--pink-bg2:#fef3f7;
+  --blue:#80a0e8;--blue2:#5a78c8;--blue-bg:#e8f0ff;--blue-bg2:#f3f7ff;
+  --green:#60c890;--green2:#3a9a68;--green-bg:#e8f8f0;--green-bg2:#f3faf6;
+  --orange:#e8a060;--orange2:#c88040;--orange-bg:#fff0e0;--orange-bg2:#fff8ed;
+  --lavender:#c0a0e8;--lavender-bg:#efe8f8;
+  --yellow-bg:#fff8d6;--yellow:#b89030;
+}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:20px 12px 60px;line-height:1.5;font-weight:400}
+.wrap{max-width:1000px;margin:0 auto}
+.preview-header{text-align:center;margin-bottom:28px}
+.preview-header h1{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:.05em;margin-bottom:4px}
+.preview-header p{font-size:11px;color:var(--ink3)}
+.app{background:var(--bg2);border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(100,60,120,0.06);border:1px solid var(--line)}
+.topbar{background:linear-gradient(135deg,#fff 0%,#faf3fa 100%);padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand-wrap{display:flex;align-items:center;gap:12px}
+.brand-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--pink),var(--lavender));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 2px 8px rgba(232,96,138,0.25)}
+.brand-txt{line-height:1.2}
+.brand-name{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:.06em}
+.brand-sub{font-size:8px;color:var(--ink3);letter-spacing:.18em;margin-top:2px;font-weight:500}
+.mode-pill{font-size:9px;padding:5px 12px;background:var(--pink-bg);color:var(--pink2);border-radius:20px;font-weight:700;letter-spacing:.12em}
+.nav{background:var(--bg2);padding:10px 14px;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.nbtn{font-size:10px;padding:12px 14px;border:none;background:transparent;color:var(--g4);cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;border-bottom:1.5px solid transparent;flex-shrink:0;letter-spacing:.12em;transition:all .2s}
-.nbtn.active{color:var(--black);border-bottom-color:var(--black)}
-.page{display:none;padding:20px}.page.active{display:block}
-.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:20px;background:var(--g5)}
-.metric{background:var(--bg);padding:20px 16px}
-.ml{font-size:12px;color:var(--g2);letter-spacing:.06em;margin-bottom:10px;font-weight:400}
-.mv{font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--black);font-weight:400;line-height:1}
-.ms{font-size:12px;color:var(--g2);margin-top:6px;font-weight:400}
-.card{background:var(--bg);border:.5px solid var(--g5);padding:18px;margin-bottom:12px}
-.ctitle{font-family:'Cormorant Garamond',serif;font-size:9px;letter-spacing:.2em;color:var(--g4);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-.ctitle::after{content:'';flex:1;height:.5px;background:var(--g6)}
-.charts-row{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
-@media(min-width:600px){.charts-row{grid-template-columns:1fr 1fr}}
-.follow-box{padding:14px 16px;border:.5px solid var(--black);background:var(--bg);margin-bottom:14px}
-.follow-label{font-size:11px;color:var(--g2);letter-spacing:.06em;margin-bottom:6px;font-weight:400}
-.follow-val{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--black);font-weight:400}
-.follow-sub{font-size:12px;color:var(--g2);margin-top:4px;font-weight:400;line-height:1.6}
-.fg{display:flex;flex-direction:column;gap:5px}
-.fg label{font-size:10px;color:var(--g2);letter-spacing:.06em;font-weight:400}
-.fg input,.fg select{font-size:13px;padding:9px 12px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .2s}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--black)}
-.btn-black{background:var(--black);color:#fff;border:1px solid var(--black);padding:10px 22px;border-radius:0;font-size:11px;cursor:pointer;letter-spacing:.14em;margin-top:12px;font-family:'Noto Sans JP',sans-serif}
-.btn-ghost{background:transparent;border:.5px solid var(--g4);padding:7px 14px;border-radius:0;font-size:11px;cursor:pointer;color:var(--g1);font-family:'Noto Sans JP',sans-serif;letter-spacing:.06em}
-.btn-ghost:hover{border-color:var(--black);color:var(--black)}
-.mrow{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:.5px solid var(--g6)}
-.mrow:last-child{border:none}
-.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;flex-shrink:0;background:var(--black);color:#fff}
-.av-warn{background:var(--g5);color:var(--g3)}
-.mname{font-size:13px;color:var(--black);font-weight:400;letter-spacing:.04em}
-.mbadge{font-size:9px;padding:2px 8px;border:.5px solid var(--g4);letter-spacing:.06em;color:var(--g2);white-space:nowrap;flex-shrink:0;margin-top:2px}
-.mbadge-warn{border-color:var(--g5);color:var(--g4)}
-.url-box{display:flex;align-items:center;gap:6px;margin-top:8px;background:var(--g6);padding:8px 10px}
-.url-text{font-size:9px;color:var(--g2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
-.copy-btn{font-size:8px;padding:4px 10px;background:var(--black);color:#fff;border:none;cursor:pointer;letter-spacing:.06em;white-space:nowrap;flex-shrink:0}
-.set-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 30px;gap:6px;align-items:center;margin-bottom:6px}
-.set-row input{font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif}
-.del-btn{width:28px;height:28px;border:.5px solid var(--g5);background:transparent;cursor:pointer;color:var(--g3);font-size:14px}
-.pi{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--g6)}
-.pi:last-child{border:none}
-.pn{font-size:13px;color:var(--black);font-weight:400}
-.pvs{display:flex;gap:8px;font-size:11px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.pp{color:var(--g4)}.pc{color:var(--black);font-weight:400}.pu{color:var(--black);font-size:11px;font-weight:500}
-.msel{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
-.msel select,.msel input[type=date]{font-size:12px;padding:7px 11px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cday{text-align:center;padding:6px 2px;font-size:11px;color:var(--g4);font-weight:300}
-.cday.hdr{font-size:8px;color:var(--g4);font-weight:400;letter-spacing:.08em}
-.cday.has{background:var(--black);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px}
-.cday.today{border:1px solid var(--black);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto}
-.pr-list{display:flex;flex-direction:column;gap:8px}
-.pr-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--g6)}
-.pr-name{font-size:12px;color:var(--black);font-weight:400}
-.pr-val{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--black)}
-.pr-date{font-size:10px;color:var(--g3);margin-top:1px}
-.pr-badge{font-size:7px;padding:1px 6px;border:.5px solid var(--g4);color:var(--g2);letter-spacing:.1em;margin-left:6px}
-.sales-kpi{display:grid;grid-template-columns:1fr;gap:1px;margin-bottom:20px;background:var(--g5)}
-@media(min-width:480px){.sales-kpi{grid-template-columns:repeat(3,1fr)}}
-.course-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--g6)}
-.course-item:last-child{border:none}
-.course-name{font-size:12px;color:var(--black);font-weight:400}
-.course-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)}
-.course-count{font-size:10px;color:var(--g3);margin-top:2px}
-.loading{text-align:center;padding:32px;color:var(--g3);font-size:13px;letter-spacing:.1em}
-.taiken-item{border:.5px solid var(--g5);padding:14px;margin-bottom:10px;background:var(--bg)}
-.taiken-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.taiken-name{font-size:14px;font-weight:500;color:var(--black)}
-.taiken-date{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black);margin-top:2px}
-.taiken-meta{display:grid;grid-template-columns:1fr;gap:4px;font-size:11px;color:var(--g2);margin-top:8px}
-@media(min-width:600px){.taiken-meta{grid-template-columns:1fr 1fr}}
-.taiken-meta span{word-break:break-all}
-.taiken-cancel{font-size:10px;padding:6px 14px;background:#fff;border:1px solid #e86060;color:#e86060;cursor:pointer;font-family:'Noto Sans JP',sans-serif;letter-spacing:.04em}
-.taiken-cancel:hover{background:#e86060;color:#fff}
-.renew-modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9998;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px}
-.renew-modal{background:#fff;max-width:480px;width:100%;margin:auto;padding:24px;border-radius:4px;font-family:'Noto Sans JP',sans-serif}
-.renew-modal-head{border-bottom:.5px solid var(--g5);padding-bottom:14px;margin-bottom:18px}
-.renew-modal-ttl{font-size:14px;font-weight:500;letter-spacing:.08em;color:var(--black);margin-bottom:4px}
-.renew-modal-sub{font-size:11px;color:var(--g2);letter-spacing:.04em}
-.rm-sec{margin-bottom:18px}
-.rm-sec-ttl{font-size:10px;color:var(--g2);letter-spacing:.12em;margin-bottom:10px;font-weight:500}
-.rm-course-list{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.rm-course{border:1px solid var(--g5);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:#fff}
-.rm-course.sel{border-color:var(--black);background:#222;color:#fff}
-.rm-course-name{font-size:13px;font-weight:500;margin-bottom:3px}
-.rm-course-price{font-family:'Cormorant Garamond',serif;font-size:15px}
-.rm-course-badge{position:absolute;top:-7px;left:50%;transform:translateX(-50%);background:#c8a030;color:#fff;font-size:8px;padding:2px 6px;letter-spacing:.05em;white-space:nowrap}
-.rm-deal-list,.rm-disc-list{display:flex;flex-direction:column;gap:6px}
-.rm-deal,.rm-disc{display:flex;align-items:center;gap:8px;padding:10px 12px;border:.5px solid var(--g5);cursor:pointer;font-size:12px;color:var(--black);transition:all .2s}
-.rm-deal input,.rm-disc input{margin:0}
-.rm-deal small,.rm-disc small{font-size:10px;color:var(--g3);margin-left:6px}
-.rm-deal:has(input:checked),.rm-disc:has(input:checked){border-color:var(--black);background:#fafafa}
-.rm-pair-row{display:flex;align-items:center;padding:12px 14px;border:.5px solid var(--g5);cursor:pointer;transition:all .2s}
-.rm-pair-row:has(input:checked){border-color:var(--black);background:#fafafa}
-.rm-summary{background:#fafafa;padding:14px;margin-top:18px;font-size:12px}
-.rm-sum-row{display:flex;justify-content:space-between;padding:3px 0;color:var(--g1)}
-.rm-sum-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:8px;border-top:1px dashed var(--g4)}
-.rm-sum-total span:first-child{font-size:11px;color:var(--black);font-weight:500}
-.rm-sum-total span:last-child{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--black);font-weight:500}
-.rm-btn-row{display:flex;gap:8px;margin-top:18px}
-.rm-btn-cancel{flex:1;padding:12px;background:#fff;border:.5px solid var(--g4);color:var(--g1);cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.06em}
-.rm-btn-submit{flex:2;padding:12px;background:var(--black);color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.12em;font-weight:500}
-.rm-btn-submit:disabled{background:#ccc;cursor:not-allowed}
-.renew-btn-inline{font-size:9px;padding:4px 10px;background:linear-gradient(135deg,#c8a030,#b88a20);color:#fff;border:none;cursor:pointer;letter-spacing:.06em;white-space:nowrap;flex-shrink:0;font-family:inherit;margin-left:6px;font-weight:500}
-.renew-btn-inline:hover{opacity:0.9}
+.nbtn{border:none;background:var(--bg);color:var(--ink3);padding:10px 16px;border-radius:14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.nbtn.active{background:linear-gradient(135deg,var(--pink),var(--lavender));color:#fff;box-shadow:0 3px 10px rgba(232,96,138,0.25)}
+.content{padding:20px}
+.section-ttl{font-size:11px;font-weight:800;color:var(--ink2);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.section-ttl::before{content:'';width:3px;height:14px;background:linear-gradient(to bottom,var(--pink),var(--lavender));border-radius:2px}
 
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(120%);background:#222;color:#fff;padding:12px 24px;border-radius:30px;font-size:13px;font-family:'Noto Sans JP',sans-serif;font-weight:500;z-index:10000;transition:transform .3s ease,opacity .3s;box-shadow:0 4px 20px rgba(0,0,0,0.3);opacity:0;letter-spacing:.04em;max-width:90vw;text-align:center}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.toast.error{background:#c83030}
-.toast.success{background:#2e7d32}
-.cday.has{background:var(--black);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:10px;position:relative}
-.cday.has-multi{background:#c8a030;color:#fff}
-.cday-badge{position:absolute;top:-3px;right:-6px;background:#c83030;color:#fff;font-size:7px;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;font-weight:700}
+/* KPI */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:20px}
+.metric{padding:16px 18px;border-radius:16px;position:relative;overflow:hidden}
+.metric-pink{background:linear-gradient(135deg,var(--pink-bg2),var(--pink-bg))}
+.metric-blue{background:linear-gradient(135deg,var(--blue-bg2),var(--blue-bg))}
+.metric-green{background:linear-gradient(135deg,var(--green-bg2),var(--green-bg))}
+.metric-orange{background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg))}
+.metric-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px}
+.metric-pink .metric-label{color:var(--pink2)}
+.metric-blue .metric-label{color:var(--blue2)}
+.metric-green .metric-label{color:var(--green2)}
+.metric-orange .metric-label{color:var(--orange2)}
+.metric-value{font-size:26px;font-weight:800;line-height:1;color:var(--ink);display:flex;align-items:baseline;gap:4px}
+.metric-value-lg{font-size:22px}
+.metric-unit{font-size:12px;color:var(--ink3);font-weight:500}
+.metric-sub{font-size:10px;color:var(--ink3);margin-top:6px;font-weight:500}
+.metric-trend{display:inline-block;font-size:9px;padding:2px 8px;border-radius:8px;font-weight:700;margin-top:6px}
+.trend-up{background:rgba(96,200,144,0.2);color:var(--green2)}
+.trend-down{background:rgba(232,96,138,0.2);color:var(--pink2)}
+.metric-ico{position:absolute;top:12px;right:14px;font-size:22px;opacity:.35}
 
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+
+/* 会員一覧 */
+.member-list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.search-box{flex:1;min-width:180px;position:relative}
+.search-box input{width:100%;padding:9px 14px 9px 34px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:12px;color:var(--ink);background:var(--bg);outline:none}
+.search-box::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px}
+.filter-pill{padding:7px 14px;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer;font-family:inherit}
+.filter-pill.active{background:var(--pink-bg);border-color:var(--pink);color:var(--pink2)}
+.member-row{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border-radius:14px;margin-bottom:8px;cursor:pointer;border:1.5px solid transparent}
+.member-row:hover{background:var(--bg2);border-color:var(--pink)}
+.member-avatar{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0}
+.avatar-f{background:linear-gradient(135deg,var(--pink),#f0c8d8)}
+.avatar-m{background:linear-gradient(135deg,var(--blue),#a0b8e8)}
+.member-info{flex:1;min-width:0}
+.member-name-big{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.member-tags{display:flex;gap:5px;flex-wrap:wrap}
+.mtag{font-size:9px;padding:2px 8px;border-radius:8px;font-weight:700;letter-spacing:.04em}
+.mtag-course{background:var(--lavender-bg);color:#7a5aa8}
+.mtag-trainer{background:var(--blue-bg);color:var(--blue2)}
+.mtag-visit-ok{background:var(--green-bg);color:var(--green2)}
+.mtag-visit-warn{background:var(--orange-bg);color:var(--orange2)}
+.mtag-visit-danger{background:var(--pink-bg);color:var(--pink2)}
+.course-progress{display:flex;align-items:center;gap:8px;margin-top:6px}
+.progress-bar-bg{flex:1;max-width:100px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--pink),var(--lavender));border-radius:3px}
+.progress-text{font-size:10px;color:var(--ink3);font-weight:700}
+.chevron{color:var(--ink3);font-size:18px;flex-shrink:0}
+
+/* 詳細 */
+.member-detail{background:linear-gradient(135deg,var(--pink-bg2),var(--lavender-bg));border-radius:20px;padding:20px;margin-bottom:14px;border:1.5px solid var(--pink-bg)}
+.detail-header{display:flex;align-items:center;gap:14px;padding-bottom:16px;border-bottom:1.5px dashed rgba(232,96,138,0.2);margin-bottom:16px;flex-wrap:wrap}
+.detail-avatar{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;background:linear-gradient(135deg,var(--pink),#f0c8d8);box-shadow:0 4px 12px rgba(232,96,138,0.25);flex-shrink:0}
+.detail-info{flex:1;min-width:0}
+.detail-name{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.detail-meta{font-size:11px;color:var(--ink3);font-weight:500}
+.detail-actions{display:flex;gap:6px;flex-wrap:wrap}
+.action-btn{padding:8px 14px;border:none;border-radius:10px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.04em}
+.action-primary{background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff}
+.action-ghost{background:#fff;color:var(--ink2);border:1.5px solid var(--line)}
+
+/* 順序ラベル */
+.order-label{display:inline-block;font-size:9px;padding:2px 8px;background:#fff;color:var(--pink2);border-radius:8px;font-weight:800;letter-spacing:.08em;margin-right:6px;border:1.5px solid var(--pink-bg)}
+.section-order{font-size:12px;font-weight:800;color:var(--ink);margin-bottom:10px;margin-top:4px;display:flex;align-items:center;gap:8px}
+
+/* コース消化 */
+.course-status{background:#fff;border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;border:1.5px solid var(--pink-bg)}
+.course-ico{font-size:28px;width:48px;height:48px;background:var(--pink-bg);border-radius:14px;display:flex;align-items:center;justify-content:center}
+.course-body{flex:1}
+.course-title{font-size:11px;color:var(--ink3);font-weight:700;margin-bottom:2px}
+.course-fraction{font-size:22px;font-weight:800;color:var(--ink);display:flex;align-items:baseline;gap:4px}
+.course-fraction .num{color:var(--pink2)}
+.course-fraction .slash{color:var(--ink3);font-size:16px;margin:0 2px}
+.course-fraction .total{color:var(--ink3);font-size:14px}
+.course-remaining{font-size:11px;padding:4px 10px;background:var(--green-bg);color:var(--green2);border-radius:10px;font-weight:700;white-space:nowrap}
+
+/* フォーム */
+.form-section{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px}
+.form-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.form-head-ttl{font-size:12px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:6px}
+.form-selects{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.form-select{flex:1;min-width:140px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:12px;color:var(--ink);font-weight:500;outline:none}
+
+.exercise-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 32px;gap:6px;align-items:center;padding:10px;background:var(--bg);border-radius:10px;margin-bottom:6px}
+.ex-select,.ex-input{padding:8px 10px;border:1.5px solid transparent;border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:500;outline:none;color:var(--ink);width:100%}
+.ex-input-weight{background:linear-gradient(135deg,#fff,var(--blue-bg2));border:1.5px solid var(--blue-bg);font-weight:700;color:var(--blue2);text-align:center}
+.ex-del{background:transparent;border:none;color:var(--ink3);font-size:18px;cursor:pointer;width:28px;height:28px;border-radius:8px}
+.row-labels{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 32px;gap:6px;padding:0 10px;margin-bottom:6px}
+.row-label{font-size:9px;font-weight:800;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase}
+.row-label-weight{color:var(--blue2)}
+.row-label-weight::after{content:' 📱';font-size:8px}
+
+.hint-weight{font-size:10px;color:var(--blue2);background:var(--blue-bg2);padding:6px 10px;border-radius:8px;margin-top:8px;display:flex;align-items:center;gap:6px;font-weight:500}
+
+.btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn-primary{padding:10px 18px;background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;letter-spacing:.04em;box-shadow:0 3px 10px rgba(232,96,138,0.2)}
+.btn-ghost{padding:10px 16px;background:#fff;color:var(--ink2);border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer}
+
+/* 直近記録 */
+.recent-log{background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--blue)}
+.recent-date{font-size:11px;color:var(--ink2);font-weight:700;margin-bottom:6px}
+.recent-sets{font-size:11px;color:var(--ink2);font-weight:500;line-height:1.8}
+.recent-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.act-tiny{padding:4px 10px;font-size:10px;border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer;border:1.5px solid}
+.act-edit{background:#fff;color:var(--blue2);border-color:var(--blue)}
+.act-copy{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border:none;padding:5px 11px}
+.act-del{background:#fff;color:var(--pink2);border-color:var(--pink)}
+
+/* カウンセリング */
+.counsel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.counsel-item{background:var(--bg);border-radius:12px;padding:12px 14px;border-left:3px solid var(--green)}
+.counsel-label{font-size:9px;color:var(--ink3);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.counsel-value{font-size:12px;color:var(--ink);font-weight:500;line-height:1.5}
+.counsel-empty{color:var(--ink3);font-style:italic;font-weight:400}
+.counsel-section-title{font-size:11px;font-weight:800;color:var(--green2);margin-bottom:8px;margin-top:12px;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
+.counsel-section-title:first-child{margin-top:0}
+.counsel-diet .counsel-item{border-left-color:var(--pink2)}
+.counsel-diet .counsel-section-title{color:var(--pink2)}
+
+/* 凡例 */
+.legend{background:linear-gradient(135deg,#fff,var(--lavender-bg));border-radius:16px;padding:18px;margin-top:28px;border:1px solid var(--line)}
+.legend h3{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.legend-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.legend-item{background:#fff;padding:10px 14px;border-radius:12px;font-size:11px;color:var(--ink2);font-weight:500;line-height:1.6;border:1px solid var(--line)}
+.legend-item strong{color:var(--ink);font-weight:800;display:block;margin-bottom:3px;font-size:12px}
 </style>
 </head>
 <body>
-<div class="toast" id="toast"></div>
-<div class="renew-modal-bg" id="renew-modal-bg" style="display:none">
-  <div class="renew-modal">
-    <div class="renew-modal-head">
-      <div class="renew-modal-ttl">継続契約の代行入力</div>
-      <div class="renew-modal-sub" id="renew-modal-sub">—</div>
-    </div>
+<div class="wrap">
 
-    <div class="rm-sec">
-      <div class="rm-sec-ttl">① コースを選択</div>
-      <div class="rm-course-list">
-        <div class="rm-course" data-course="8" data-price="49800" onclick="rmSelectCourse(this)">
-          <div class="rm-course-name">8回</div>
-          <div class="rm-course-price">¥49,800</div>
-        </div>
-        <div class="rm-course" data-course="16" data-price="94800" onclick="rmSelectCourse(this)">
-          <div class="rm-course-badge">推奨</div>
-          <div class="rm-course-name">16回</div>
-          <div class="rm-course-price">¥94,800</div>
-        </div>
-        <div class="rm-course" data-course="32" data-price="178000" onclick="rmSelectCourse(this)">
-          <div class="rm-course-name">32回</div>
-          <div class="rm-course-price">¥178,000</div>
+  <div class="preview-header">
+    <h1>ONE TRE トレーナー管理画面 v2</h1>
+    <p>修正：数値入力・リアル金額・カウンセリング表示・順序並び替え</p>
+  </div>
+
+  <div class="app">
+
+    <div class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-ico">T</div>
+        <div class="brand-txt">
+          <div class="brand-name">ONE TRE</div>
+          <div class="brand-sub">TRAINER · YONAGO</div>
         </div>
       </div>
+      <div class="mode-pill">TRAINER MODE</div>
     </div>
 
-    <div class="rm-sec">
-      <div class="rm-sec-ttl">② 取引形態</div>
-      <div class="rm-deal-list">
-        <label class="rm-deal"><input type="radio" name="dealType" value="normal" checked onchange="rmUpdateSummary()"><span>通常契約<small>（お金のやり取り）</small></span></label>
-        <label class="rm-deal"><input type="radio" name="dealType" value="trade" onchange="rmUpdateSummary()"><span>トレード<small>（相殺・実支払0円）</small></span></label>
-        <label class="rm-deal"><input type="radio" name="dealType" value="free" onchange="rmUpdateSummary()"><span>招待・無料<small>（キャンペーン等）</small></span></label>
-      </div>
+    <div class="nav">
+      <button class="nbtn active"><span>📊</span>ダッシュボード</button>
+      <button class="nbtn"><span>💰</span>売上</button>
+      <button class="nbtn"><span>🎯</span>体験予約</button>
+      <button class="nbtn"><span>📝</span>カウンセリング</button>
+      <button class="nbtn"><span>👥</span>会員</button>
+      <button class="nbtn"><span>💪</span>記録</button>
+      <button class="nbtn"><span>📅</span>カレンダー</button>
     </div>
 
-    <div class="rm-sec" id="rm-sec-discount">
-      <div class="rm-sec-ttl">③ 割引タイプ</div>
-      <div class="rm-disc-list">
-        <label class="rm-disc"><input type="radio" name="discType" value="full" onchange="rmUpdateSummary()"><span>定価（割引なし）</span></label>
-        <label class="rm-disc"><input type="radio" name="discType" value="monitor" onchange="rmUpdateSummary()"><span>モニター 20%OFF</span></label>
-        <label class="rm-disc"><input type="radio" name="discType" value="continue" checked onchange="rmUpdateSummary()"><span>継続 10%OFF</span></label>
-        <label class="rm-disc"><input type="radio" name="discType" value="custom" onchange="rmUpdateSummary()"><span>カスタム</span>
-          <input type="number" id="rm-custom-rate" min="0" max="100" step="1" placeholder="15" style="width:60px;margin-left:auto;padding:5px 8px;border:.5px solid #ccc;font-family:inherit" oninput="document.querySelector('[name=discType][value=custom]').checked=true;rmUpdateSummary()"><span style="margin-left:4px">%OFF</span></label>
-      </div>
-    </div>
+    <div class="content">
 
-    <div class="rm-sec" id="rm-sec-pair">
-      <label class="rm-pair-row" onclick="rmTogglePair(event)">
-        <input type="checkbox" id="rm-pair-chk" style="transform:scale(1.3);margin-right:10px">
-        <div>
-          <div style="font-size:13px;color:var(--black);font-weight:500">ペアで受ける</div>
-          <div style="font-size:10px;color:var(--g2);margin-top:2px">2人同時受講の場合、1回あたり ¥1,500引き</div>
+      <!-- KPI（リアル金額） -->
+      <div class="section-ttl">今月のKPI</div>
+      <div class="metrics">
+        <div class="metric metric-pink">
+          <div class="metric-ico">👥</div>
+          <div class="metric-label">会員数</div>
+          <div class="metric-value">24<span class="metric-unit">名</span></div>
+          <span class="metric-trend trend-up">▲ +3 先月比</span>
         </div>
-      </label>
-    </div>
-
-    <div class="rm-sec">
-      <div class="rm-sec-ttl">④ 契約メモ（任意）</div>
-      <input type="text" id="rm-memo" placeholder="例: 〇〇様とのトレード、友人紹介等" style="width:100%;padding:9px 12px;border:.5px solid var(--g5);font-family:inherit;font-size:12px">
-    </div>
-
-    <div class="rm-summary" id="rm-summary">
-      <div class="rm-sum-row"><span>コース</span><span id="rm-sum-course">—</span></div>
-      <div class="rm-sum-row"><span>定価</span><span id="rm-sum-orig">—</span></div>
-      <div class="rm-sum-row" id="rm-sum-disc-row"><span id="rm-sum-disc-lbl">割引</span><span id="rm-sum-disc">—</span></div>
-      <div class="rm-sum-row" id="rm-sum-pair-row" style="display:none"><span id="rm-sum-pair-lbl">ペア割</span><span id="rm-sum-pair">—</span></div>
-      <div class="rm-sum-row" id="rm-sum-deal-row" style="display:none"><span>取引形態</span><span id="rm-sum-deal">—</span></div>
-      <div class="rm-sum-total">
-        <span>お支払い金額</span>
-        <span id="rm-sum-total">¥0</span>
+        <div class="metric metric-blue">
+          <div class="metric-ico">🎯</div>
+          <div class="metric-label">体験予約</div>
+          <div class="metric-value">7<span class="metric-unit">件</span></div>
+          <span class="metric-trend trend-up">成約率 71%</span>
+        </div>
+        <div class="metric metric-green">
+          <div class="metric-ico">💰</div>
+          <div class="metric-label">今月売上</div>
+          <div class="metric-value metric-value-lg">¥485,000</div>
+          <span class="metric-trend trend-up">▲ +12% 前年比</span>
+        </div>
+        <div class="metric metric-orange">
+          <div class="metric-ico">⚠️</div>
+          <div class="metric-label">要フォロー</div>
+          <div class="metric-value">3<span class="metric-unit">名</span></div>
+          <div class="metric-sub">7日以上来店なし</div>
+        </div>
       </div>
-    </div>
 
-    <div class="rm-btn-row">
-      <button class="rm-btn-cancel" onclick="rmClose()">キャンセル</button>
-      <button class="rm-btn-submit" id="rm-btn-submit" onclick="rmSubmit()" disabled>契約を登録</button>
+      <!-- 会員一覧 -->
+      <div class="section-ttl">会員を選ぶ</div>
+      <div class="card">
+        <div class="member-list-header">
+          <div class="search-box"><input type="text" placeholder="会員名で検索..."></div>
+          <button class="filter-pill active">全員</button>
+          <button class="filter-pill">要フォロー</button>
+        </div>
+        <div class="member-row">
+          <div class="member-avatar avatar-m">長</div>
+          <div class="member-info">
+            <div class="member-name-big">長尾 儀弘 さん<span class="mtag mtag-visit-ok">3日前</span></div>
+            <div class="member-tags">
+              <span class="mtag mtag-course">16回コース</span>
+              <span class="mtag mtag-trainer">担当：稲田</span>
+            </div>
+            <div class="course-progress">
+              <div class="progress-bar-bg"><div class="progress-bar" style="width:25%"></div></div>
+              <div class="progress-text">4 / 16 回</div>
+            </div>
+          </div>
+          <div class="chevron">→</div>
+        </div>
+      </div>
+
+      <!-- 詳細 -->
+      <div class="section-ttl">会員タップ後の詳細ページ</div>
+      <div class="member-detail">
+
+        <div class="detail-header">
+          <div class="detail-avatar">長</div>
+          <div class="detail-info">
+            <div class="detail-name">長尾 儀弘 さん</div>
+            <div class="detail-meta">ID: DDD4DF · 40代 · 男性 · 担当：稲田</div>
+          </div>
+          <div class="detail-actions">
+            <button class="action-btn action-ghost">📋 URLコピー</button>
+            <button class="action-btn action-primary">✨ 継続契約</button>
+          </div>
+        </div>
+
+        <!-- ① コース消化 -->
+        <div class="section-order"><span class="order-label">01</span>コース消化状況</div>
+        <div class="course-status">
+          <div class="course-ico">🎟️</div>
+          <div class="course-body">
+            <div class="course-title">16回コース（2026/04/01 開始）</div>
+            <div class="course-fraction">
+              <span class="num">4</span><span class="slash">/</span><span class="total">16 回</span>
+            </div>
+          </div>
+          <div class="course-remaining">残 12 回</div>
+        </div>
+
+        <!-- ② トレーニング記録入力 -->
+        <div class="section-order"><span class="order-label">02</span>トレーニング記録を入力</div>
+        <div class="form-section">
+          <div class="form-head">
+            <div class="form-head-ttl">💪 今日のトレーニング</div>
+            <div style="font-size:10px;color:var(--ink3);font-weight:700">2026/04/23（木）</div>
+          </div>
+
+          <div class="form-selects">
+            <input type="date" class="form-select" value="2026-04-23">
+          </div>
+
+          <div class="row-labels">
+            <span class="row-label">種目</span>
+            <span class="row-label row-label-weight">重量 kg</span>
+            <span class="row-label">回数</span>
+            <span class="row-label">セット</span>
+            <span></span>
+          </div>
+
+          <div class="exercise-row">
+            <select class="ex-select">
+              <option>スクワット</option>
+              <option>デッドリフト</option>
+              <option>ベンチプレス</option>
+              <option style="font-style:italic;color:#888">+ 新しい種目を追加</option>
+            </select>
+            <input type="number" class="ex-input ex-input-weight" value="45.5" step="0.5" inputmode="decimal" placeholder="40">
+            <select class="ex-select">
+              <option>8 回</option><option selected>10 回</option><option>12 回</option>
+            </select>
+            <select class="ex-select">
+              <option selected>3 セット</option><option>4 セット</option>
+            </select>
+            <button class="ex-del">×</button>
+          </div>
+
+          <div class="exercise-row">
+            <select class="ex-select">
+              <option>ベンチプレス</option>
+            </select>
+            <input type="number" class="ex-input ex-input-weight" value="30" step="0.5" inputmode="decimal" placeholder="30">
+            <select class="ex-select"><option>10 回</option></select>
+            <select class="ex-select"><option>3 セット</option></select>
+            <button class="ex-del">×</button>
+          </div>
+
+          <div class="hint-weight">
+            <span>💡</span>
+            <span>重量は自由に入力（スマホで数字キーボードが出ます／0.5kg刻みも対応）</span>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-ghost">+ 種目追加</button>
+            <button class="btn-primary">記録を保存</button>
+          </div>
+        </div>
+
+        <!-- ③ 直近の記録 -->
+        <div class="section-order"><span class="order-label">03</span>直近の記録</div>
+        <div class="form-section">
+          <div class="recent-log">
+            <div class="recent-date">2026/04/20（月）</div>
+            <div class="recent-sets">
+              スクワット 45kg × 10回 × 3セット<br>
+              デッドリフト 60kg × 8回 × 3セット
+            </div>
+            <div class="recent-actions">
+              <button class="act-tiny act-edit">修正</button>
+              <button class="act-tiny act-copy">今日にコピー</button>
+              <button class="act-tiny act-del">削除</button>
+            </div>
+          </div>
+          <div class="recent-log">
+            <div class="recent-date">2026/04/16（木）</div>
+            <div class="recent-sets">
+              ベンチプレス 30kg × 10回 × 3セット<br>
+              ラットプルダウン 25kg × 12回 × 3セット
+            </div>
+            <div class="recent-actions">
+              <button class="act-tiny act-edit">修正</button>
+              <button class="act-tiny act-copy">今日にコピー</button>
+              <button class="act-tiny act-del">削除</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ④ カウンセリング内容 -->
+        <div class="section-order"><span class="order-label">04</span>カウンセリング内容</div>
+        <div class="form-section">
+          <div class="form-head">
+            <div class="form-head-ttl">📝 ヒアリング内容</div>
+            <button class="act-tiny act-edit">編集</button>
+          </div>
+
+          <div class="counsel-section-title">🎯 目的・目標</div>
+          <div class="counsel-grid">
+            <div class="counsel-item">
+              <div class="counsel-label">入会の目的</div>
+              <div class="counsel-value">健康維持</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">具体的な目標</div>
+              <div class="counsel-value">体重を5kg落とす</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">達成期限</div>
+              <div class="counsel-value">2026年8月31日</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">ジム経験</div>
+              <div class="counsel-value">通ったことある</div>
+            </div>
+          </div>
+
+          <div class="counsel-section-title">🏃 運動経験・現状</div>
+          <div class="counsel-grid">
+            <div class="counsel-item">
+              <div class="counsel-label">現在の運動習慣</div>
+              <div class="counsel-value">週1-2回</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">過去の運動経験</div>
+              <div class="counsel-value">学生時代にバスケ部</div>
+            </div>
+          </div>
+
+          <div class="counsel-section-title">⚕️ 身体の状態・ケガ歴</div>
+          <div class="counsel-grid">
+            <div class="counsel-item">
+              <div class="counsel-label">過去のケガ・手術歴</div>
+              <div class="counsel-value">右膝半月板損傷（2018年）</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">現在の通院・服薬</div>
+              <div class="counsel-value counsel-empty">なし</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">痛みのある箇所</div>
+              <div class="counsel-value">腰痛、肩こり</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">気になる身体の箇所</div>
+              <div class="counsel-value">お腹、太もも</div>
+            </div>
+          </div>
+
+          <div class="counsel-section-title">🌙 ライフスタイル</div>
+          <div class="counsel-grid">
+            <div class="counsel-item">
+              <div class="counsel-label">睡眠時間</div>
+              <div class="counsel-value">6-7時間</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">就寝時刻</div>
+              <div class="counsel-value">24-2時</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">仕事の形態</div>
+              <div class="counsel-value">デスクワーク</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">ストレスレベル</div>
+              <div class="counsel-value">3 / 5</div>
+            </div>
+          </div>
+
+          <div class="counsel-section-title">💬 その他</div>
+          <div class="counsel-grid">
+            <div class="counsel-item">
+              <div class="counsel-label">事前に伝えたいこと</div>
+              <div class="counsel-value">無理をせずゆっくり進めたい</div>
+            </div>
+            <div class="counsel-item">
+              <div class="counsel-label">NGなこと</div>
+              <div class="counsel-value">細かい指摘は苦手</div>
+            </div>
+          </div>
+
+          <div class="counsel-diet">
+            <div class="counsel-section-title">🍽️ ダイエット項目（食生活・モチベーション）</div>
+            <div class="counsel-grid">
+              <div class="counsel-item">
+                <div class="counsel-label">身長</div>
+                <div class="counsel-value">168 cm</div>
+              </div>
+              <div class="counsel-item">
+                <div class="counsel-label">目標減量</div>
+                <div class="counsel-value">-5 kg</div>
+              </div>
+              <div class="counsel-item">
+                <div class="counsel-label">1日の食事回数</div>
+                <div class="counsel-value">3回</div>
+              </div>
+              <div class="counsel-item">
+                <div class="counsel-label">朝食の頻度</div>
+                <div class="counsel-value">週4-5</div>
+              </div>
+              <div class="counsel-item">
+                <div class="counsel-label">外食の頻度</div>
+                <div class="counsel-value">週1-2</div>
+              </div>
+              <div class="counsel-item">
+                <div class="counsel-label">お酒</div>
+                <div class="counsel-value">週3-4</div>
+              </div>
+              <div class="counsel-item" style="grid-column:1/-1">
+                <div class="counsel-label">モチベーション</div>
+                <div class="counsel-value">夏の旅行で水着を着るため、健康診断でコレステロール値が引っかかった</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   </div>
+
+  <div class="legend">
+    <h3>🎨 修正ポイント</h3>
+    <div class="legend-items">
+      <div class="legend-item">
+        <strong>✅ 重量は数値入力に</strong>
+        <code>inputmode="decimal"</code> でスマホで自動的に数字キーボード表示。5kg刻みの制限なし、0.5kg単位でも自由入力可能
+      </div>
+      <div class="legend-item">
+        <strong>✅ 売上リアル金額</strong>
+        ¥485K → ¥485,000 のカンマ区切り表示
+      </div>
+      <div class="legend-item">
+        <strong>✅ 会員詳細の順序</strong>
+        ①コース消化 → ②トレーニング入力 → ③直近記録 → ④カウンセリング
+      </div>
+      <div class="legend-item">
+        <strong>カウンセリング表示</strong>
+        カテゴリごとに色分けしてカード表示。ダイエット項目はピンクで区別
+      </div>
+      <div class="legend-item">
+        <strong>空欄の扱い</strong>
+        未回答項目は「なし」表記で斜体グレー
+      </div>
+      <div class="legend-item">
+        <strong>編集ボタン</strong>
+        各セクションに編集ボタンを配置、その場で修正可能
+      </div>
+    </div>
+  </div>
+
 </div>
-
-<div class="app">
-  <div class="topbar">
-    <div>
-      <div class="logo">ONE TRE</div>
-      <div class="logo-sub">PERSONAL TRAINING · YONAGO</div>
-      <div class="logo-catch">私は私</div>
-    </div>
-    <div class="mode-badge">TRAINER MODE</div>
-  </div>
-  <div class="nav">
-    <button class="nbtn active" onclick="sp('dashboard',this)">ダッシュボード</button>
-    <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
-    <button class="nbtn" onclick="sp('taiken',this)">体験予約</button>
-    <button class="nbtn" onclick="sp('counseling',this)">カウンセリング</button>
-    <button class="nbtn" onclick="sp('members',this)">会員管理</button>
-    <button class="nbtn" onclick="sp('training',this)">トレーニング</button>
-    <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
-    <button class="nbtn" onclick="sp('progress',this)">成長グラフ</button>
-  </div>
-
-  <div id="page-dashboard" class="page active">
-    <div class="metrics">
-      <div class="metric"><div class="ml">会員数</div><div class="mv" id="mt">0</div><div class="ms">名</div></div>
-      <div class="metric"><div class="ml">女性</div><div class="mv" id="mf">0</div><div class="ms" id="mfp">-%</div></div>
-      <div class="metric"><div class="ml">男性</div><div class="mv" id="mm">0</div><div class="ms" id="mmp">-%</div></div>
-    </div>
-    <div id="follow-alert" style="display:none" class="follow-box">
-      <div class="follow-label">要フォロー — 7日以上 来店なし</div>
-      <div class="follow-val" id="follow-count">0<span style="font-size:16px;color:var(--g3);margin-left:4px">名</span></div>
-      <div class="follow-sub" id="follow-names"></div>
-    </div>
-    <div class="charts-row">
-      <div class="card"><div class="ctitle">男女比</div><div style="position:relative;height:180px"><canvas id="cg"></canvas></div></div>
-      <div class="card"><div class="ctitle">年代別</div><div style="position:relative;height:180px"><canvas id="ca"></canvas></div></div>
-    </div>
-  </div>
-
-  <div id="page-sales" class="page">
-    <div id="sales-loading" class="loading">スプレッドシートからデータを取得中...</div>
-    <div id="sales-content" style="display:none">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="cPrevYear()" style="padding:5px 12px">&#8249;</button>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black)" id="sales-year-label"></span>
-        <button class="btn-ghost" onclick="cNextYear()" style="padding:5px 12px">&#8250;</button>
-        <span style="font-size:10px;color:var(--g3);margin-left:4px">年を切り替えて比較できます</span>
-      </div>
-      <div class="sales-kpi">
-        <div class="metric"><div class="ml">今月の売上</div><div class="mv" id="s-month">¥0</div><div class="ms" id="s-month-count">0件</div></div>
-        <div class="metric"><div class="ml" id="s-year-label">年間売上</div><div class="mv" id="s-year">¥0</div><div class="ms" id="s-year-count">0件</div></div>
-        <div class="metric"><div class="ml">前年比</div><div class="mv" id="s-yoy">-</div><div class="ms" id="s-yoy-sub"></div></div>
-      </div>
-      <div class="charts-row">
-        <div class="card"><div class="ctitle" id="cs-month-title">月別売上</div><div style="position:relative;height:200px"><canvas id="cs-month"></canvas></div></div>
-        <div class="card"><div class="ctitle">今年 vs 去年</div><div style="position:relative;height:200px"><canvas id="cs-yoy"></canvas></div></div>
-      </div>
-      <div class="charts-row">
-        <div class="card"><div class="ctitle">コース別内訳</div><div style="position:relative;height:200px"><canvas id="cs-course"></canvas></div></div>
-        <div class="card"><div class="ctitle">コース別詳細</div><div id="course-detail"></div></div>
-      </div>
-      <div class="card"><div class="ctitle">申込一覧</div><div id="form-list"></div></div>
-    </div>
-    <div id="sales-error" style="display:none;padding:20px;color:var(--g3);font-size:13px;text-align:center">データの取得に失敗しました。GASのデプロイ設定を確認してください。</div>
-  </div>
-
-  <div id="page-taiken" class="page">
-    <div class="card">
-      <div class="ctitle">体験予約一覧</div>
-      <div style="font-size:11px;color:var(--g2);margin-bottom:12px;line-height:1.6">予約された体験のリストです。キャンセルボタンでGoogleカレンダーから自動で削除、予約者にキャンセル通知メールが送信されます。</div>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <button class="btn-ghost" onclick="loadTaikenList()">&#8634; 更新</button>
-      </div>
-      <div id="taiken-list">読み込み中...</div>
-    </div>
-  </div>
-<div id="page-counseling" class="page">
-  <div class="card">
-    <div class="ctitle">カウンセリング記録</div>
-    <div style="font-size:11px;color:var(--g2);margin-bottom:12px;line-height:1.6">ヒアリングしながら入力します。空欄は「該当なし」扱いです。</div>
-    <div class="msel" style="margin-bottom:16px">
-      <select id="counsel-member" onchange="loadCounseling()" style="min-width:200px"><option value="">会員を選択</option></select>
-    </div>
-    <div id="counsel-form" style="display:none">
-
-      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
-        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">① 目的・目標</div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>ジム入会の目的</label>
-          <select id="c-purpose" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>ダイエット</option><option>筋力アップ</option><option>健康維持</option>
-            <option>姿勢改善</option><option>ストレス解消</option><option>大会出場</option>
-            <option>リハビリ</option><option>その他</option>
-          </select>
-        </div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>具体的な目標</label>
-          <input id="c-goal" type="text" placeholder="例：夏までに水着が似合う体型">
-        </div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>達成期限（あれば）</label>
-          <input id="c-deadline" type="date">
-        </div>
-        <div class="fg">
-          <label>過去のトレーニングジム経験</label>
-          <select id="c-gymexp" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>初めて</option><option>通ったことある</option><option>通ってる</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
-        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">② 運動経験・現状</div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>現在の運動習慣</label>
-          <select id="c-exercisehabit" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>週3以上</option><option>週1-2</option><option>月数回</option><option>ほぼなし</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>過去の運動経験（なければ空欄）</label>
-          <input id="c-exerciseexp" type="text" placeholder="例：学生時代にバスケ部">
-        </div>
-      </div>
-
-      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
-        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">③ 身体の状態・ケガ歴</div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>過去のケガ手術歴</label>
-          <input id="c-injury" type="text" placeholder="例：右膝半月板損傷">
-        </div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>現在の通院・服薬</label>
-          <input id="c-medication" type="text" placeholder="例：高血圧の薬">
-        </div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>現在痛みのある箇所</label>
-          <input id="c-pain" type="text" placeholder="例：腰痛、肩こり（複数可）">
-        </div>
-        <div class="fg">
-          <label>気になる身体の箇所</label>
-          <input id="c-concern" type="text" placeholder="例：お腹、太もも（複数可）">
-        </div>
-      </div>
-
-      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
-        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">④ ライフスタイル</div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>平均睡眠時間</label>
-          <select id="c-sleep" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>4時間未満</option><option>4-5時間</option><option>6-7時間</option><option>8時間以上</option>
-          </select>
-        </div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>就寝時刻</label>
-          <select id="c-bedtime" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>22時前</option><option>22-24時</option><option>24-2時</option><option>2時以降</option>
-          </select>
-        </div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>仕事の形態</label>
-          <select id="c-work" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>デスクワーク</option><option>立ち仕事</option><option>肉体労働</option><option>主婦主夫</option><option>その他</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>ストレスレベル（1-5）</label>
-          <select id="c-stress" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
-        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">⑤ メンタル</div>
-        <div class="fg">
-          <label>自分の体に対する自己評価（1-10）</label>
-          <select id="c-selfeval" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-            <option value="">選択してください</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="background:#fafafa;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #222">
-        <div style="font-size:11px;color:#222;font-weight:500;letter-spacing:.1em;margin-bottom:12px">⑥ その他</div>
-        <div class="fg" style="margin-bottom:10px">
-          <label>トレーナーに事前に伝えたいこと</label>
-          <input id="c-message" type="text" placeholder="自由記述">
-        </div>
-        <div class="fg">
-          <label>NGなこと</label>
-          <input id="c-ng" type="text" placeholder="例：細かい指摘は苦手">
-        </div>
-      </div>
-
-      <button id="diet-toggle" class="btn-ghost" onclick="toggleDietSection()" style="width:100%;padding:12px;margin-bottom:12px;font-size:12px">＋ ダイエット項目を追加する</button>
-
-      <div id="diet-section" style="display:none">
-        <div style="background:#fff0f5;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #e8608a">
-          <div style="font-size:11px;color:#e8608a;font-weight:500;letter-spacing:.1em;margin-bottom:12px">ダイエット｜身体データ＆減量目標</div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>身長cm</label>
-            <input id="c-height" type="number" placeholder="例：165">
-          </div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>目標減量（kg）</label>
-            <input id="c-goalweight" type="number" placeholder="例：5">
-          </div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>達成希望期限（あれば）</label>
-            <input id="c-ddeadline" type="date">
-          </div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>過去のダイエット経験</label>
-            <select id="c-dpast" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-              <option value="">選択してください</option>
-              <option>初めて</option><option>何度か挑戦</option><option>毎回リバウンド</option><option>成功経験あり</option>
-            </select>
-          </div>
-          <div class="fg">
-            <label>試したダイエット方法</label>
-            <input id="c-dmethods" type="text" placeholder="例：ケトン、ローファット">
-          </div>
-        </div>
-
-        <div style="background:#fff0f5;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #e8608a">
-          <div style="font-size:11px;color:#e8608a;font-weight:500;letter-spacing:.1em;margin-bottom:12px">ダイエット｜食生活</div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>1日の食事回数</label>
-            <select id="c-meal" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-              <option value="">選択してください</option>
-              <option>1回</option><option>2回</option><option>3回</option><option>4回以上</option>
-            </select>
-          </div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>朝食を食べる頻度</label>
-            <select id="c-breakfast" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-              <option value="">選択してください</option>
-              <option>毎日</option><option>週4-5</option><option>週2-3</option><option>ほぼなし</option>
-            </select>
-          </div>
-          <div class="fg" style="margin-bottom:10px">
-            <label>外食の頻度</label>
-            <select id="c-eatout" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-              <option value="">選択してください</option>
-              <option>ほぼ毎日</option><option>週3-4</option><option>週1-2</option><option>ほぼなし</option>
-            </select>
-          </div>
-          <div class="fg">
-            <label>お酒の頻度</label>
-            <select id="c-alcohol" style="padding:8px 10px;border:.5px solid #e0e0e0;font-family:'Noto Sans JP',sans-serif;font-size:13px">
-              <option value="">選択してください</option>
-              <option>毎日</option><option>週3-4</option><option>週1-2</option><option>たまに</option><option>飲まない</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="background:#fff0f5;padding:16px;border-radius:0;margin-bottom:12px;border-left:2px solid #e8608a">
-          <div style="font-size:11px;color:#e8608a;font-weight:500;letter-spacing:.1em;margin-bottom:12px">ダイエット｜モチベーション</div>
-          <div class="fg">
-            <label>ダイエットのモチベーション</label>
-            <input id="c-motivation" type="text" placeholder="例：結婚式のため、健康診断で引っかかった">
-          </div>
-        </div>
-      </div>
-
-      <button class="btn-black" onclick="saveCounseling()" style="width:100%;padding:14px;font-size:13px;margin-top:8px">カウンセリングを保存</button>
-    </div>
-  </div>
-</div>
-  <div id="page-members" class="page">
-    <div class="card">
-      <div class="ctitle">ボディバランス スコア設定</div>
-      <div style="font-size:11px;color:var(--g2);margin-bottom:12px;font-weight:400;line-height:1.6">会員ごとに4軸のスコアを設定します。各軸0〜25点・合計100点満点。保存するとマイページに即時反映されます。</div>
-      <div style="margin-bottom:10px">
-        <div class="fg"><label>会員を選択</label>
-          <select id="score-member" onchange="loadBodyScore()"><option value="">会員を選択してください</option></select>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div style="background:#fdf0f6;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#c8608a;letter-spacing:.08em;margin-bottom:6px">筋力</div>
-          <select id="sc-strength" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
-          </select>
-          <div style="font-size:8px;color:#e8a0bf;margin-top:4px">/ 25点</div>
-        </div>
-        <div style="background:#f3f0fd;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#7060b8;letter-spacing:.08em;margin-bottom:6px">体幹</div>
-          <select id="sc-core" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
-          </select>
-          <div style="font-size:8px;color:#b4a0e8;margin-top:4px">/ 25点</div>
-        </div>
-        <div style="background:#f0f9f6;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#3a8a6a;letter-spacing:.08em;margin-bottom:6px">連動性</div>
-          <select id="sc-agility" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(128,200,170,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#3a8a6a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
-          </select>
-          <div style="font-size:8px;color:#80c8aa;margin-top:4px">/ 25点</div>
-        </div>
-        <div style="background:#fdf7f0;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#b87830;letter-spacing:.08em;margin-bottom:6px">柔軟性</div>
-          <select id="sc-flex" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#b87830;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
-          </select>
-          <div style="font-size:8px;color:#f0b870;margin-top:4px">/ 25点</div>
-        </div>
-      </div>
-      <div id="score-total" style="font-size:13px;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">合計: 0 / 100</div>
-      <button class="btn-black" onclick="saveBodyScore()">スコアを保存 → 会員マイページに反映</button>
-    </div>
-    <div class="card">
-      <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
-      <div style="font-size:11px;color:var(--g2);margin-bottom:12px;font-weight:400;line-height:1.6">Googleフォームから申し込まれた会員が自動で表示されます。URLをコピーしてLINEで送ってください。</div>
-      <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
-    </div>
-  </div>
-
-  <div id="page-training" class="page">
-    <div class="card">
-      <div class="ctitle">トレーニング記録</div>
-      <div class="msel">
-        <select id="str"><option value="">会員を選択</option></select>
-        <input id="idate" type="date">
-      </div>
-      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 30px;gap:6px;margin-bottom:8px">
-        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">種目名</span>
-        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">重量kg</span>
-        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">回数</span>
-        <span style="font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase">セット</span>
-        <span></span>
-      </div>
-      <div id="sw"></div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="addS()">+ 種目追加</button>
-        <button class="btn-black" onclick="saveTr()">記録を保存 → 会員画面に反映</button>
-      </div>
-    </div>
-    <div class="card"><div class="ctitle">直近の記録</div><div id="rl"></div></div>
-  </div>
-
-  <div id="page-calendar" class="page">
-    <div class="card">
-      <div class="msel">
-        <select id="scal" onchange="rCal()"><option value="">全会員</option></select>
-        <button class="btn-ghost" onclick="cPrev()">&#8249;</button>
-        <span style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black)" id="ctitle"></span>
-        <button class="btn-ghost" onclick="cNext()">&#8250;</button>
-      </div>
-      <div class="cal-grid" id="chdr"></div>
-      <div class="cal-grid" style="margin-top:4px" id="cbody"></div>
-    </div>
-  </div>
-
-  <div id="page-progress" class="page">
-    <div class="msel"><select id="spro" onchange="rPro()"><option value="">会員を選択</option></select></div>
-    <div class="charts-row">
-      <div class="card"><div class="ctitle">週トレーニング頻度</div><div style="position:relative;height:180px"><canvas id="cf"></canvas></div></div>
-      <div class="card"><div class="ctitle">総ボリューム推移</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
-    </div>
-    <div class="card"><div class="ctitle">自己ベスト</div><div id="pr-list" class="pr-list"></div></div>
-    <div class="card"><div class="ctitle">前回比較</div><div id="pcmp"></div></div>
-  </div>
-</div>
-
-<script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-
-// ===== トースト通知 =====
-function showToast(msg, type){
-  const el = document.getElementById('toast');
-  if(!el) return;
-  el.textContent = msg;
-  el.className = 'toast show' + (type ? ' ' + type : '');
-  clearTimeout(el._tid);
-  el._tid = setTimeout(()=>{ el.className = 'toast'; }, 1500);
-}
-
-
-
-// ===== 継続契約代行入力モーダル =====
-let rmState = { memberId: null, memberName: '', course: null, coursePrice: 0 };
-
-function rmOpen(memberId, memberName){
-  rmState = { memberId: memberId, memberName: memberName, course: null, coursePrice: 0 };
-  document.getElementById('renew-modal-sub').textContent = memberName + ' さん';
-  // リセット
-  document.querySelectorAll('.rm-course').forEach(c => c.classList.remove('sel'));
-  document.querySelector('[name=discType][value=continue]').checked = true;
-  document.querySelector('[name=dealType][value=normal]').checked = true;
-  document.getElementById('rm-pair-chk').checked = false;
-  document.getElementById('rm-custom-rate').value = '';
-  document.getElementById('rm-memo').value = '';
-  document.getElementById('rm-btn-submit').disabled = true;
-  rmUpdateSummary();
-  document.getElementById('renew-modal-bg').style.display = 'flex';
-}
-
-function rmClose(){
-  document.getElementById('renew-modal-bg').style.display = 'none';
-}
-
-function rmSelectCourse(el){
-  document.querySelectorAll('.rm-course').forEach(c => c.classList.remove('sel'));
-  el.classList.add('sel');
-  rmState.course = el.dataset.course;
-  rmState.coursePrice = parseInt(el.dataset.price);
-  rmUpdateSummary();
-}
-
-function rmTogglePair(ev){
-  // チェックボックスのクリックはそのまま、親クリックは切替
-  if(ev.target.tagName !== 'INPUT'){
-    const chk = document.getElementById('rm-pair-chk');
-    chk.checked = !chk.checked;
-  }
-  rmUpdateSummary();
-}
-
-function rmUpdateSummary(){
-  const dealType = document.querySelector('[name=dealType]:checked').value;
-  const dealLabel = dealType === 'trade' ? 'トレード' : (dealType === 'free' ? '招待・無料' : '通常契約');
-  const sub = document.getElementById('renew-modal-sub');
-  sub.textContent = rmState.memberName + ' さん' + (dealType !== 'normal' ? '　【' + dealLabel + '】' : '');
-
-  // 割引セクションの表示切替（トレード・無料時は割引無関係）
-  document.getElementById('rm-sec-discount').style.opacity = dealType === 'normal' ? '1' : '0.4';
-  document.getElementById('rm-sec-pair').style.opacity = dealType === 'normal' ? '1' : '0.4';
-
-  if(!rmState.course){
-    document.getElementById('rm-sum-course').textContent = '—';
-    document.getElementById('rm-sum-orig').textContent = '—';
-    document.getElementById('rm-sum-disc').textContent = '—';
-    document.getElementById('rm-sum-total').textContent = '¥0';
-    document.getElementById('rm-btn-submit').disabled = true;
-    return;
-  }
-
-  const discType = document.querySelector('[name=discType]:checked').value;
-  let discRate = 0;
-  let discLabel = '—';
-  if(discType === 'full'){ discRate = 0; discLabel = '定価（割引なし）'; }
-  else if(discType === 'monitor'){ discRate = 0.20; discLabel = 'モニター 20%OFF'; }
-  else if(discType === 'continue'){ discRate = 0.10; discLabel = '継続 10%OFF'; }
-  else if(discType === 'custom'){
-    const cv = parseFloat(document.getElementById('rm-custom-rate').value);
-    if(!isNaN(cv) && cv >= 0 && cv <= 100){
-      discRate = cv / 100;
-      discLabel = 'カスタム ' + cv + '%OFF';
-    } else {
-      discLabel = 'カスタム（%を入力）';
-    }
-  }
-
-  const isPair = document.getElementById('rm-pair-chk').checked && dealType === 'normal';
-  const sessions = parseInt(rmState.course) || 0;
-  const pairAmt = isPair ? (1500 * sessions) : 0;
-  const orig = rmState.coursePrice;
-  const discAmt = Math.round(orig * discRate);
-  const afterDisc = orig - discAmt;
-  let finalPrice = afterDisc - pairAmt;
-  if(dealType === 'trade' || dealType === 'free') finalPrice = 0;
-
-  document.getElementById('rm-sum-course').textContent = rmState.course + '回コース';
-  document.getElementById('rm-sum-orig').textContent = '¥' + orig.toLocaleString();
-  document.getElementById('rm-sum-disc-lbl').textContent = discLabel;
-  document.getElementById('rm-sum-disc').textContent = discAmt > 0 ? '-¥' + discAmt.toLocaleString() : '¥0';
-
-  if(isPair){
-    document.getElementById('rm-sum-pair-row').style.display = 'flex';
-    document.getElementById('rm-sum-pair-lbl').textContent = 'ペア割（¥1,500×' + sessions + '回）';
-    document.getElementById('rm-sum-pair').textContent = '-¥' + pairAmt.toLocaleString();
-  } else {
-    document.getElementById('rm-sum-pair-row').style.display = 'none';
-  }
-
-  if(dealType !== 'normal'){
-    document.getElementById('rm-sum-deal-row').style.display = 'flex';
-    document.getElementById('rm-sum-deal').textContent = dealLabel + '（実支払0円）';
-  } else {
-    document.getElementById('rm-sum-deal-row').style.display = 'none';
-  }
-
-  document.getElementById('rm-sum-total').textContent = '¥' + finalPrice.toLocaleString();
-  document.getElementById('rm-btn-submit').disabled = false;
-}
-
-function rmSubmit(){
-  if(!rmState.course){ showToast('コースを選択してください','error'); return; }
-  const btn = document.getElementById('rm-btn-submit');
-  btn.disabled = true;
-  btn.textContent = '送信中...';
-  const dealType = document.querySelector('[name=dealType]:checked').value;
-  const discType = document.querySelector('[name=discType]:checked').value;
-  const customRate = document.getElementById('rm-custom-rate').value || '';
-  const isPair = document.getElementById('rm-pair-chk').checked ? '1' : '0';
-  const memo = document.getElementById('rm-memo').value.trim();
-
-  const params = new URLSearchParams({
-    action: 'renewMembership',
-    memberId: rmState.memberId,
-    course: rmState.course,
-    coursePrice: rmState.coursePrice,
-    pair: isPair,
-    dealType: dealType,
-    dealMemo: memo,
-    discountType: discType,
-    customRate: customRate
-  });
-
-  fetch(GAS_URL + '?' + params.toString(), { method:'GET', mode:'cors' })
-    .then(r => r.json())
-    .then(result => {
-      if(result && result.ok){
-        rmClose();
-        showToast('✓ ' + rmState.memberName + ' さんの契約を登録しました','success');
-        setTimeout(()=>loadGasMembers(true), 500);
-      } else {
-        showToast('エラー: ' + (result.error||'不明'),'error');
-        btn.disabled = false;
-        btn.textContent = '契約を登録';
-      }
-    })
-    .catch(err => {
-      showToast('通信エラー: ' + err.message,'error');
-      btn.disabled = false;
-      btn.textContent = '契約を登録';
-    });
-}
-
-// ===== 日本語日付フォーマット =====
-// 2026-04-17 → 4月17日（金）
-function formatJpDate(dateStr){
-  if(!dateStr) return '';
-  const s = String(dateStr).trim();
-  // Dateに変換を試みる
-  let d;
-  if(/^\d{4}-\d{2}-\d{2}/.test(s)){
-    d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
-  } else {
-    d = new Date(s);
-  }
-  if(isNaN(d.getTime())) return s;
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const wd = ['日','月','火','水','木','金','土'][d.getDay()];
-  return m + '月' + day + '日（' + wd + '）';
-}
-function formatJpDateYear(dateStr){
-  if(!dateStr) return '';
-  const s = String(dateStr).trim();
-  let d;
-  if(/^\d{4}-\d{2}-\d{2}/.test(s)){
-    d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
-  } else {
-    d = new Date(s);
-  }
-  if(isNaN(d.getTime())) return s;
-  const y = d.getFullYear();
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const wd = ['日','月','火','水','木','金','土'][d.getDay()];
-  return y + '年' + m + '月' + day + '日（' + wd + '）';
-}
-
-const NAME_KEY='お名前（長尾儀弘）';
-let T=[];
-let gasMembers=[];
-let cY=new Date().getFullYear(),cM2=new Date().getMonth();
-let C={};
-
-function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
-function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
-function daysSince(dateStr){if(!dateStr)return null;return Math.floor((new Date()-new Date(dateStr))/(1000*60*60*24));}
-function getLastVisit(memberId){const mts=T.filter(t=>t.memberId===memberId).sort((a,b)=>b.date.localeCompare(a.date));return mts.length?mts[0].date:null;}
-
-function getMemberUrl(id){
-  return 'https://onebalanceyume-beep.github.io/private-gym-trainer/one_tre_member.html?id='+id;
-}
-
-let gasCache=null;
-
-async function fetchGasData(forceRefresh){
-  if(gasCache && !forceRefresh)return gasCache;
-  try{
-    const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    gasCache=await res.json();
-    return gasCache;
-  }catch(e){console.error('GAS fetch error:',e);return null;}
-}
-
-async function loadGasMembers(forceRefresh){
-  const data=await fetchGasData(forceRefresh);
-  if(!data){pSel();rMem();rDash();return;}
-  const members=Array.isArray(data)?data:(data.members||[]);
-  gasMembers=[];
-  members.forEach(row=>{
-    const name=String(row.name||'').trim();
-    const id=String(row.id||'').trim();
-    const genderRaw=String(row.gender||'').trim();
-    const gender=genderRaw==='男性'?'m':'f';
-    if(name&&id&&!gasMembers.find(m=>m.id===id)){
-      gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true});
-    }
-  });
-  T=[];
-  if(data.training&&data.training.length){
-    const grouped={};
-    data.training.forEach(r=>{
-      const key=r.memberId+'_'+r.date;
-      if(!grouped[key])grouped[key]={id:key,memberId:r.memberId,date:r.date,sets:[]};
-      grouped[key].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
-    });
-    T=Object.values(grouped);
-  }
-  pSel();rMem();rDash();rRec();
-}
-
-let salesCache=null;
-let salesViewYear=new Date().getFullYear();
-
-function cPrevYear(){salesViewYear--;renderSales();}
-function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;renderSales();}
-
-function calcYearData(data,year){
-  const mD={};for(let i=1;i<=12;i++)mD[i]=0;
-  const cD={};let yT=0,yC=0;
-  data.forEach(row=>{
-    const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0),course=row['各コース']||'不明';
-    if(!ts||!actual)return;
-    const d=new Date(ts);if(d.getFullYear()!==year)return;
-    const mo=d.getMonth()+1;
-    yT+=actual;yC++;mD[mo]=(mD[mo]||0)+actual;
-    const cn=course.split('¥')[0].trim().substring(0,20);
-    if(!cD[cn])cD[cn]={total:0,count:0};
-    cD[cn].total+=actual;cD[cn].count++;
-  });
-  return{mD,cD,yT,yC};
-}
-
-function renderSales(){
-  if(!salesCache)return;
-  const data=salesCache;
-  const now=new Date(),ty=salesViewYear,tm=now.getMonth()+1;
-  const isCurrentYear=ty===now.getFullYear();
-  document.getElementById('sales-year-label').textContent=ty+'年';
-  document.getElementById('s-year-label').textContent=ty+'年 売上';
-  document.getElementById('cs-month-title').textContent=ty+'年 月別売上';
-  const cur=calcYearData(data,ty);
-  const prev=calcYearData(data,ty-1);
-  let mT=0,mC=0;
-  if(isCurrentYear){
-    data.forEach(row=>{
-      const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0);
-      if(!ts||!actual)return;
-      const d=new Date(ts);if(d.getFullYear()===ty&&d.getMonth()+1===tm){mT+=actual;mC++;}
-    });
-  }
-  document.getElementById('s-month').textContent=isCurrentYear?fmtYen(mT):'-';
-  document.getElementById('s-month-count').textContent=isCurrentYear?mC+'件':'-';
-  document.getElementById('s-year').textContent=fmtYen(cur.yT);
-  document.getElementById('s-year-count').textContent=cur.yC+'件';
-  const yoyEl=document.getElementById('s-yoy');
-  const yoySub=document.getElementById('s-yoy-sub');
-  if(prev.yT>0){
-    const pct=Math.round((cur.yT-prev.yT)/prev.yT*100);
-    yoyEl.textContent=(pct>=0?'+':'')+pct+'%';
-    yoyEl.style.color=pct>=0?'var(--black)':'var(--g2)';
-    yoySub.textContent='前年 '+fmtYen(prev.yT);
-  }else{yoyEl.textContent='-';yoySub.textContent='前年データなし';}
-  dc('csm');
-  C.csm=new Chart(document.getElementById('cs-month'),{type:'bar',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),backgroundColor:'#111',borderRadius:0,borderSkipped:false},{label:(ty-1)+'年',data:Object.values(prev.mD),backgroundColor:'#ccc',borderRadius:0,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
-  dc('csyoy');
-  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  C.csyoy=new Chart(document.getElementById('cs-yoy'),{type:'line',data:{labels:months,datasets:[{label:ty+'年',data:Object.values(cur.mD),borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:3,fill:true},{label:(ty-1)+'年',data:Object.values(prev.mD),borderColor:'#ccc',backgroundColor:'transparent',tension:0.4,pointRadius:3,borderDash:[4,4],fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
-  dc('csc');
-  const courseColors=['#DB444C','#5BB9CD','#e8a0bf','#b4a0e8','#80c8aa','#f0b870'];
-  const sortedCourses=Object.entries(cur.cD).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
-  C.csc=new Chart(document.getElementById('cs-course'),{type:'doughnut',data:{labels:sortedCourses.map(([n])=>n),datasets:[{data:sortedCourses.map(([,d])=>d.total),backgroundColor:courseColors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:6,boxWidth:8}}}}});
-  const det=document.getElementById('course-detail');det.innerHTML='';
-  Object.entries(cur.cD).sort((a,b)=>b[1].count-a[1].count).forEach(([n,d],i)=>{const div=document.createElement('div');div.className='course-item';div.innerHTML=`<div><div class="course-name" style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${courseColors[i]||'#aaa'};flex-shrink:0"></span>${n}</div><div class="course-count" style="padding-left:14px">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;det.appendChild(div);});
-  const fl=document.getElementById('form-list');fl.innerHTML='';
-  [...data].filter(row=>{const ts=row['タイムスタンプ'];if(!ts)return false;return new Date(ts).getFullYear()===salesViewYear;}).reverse().slice(0,10).forEach(row=>{
-    const div=document.createElement('div');div.className='pi';
-    const ts=row['タイムスタンプ']?formatJpDate(new Date(row['タイムスタンプ']).toISOString().slice(0,10)):'';
-    const name=row[NAME_KEY]||row['お名前']||'-';
-    const course=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
-    const actual=parseFloat(row['実際の金額']||0);
-    div.innerHTML=`<div><div class="pn">${name}</div><div style="font-size:11px;color:var(--g3);margin-top:2px">${ts} / ${course}</div></div><div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${fmtYen(actual)}</div>`;
-    fl.appendChild(div);
-  });
-}
-
-async function rSales(){
-  document.getElementById('sales-loading').style.display='block';
-  document.getElementById('sales-content').style.display='none';
-  document.getElementById('sales-error').style.display='none';
-  const rawData=await fetchGasData();
-  if(!rawData){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
-  const data=Array.isArray(rawData)?(rawData):(rawData.all||[]);
-  if(!data||!data.length){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
-  salesCache=data;
-  salesViewYear=new Date().getFullYear();
-  document.getElementById('sales-loading').style.display='none';
-  document.getElementById('sales-content').style.display='block';
-  renderSales();
-}
-
-async function loadTaikenList(){
-  const listEl=document.getElementById('taiken-list');
-  listEl.innerHTML='<p style="font-size:13px;color:var(--g3)">読み込み中...</p>';
-  try{
-    const res=await fetch(GAS_URL+'?action=getTaikenList&t='+Date.now(),{method:'GET',mode:'cors'});
-    const data=await res.json();
-    if(!data.ok){listEl.innerHTML='<p style="font-size:13px;color:#e86060">取得に失敗しました</p>';return;}
-    if(!data.list||data.list.length===0){listEl.innerHTML='<p style="font-size:13px;color:var(--g3)">予約はありません</p>';return;}
-    listEl.innerHTML='';
-    data.list.forEach(item=>{
-      const div=document.createElement('div');
-      div.className='taiken-item';
-      div.innerHTML=`
-        <div class="taiken-header">
-          <div>
-            <div class="taiken-name">${item.name} 様</div>
-            <div class="taiken-date">${item.reserveDate||'日時未設定'}</div>
-          </div>
-          <button class="taiken-cancel" onclick="cancelTaiken('${item.token}','${item.name.replace(/'/g,"\\'")}','${item.reserveDate.replace(/'/g,"\\'")}')">キャンセル</button>
-        </div>
-        <div class="taiken-meta">
-          <span>📞 ${item.phone||'-'}</span>
-          <span>✉️ ${item.email||'-'}</span>
-          <span>👤 ${item.gender||'-'} / ${item.age||'-'}</span>
-          <span>📍 ${item.address||'-'}</span>
-          <span>🔎 キッカケ: ${item.kikkake||'-'}</span>
-          <span>🏃 運動: ${item.undou||'-'}</span>
-        </div>
-      `;
-      listEl.appendChild(div);
-    });
-  }catch(err){
-    listEl.innerHTML='<p style="font-size:13px;color:#e86060">通信エラーが発生しました</p>';
-  }
-}
-
-async function cancelTaiken(token,name,reserveDate){
-  if(!confirm(name+' 様の「'+reserveDate+'」の予約をキャンセルします。\n\n予約者にキャンセル通知メールが送信されます。\nよろしいですか？'))return;
-  try{
-    const res=await fetch(GAS_URL+'?action=cancelTaikenByTrainer&token='+encodeURIComponent(token)+'&t='+Date.now(),{method:'GET',mode:'cors'});
-    const data=await res.json();
-    if(data.ok){
-      showToast('✓ キャンセル完了（通知メール送信済）','success');
-      setTimeout(()=>loadTaikenList(), 500);
-    }else{
-      showToast('エラー: '+(data.error||'不明'),'error');
-    }
-  }catch(err){
-    showToast('通信エラー','error');
-  }
-}
-
-function loadBodyScore(){
-  const mid=document.getElementById('score-member').value;
-  if(!mid)return;
-  const saved=JSON.parse(localStorage.getItem('onetreScore_'+mid)||'{"strength":0,"core":0,"agility":0,"flex":0}');
-  document.getElementById('sc-strength').value=saved.strength||0;
-  document.getElementById('sc-core').value=saved.core||0;
-  document.getElementById('sc-agility').value=saved.agility||0;
-  document.getElementById('sc-flex').value=saved.flex||0;
-  updateScoreTotal();
-}
-
-function updateScoreTotal(){
-  const s=parseInt(document.getElementById('sc-strength').value)||0;
-  const c=parseInt(document.getElementById('sc-core').value)||0;
-  const a=parseInt(document.getElementById('sc-agility').value)||0;
-  const f=parseInt(document.getElementById('sc-flex').value)||0;
-  const total=s+c+a+f;
-  const el=document.getElementById('score-total');
-  el.textContent='合計: '+total+' / 100';
-  el.style.color=total===100?'#3a8a6a':'var(--g2)';
-}
-
-function saveBodyScore(){
-  const mid=document.getElementById('score-member').value;
-  if(!mid){alert('会員を選択してください');return;}
-  const s=parseInt(document.getElementById('sc-strength').value)||0;
-  const c=parseInt(document.getElementById('sc-core').value)||0;
-  const a=parseInt(document.getElementById('sc-agility').value)||0;
-  const f=parseInt(document.getElementById('sc-flex').value)||0;
-  const score={strength:s,core:c,agility:a,flex:f};
-  localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
-  const params=new URLSearchParams({action:'saveBodyScore',memberId:mid,strength:s,core:c,agility:a,flex:f});
-  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-  .then(()=>showToast('✓ スコアを保存しました','success'))
-  .catch(()=>showToast('スコア保存（オフライン）','success'));
-}
-
-function sp(name,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
-  if(name==='dashboard')rDash();
-  if(name==='sales')rSales();
-  if(name==='taiken')loadTaikenList();
-  if(name==='members')rMem();
-  if(name==='training'){pSel();rRec();}
-  if(name==='calendar'){pSel();rCal();}
- if(name==='progress')pSel();
-if(name==='counseling')pSel();
-}
-
-function getAllMembers(){return gasMembers;}
-
-function rDash(){
-  const all=getAllMembers();
-  const t=all.length,f=all.filter(m=>m.gender==='f').length,ml=t-f;
-  document.getElementById('mt').textContent=t;
-  document.getElementById('mf').textContent=f;document.getElementById('mfp').textContent=t?Math.round(f/t*100)+'%':'-%';
-  document.getElementById('mm').textContent=ml;document.getElementById('mmp').textContent=t?Math.round(ml/t*100)+'%':'-%';
-  const followList=all.filter(m=>{const last=getLastVisit(m.id);return last&&daysSince(last)>=7;});
-  const fbox=document.getElementById('follow-alert');
-  if(followList.length>0){
-    fbox.style.display='block';
-    document.getElementById('follow-count').innerHTML=followList.length+'<span style="font-size:16px;color:var(--g3);margin-left:4px">名</span>';
-    document.getElementById('follow-names').textContent=followList.map(m=>m.name+'（'+daysSince(getLastVisit(m.id))+'日前）').join(' · ');
-  }else{fbox.style.display='none';}
-  dc('g');dc('a');
-  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#DB444C','#5BB9CD'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:12,boxWidth:10}}}}});
-  const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
-  const ageColors=['#e8a0bf','#b4a0e8','#DB444C','#5BB9CD'];
-  const allData=(gasCache&&gasCache.all)?gasCache.all:[];
-  allData.forEach(row=>{
-    const ag=String(row['年代']||row['年齢']||'').trim();
-    if(ag.includes('20'))bk['20代']++;
-    else if(ag.includes('30'))bk['30代']++;
-    else if(ag.includes('40'))bk['40代']++;
-    else if(ag.includes('50')||ag.includes('60')||ag.includes('70'))bk['50代+']++;
-  });
-  C.a=new Chart(document.getElementById('ca'),{type:'bar',data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:ageColors,borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#555',font:{size:12}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#555'},grid:{color:'#f0f0f0'}}}}});
-}
-
-function rMem(){
-  const l=document.getElementById('mlist');
-  const all=getAllMembers();
-  l.innerHTML=all.length?'':'<p style="font-size:13px;color:var(--g3)">会員がいません</p>';
-  all.forEach(m=>{
-    const last=getLastVisit(m.id),days=last?daysSince(last):null,isWarn=days!==null&&days>=7;
-    const url=getMemberUrl(m.id);
-    const avColor=m.gender==='m'?'background:#5BB9CD':'background:#DB444C';
-    const d=document.createElement('div');d.className='mrow';
-    d.innerHTML=`<div class="av ${isWarn?'av-warn':''}" style="${avColor}">${m.name.charAt(0)}</div>
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-          <div class="mname">${m.name}${m.fromSheet?'<span style="font-size:9px;color:var(--g4);margin-left:6px;letter-spacing:.06em">フォーム</span>':''}</div>
-          <span class="mbadge ${isWarn?'mbadge-warn':''}">${days!==null?days+'日前':'未記録'}</span>
-        </div>
-        <div class="url-box">
-          <span class="url-text">${url}</span>
-          <button class="copy-btn" onclick="cpUrl('${url}',this)">URLコピー</button>
-          <button class="renew-btn-inline" onclick="rmOpen('${m.id}','${m.name.replace(/'/g,"\\'")}')">継続契約</button>
-        </div>
-      </div>`;
-    l.appendChild(d);
-  });
-}
-
-function cpUrl(url,btn){
-  navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ コピー済';setTimeout(()=>btn.textContent='URLコピー',2000);});
-}
-
-function pSel(){
-  const all=getAllMembers();
- ['str','scal','spro','score-member','counsel-member'].forEach(id=>{
-    const s=document.getElementById(id);if(!s)return;
-    const ha=s.options[0]&&s.options[0].value==='';
-    while(s.options.length>(ha?1:0))s.remove(ha?1:0);
-    all.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;s.appendChild(o);});
-  });
-  const td=document.getElementById('idate');if(td&&!td.value)td.value=new Date().toISOString().slice(0,10);
-}
-
-function addS(){
-  const c=document.getElementById('sw'),r=document.createElement('div');r.className='set-row';
-  r.innerHTML=`<input placeholder="スクワット" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:100%"><input type="number" placeholder="40" step="0.5" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100%"><input type="number" placeholder="10" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100%"><input type="number" placeholder="3" min="1" style="font-size:12px;padding:7px 8px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100%"><button class="del-btn" onclick="this.parentElement.remove()">×</button>`;
-  c.appendChild(r);
-}
-
-function saveTr(){
-  const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
-  if(!mid||!dt){alert('会員と日付を選んでください');return;}
-  const setsArr=[];
-  document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});});
-  if(!setsArr.length){alert('種目を入力してください');return;}
-  const params=new URLSearchParams({action:'saveTraining',memberId:mid,date:dt,sets:JSON.stringify(setsArr)});
-  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-  .then(()=>{
-    document.getElementById('sw').innerHTML='';
-    showToast('✓ 保存しました','success');
-    setTimeout(()=>loadGasMembers(true), 500);
-  })
-  .catch(()=>showToast('保存に失敗しました','error'));
-}
-
-function rRec(){
-  const mid=document.getElementById('str').value,l=document.getElementById('rl');
-  const all=getAllMembers();
-  const rs=T.filter(t=>!mid||t.memberId===mid).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20);
-  l.innerHTML=rs.length?'':'<p style="font-size:13px;color:var(--g3)">記録なし</p>';
-  rs.forEach((t,idx)=>{
-    const m=all.find(x=>x.id===t.memberId);
-    const d=document.createElement('div');
-    d.className='pi';
-    d.style.cssText='flex-direction:column;align-items:flex-start;gap:8px';
-    d.innerHTML=`
-      <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
-        <div class="pn">${formatJpDate(t.date)}${m?' — '+m.name:''}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button onclick="editRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #5BB9CD;color:#5BB9CD;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">修正</button>
-          <button onclick="copyRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #60b890;color:#60b890;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">複製</button>
-          <button onclick="copyRecToday('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:none;background:linear-gradient(135deg,#3a7a5a,#60b890);color:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:500">今日にコピー</button>
-          <button onclick="deleteRec('${t.memberId}','${t.date}')" style="font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid #e86060;color:#e86060;background:#fff;cursor:pointer;font-family:'Noto Sans JP',sans-serif">削除</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--g3);width:100%">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回'+(s.sets&&s.sets>1?' ×'+s.sets+'セット':'')).join('<br>')}</div>
-    `;
-    l.appendChild(d);
-  });
-}
-
-function deleteRec(memberId,date){
-  if(!confirm('この日の記録を全て削除しますか？')) return;
-  const params=new URLSearchParams({action:'deleteTraining',memberId:memberId,date:date});
-  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-  .then(()=>{
-    showToast('✓ 削除しました','success');
-    setTimeout(()=>loadGasMembers(true), 500);
-  })
-  .catch(()=>showToast('削除に失敗しました','error'));
-}
-
-function editRec(memberId,date){
-  const rec=T.find(t=>t.memberId===memberId&&t.date===date);
-  if(!rec){alert('記録が見つかりません');return;}
-  const modal=document.createElement('div');
-  modal.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px';
-  const box=document.createElement('div');
-  box.style.cssText='background:#fff;border-radius:16px;padding:20px;width:100%;max-width:480px;margin:auto';
-  const all=getAllMembers();
-  const memberOptions=all.map(m=>`<option value="${m.id}" ${m.id===rec.memberId?'selected':''}>${m.name}</option>`).join('');
-  let setsHtml=rec.sets.map((s,i)=>`
-    <div class="edit-set-row" style="display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center">
-      <input type="text" value="${s.exercise}" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <input type="number" value="${s.weight}" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <input type="number" value="${s.reps}" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <input type="number" value="${s.sets||1}" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
-    </div>
-  `).join('');
-  box.innerHTML=`
-    <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#222">トレーニング記録を修正</div>
-    <input type="hidden" id="edit-old-member" value="${rec.memberId}">
-    <input type="hidden" id="edit-old-date" value="${rec.date}">
-    <div style="margin-bottom:12px">
-      <div style="font-size:10px;color:#888;margin-bottom:4px">会員</div>
-      <select id="edit-member" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">${memberOptions}</select>
-    </div>
-    <div style="margin-bottom:12px">
-      <div style="font-size:10px;color:#888;margin-bottom:4px">日付</div>
-      <input type="date" id="edit-date" value="${rec.date}" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    </div>
-    <div style="font-size:10px;color:#888;margin-bottom:8px">種目</div>
-    <div id="edit-sets">${setsHtml}</div>
-    <button onclick="addEditRow()" style="font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;margin-bottom:16px;font-family:'Noto Sans JP',sans-serif">+ 種目追加</button>
-    <div style="display:flex;gap:8px">
-      <button onclick="saveEditRec(this)" style="flex:1;padding:12px;background:#222;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif">保存</button>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:12px;background:#f5f5f5;color:#555;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif">キャンセル</button>
-    </div>
-  `;
-  modal.appendChild(box);
-  document.body.appendChild(modal);
-}
-
-function addEditRow(){
-  const row=document.createElement('div');
-  row.className='edit-set-row';
-  row.style.cssText='display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center';
-  row.innerHTML=`
-    <input type="text" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <input type="number" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <input type="number" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <input type="number" value="1" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
-  `;
-  document.getElementById('edit-sets').appendChild(row);
-}
-
-function saveEditRec(btn){
-  const modal=btn.closest('[style*=fixed]');
-  const oldMid=document.getElementById('edit-old-member').value;
-  const oldDate=document.getElementById('edit-old-date').value;
-  const newMid=document.getElementById('edit-member').value;
-  const newDate=document.getElementById('edit-date').value;
-  if(!newMid||!newDate){alert('会員と日付を入力してください');return;}
-  const rows=document.querySelectorAll('#edit-sets .edit-set-row');
-  const setsArr=[];
-  rows.forEach(row=>{
-    const inputs=row.querySelectorAll('input');
-    const ex=inputs[0].value.trim();
-    const wt=parseFloat(inputs[1].value)||0;
-    const rp=parseInt(inputs[2].value)||0;
-    const st=parseInt(inputs[3].value)||1;
-    if(ex) setsArr.push({exercise:ex,weight:wt,reps:rp,sets:st});
-  });
-  if(!setsArr.length){alert('種目を入力してください');return;}
-  if(oldMid===newMid){
-    const params=new URLSearchParams({action:'updateTraining',memberId:newMid,oldDate:oldDate,date:newDate,sets:JSON.stringify(setsArr)});
-    fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-    .then(()=>{modal.remove();showToast('✓ 修正しました','success');setTimeout(()=>loadGasMembers(true), 500);})
-    .catch(()=>showToast('修正に失敗しました','error'));
-  }else{
-    const delParams=new URLSearchParams({action:'deleteTraining',memberId:oldMid,date:oldDate});
-    fetch(GAS_URL+'?'+delParams.toString(),{method:'GET',mode:'cors'})
-    .then(()=>{
-      const addParams=new URLSearchParams({action:'saveTraining',memberId:newMid,date:newDate,sets:JSON.stringify(setsArr)});
-      return fetch(GAS_URL+'?'+addParams.toString(),{method:'GET',mode:'cors'});
-    })
-    .then(()=>{modal.remove();showToast('✓ 修正しました','success');setTimeout(()=>loadGasMembers(true), 500);})
-    .catch(()=>showToast('修正に失敗しました','error'));
-  }
-}
-
-// ===== 複製機能（ワンクリック：今日の日付でコピー保存） =====
-function copyRecToday(memberId, date){
-  const rec = T.find(t => t.memberId===memberId && t.date===date);
-  if(!rec){ showToast('記録が見つかりません','error'); return; }
-  if(!rec.sets || !rec.sets.length){ showToast('複製する種目がありません','error'); return; }
-  const today = new Date().toISOString().slice(0,10);
-  // 同じ日・同じ会員に既に記録がある場合は確認
-  const existing = T.find(t => t.memberId===memberId && t.date===today);
-  if(existing){
-    if(!confirm('今日（'+formatJpDate(today)+'）既に同じ会員の記録があります。\n追加で保存しますか？（既存記録は残ります）')) return;
-  }
-  const setsArr = rec.sets.map(s => ({
-    exercise: s.exercise,
-    weight: s.weight,
-    reps: s.reps,
-    sets: s.sets || 1
-  }));
-  const params = new URLSearchParams({
-    action: 'saveTraining',
-    memberId: memberId,
-    date: today,
-    sets: JSON.stringify(setsArr)
-  });
-  fetch(GAS_URL + '?' + params.toString(), { method:'GET', mode:'cors' })
-    .then(() => {
-      showToast('✓ ' + formatJpDate(today) + 'に複製しました','success');
-      setTimeout(() => loadGasMembers(true), 500);
-    })
-    .catch(() => showToast('複製に失敗しました','error'));
-}
-
-// ===== 複製機能（モーダル：日付・内容を編集してから保存） =====
-function copyRec(memberId, date){
-  const rec = T.find(t => t.memberId===memberId && t.date===date);
-  if(!rec){ showToast('記録が見つかりません','error'); return; }
-  const modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px';
-  const box = document.createElement('div');
-  box.style.cssText = 'background:#fff;border-radius:16px;padding:20px;width:100%;max-width:480px;margin:auto';
-  const all = getAllMembers();
-  const memberOptions = all.map(m => `<option value="${m.id}" ${m.id===rec.memberId?'selected':''}>${m.name}</option>`).join('');
-  const today = new Date().toISOString().slice(0,10);
-  const setsHtml = rec.sets.map((s,i) => `
-    <div class="copy-set-row" style="display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center">
-      <input type="text" value="${s.exercise}" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <input type="number" value="${s.weight}" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <input type="number" value="${s.reps}" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <input type="number" value="${s.sets||1}" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-      <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
-    </div>
-  `).join('');
-  box.innerHTML = `
-    <div style="font-size:14px;font-weight:700;margin-bottom:8px;color:#222">トレーニング記録を複製</div>
-    <div style="font-size:11px;color:#888;margin-bottom:14px;padding:8px 12px;background:#f0f9f6;border-radius:6px;border-left:3px solid #60b890">元の記録（${formatJpDate(rec.date)}）は残ります。新規記録として保存されます。</div>
-    <div style="margin-bottom:12px">
-      <div style="font-size:10px;color:#888;margin-bottom:4px">会員</div>
-      <select id="copy-member" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">${memberOptions}</select>
-    </div>
-    <div style="margin-bottom:12px">
-      <div style="font-size:10px;color:#888;margin-bottom:4px">日付</div>
-      <input type="date" id="copy-date" value="${today}" style="width:100%;font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    </div>
-    <div style="font-size:10px;color:#888;margin-bottom:8px">種目（必要に応じて重量・回数を調整）</div>
-    <div id="copy-sets">${setsHtml}</div>
-    <button onclick="addCopyRow()" style="font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;margin-bottom:16px;font-family:'Noto Sans JP',sans-serif">+ 種目追加</button>
-    <div style="display:flex;gap:8px">
-      <button onclick="saveCopyRec(this)" style="flex:1;padding:12px;background:linear-gradient(135deg,#3a7a5a,#60b890);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif">複製を保存</button>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="flex:1;padding:12px;background:#f5f5f5;color:#555;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif">キャンセル</button>
-    </div>
-  `;
-  modal.appendChild(box);
-  document.body.appendChild(modal);
-}
-
-function addCopyRow(){
-  const row = document.createElement('div');
-  row.className = 'copy-set-row';
-  row.style.cssText = 'display:grid;grid-template-columns:1fr 70px 60px 50px 30px;gap:6px;margin-bottom:8px;align-items:center';
-  row.innerHTML = `
-    <input type="text" placeholder="種目名" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <input type="number" placeholder="重量kg" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <input type="number" placeholder="回数" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <input type="number" value="1" placeholder="セット" style="font-size:13px;padding:8px 10px;border:1.5px solid rgba(200,200,200,0.5);border-radius:8px;font-family:'Noto Sans JP',sans-serif">
-    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#e86060;font-size:18px;cursor:pointer">×</button>
-  `;
-  document.getElementById('copy-sets').appendChild(row);
-}
-
-function saveCopyRec(btn){
-  const modal = btn.closest('[style*=fixed]');
-  const mid = document.getElementById('copy-member').value;
-  const dt = document.getElementById('copy-date').value;
-  if(!mid || !dt){ alert('会員と日付を入力してください'); return; }
-  const rows = document.querySelectorAll('#copy-sets .copy-set-row');
-  const setsArr = [];
-  rows.forEach(row => {
-    const inputs = row.querySelectorAll('input');
-    const ex = inputs[0].value.trim();
-    const wt = parseFloat(inputs[1].value) || 0;
-    const rp = parseInt(inputs[2].value) || 0;
-    const st = parseInt(inputs[3].value) || 1;
-    if(ex) setsArr.push({exercise:ex, weight:wt, reps:rp, sets:st});
-  });
-  if(!setsArr.length){ alert('種目を入力してください'); return; }
-  const params = new URLSearchParams({
-    action: 'saveTraining',
-    memberId: mid,
-    date: dt,
-    sets: JSON.stringify(setsArr)
-  });
-  fetch(GAS_URL + '?' + params.toString(), { method:'GET', mode:'cors' })
-    .then(() => {
-      modal.remove();
-      showToast('✓ ' + formatJpDate(dt) + 'に複製しました','success');
-      setTimeout(() => loadGasMembers(true), 500);
-    })
-    .catch(() => showToast('複製に失敗しました','error'));
-}
-
-// ===== カウンセリング機能 =====
-function toggleDietSection(){
-  const sec=document.getElementById('diet-section');
-  const btn=document.getElementById('diet-toggle');
-  if(sec.style.display==='none'||!sec.style.display){
-    sec.style.display='block';
-    btn.textContent='− ダイエット項目を閉じる';
-  }else{
-    sec.style.display='none';
-    btn.textContent='＋ ダイエット項目を追加する';
-  }
-}
-
-async function loadCounseling(){
-  const mid=document.getElementById('counsel-member').value;
-  const form=document.getElementById('counsel-form');
-  if(!mid){form.style.display='none';return;}
-  form.style.display='block';
-  // 既存データ読込
-  try{
-    const res=await fetch(GAS_URL+'?action=getCounseling&memberId='+encodeURIComponent(mid)+'&t='+Date.now(),{method:'GET',mode:'cors'});
-    const data=await res.json();
-    const fields=['purpose','goal','deadline','gymexp','exercisehabit','exerciseexp','injury','medication','pain','concern','sleep','bedtime','work','stress','selfeval','message','ng','height','goalweight','ddeadline','dpast','dmethods','meal','breakfast','eatout','alcohol','motivation'];
-    fields.forEach(f=>{
-      const el=document.getElementById('c-'+f);
-      if(el)el.value='';
-    });
-    if(data && data.ok && data.data){
-      const r=data.data;
-      const map={purpose:'目的',goal:'目標',deadline:'達成期限',gymexp:'過去のジム経験',exercisehabit:'運動習慣',exerciseexp:'過去の運動経験',injury:'ケガ手術歴',medication:'通院服薬',pain:'痛みのある箇所',concern:'気になる箇所',sleep:'睡眠時間',bedtime:'就寝時刻',work:'仕事形態',stress:'ストレスレベル',selfeval:'自己評価',message:'伝えたいこと',ng:'NGなこと',height:'ダイエット_身長',goalweight:'ダイエット_目標減量',ddeadline:'ダイエット_達成期限',dpast:'ダイエット_過去経験',dmethods:'ダイエット_試した方法',meal:'ダイエット_食事回数',breakfast:'ダイエット_朝食頻度',eatout:'ダイエット_外食頻度',alcohol:'ダイエット_お酒頻度',motivation:'ダイエット_モチベーション'};
-      Object.entries(map).forEach(([k,col])=>{
-        const el=document.getElementById('c-'+k);
-        if(el && r[col]!==undefined && r[col]!==null && r[col]!=='')el.value=r[col];
-      });
-      // ダイエット項目に値があれば自動で開く
-      const dietFields=['height','goalweight','ddeadline','dpast','dmethods','meal','breakfast','eatout','alcohol','motivation'];
-      const hasDiet=dietFields.some(f=>{const v=r[map[f]];return v!==undefined&&v!==null&&v!=='';});
-      if(hasDiet){
-        document.getElementById('diet-section').style.display='block';
-        document.getElementById('diet-toggle').textContent='− ダイエット項目を閉じる';
-      }
-    }
-  }catch(e){console.log('カウンセリング読込エラー:',e);}
-}
-
-function saveCounseling(){
-  const mid=document.getElementById('counsel-member').value;
-  if(!mid){alert('会員を選択してください');return;}
-  const getVal=(id)=>{const el=document.getElementById(id);return el?el.value.trim():'';};
-  const today=new Date().toISOString().slice(0,10);
-  const data={
-    recordDate:today,
-    purpose:getVal('c-purpose'),
-    goal:getVal('c-goal'),
-    deadline:getVal('c-deadline'),
-    gymExp:getVal('c-gymexp'),
-    exerciseHabit:getVal('c-exercisehabit'),
-    exerciseExp:getVal('c-exerciseexp'),
-    injuryHistory:getVal('c-injury'),
-    medication:getVal('c-medication'),
-    painArea:getVal('c-pain'),
-    concernArea:getVal('c-concern'),
-    sleepHours:getVal('c-sleep'),
-    bedtime:getVal('c-bedtime'),
-    workStyle:getVal('c-work'),
-    stressLevel:getVal('c-stress'),
-    selfEval:getVal('c-selfeval'),
-    message:getVal('c-message'),
-    ngItems:getVal('c-ng'),
-    dHeight:getVal('c-height'),
-    dGoalWeight:getVal('c-goalweight'),
-    dDeadline:getVal('c-ddeadline'),
-    dPastExp:getVal('c-dpast'),
-    dMethods:getVal('c-dmethods'),
-    dMealCount:getVal('c-meal'),
-    dBreakfast:getVal('c-breakfast'),
-    dEatOut:getVal('c-eatout'),
-    dAlcohol:getVal('c-alcohol'),
-    dMotivation:getVal('c-motivation')
-  };
-  const params=new URLSearchParams({
-    action:'saveCounseling',
-    memberId:mid,
-    data:JSON.stringify(data)
-  });
-  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-  .then(r=>r.json())
-  .then(result=>{
-    if(result && result.ok)showToast('✓ カウンセリングを保存しました','success');
-    else showToast('保存に失敗: '+(result.error||'不明'),'error');
-  })
-  .catch(()=>showToast('通信エラー','error'));
-}
-function rCal(){
-  const mid=document.getElementById('scal').value;
-  document.getElementById('ctitle').textContent=cY+'年'+(cM2+1)+'月';
-  document.getElementById('chdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>`<div class="cday hdr">${d}</div>`).join('');
-  const first=new Date(cY,cM2,1).getDay(),days=new Date(cY,cM2+1,0).getDate(),today=new Date().toISOString().slice(0,10);
-  // 日付ごとの実施人数をカウント（会員未選択=全員、選択時=その人だけ）
-  const dayStats={};
-  T.forEach(t=>{
-    if(mid && t.memberId!==mid) return;
-    if(!t.date || !t.date.startsWith(`${cY}-${String(cM2+1).padStart(2,'0')}-`)) return;
-    const dayKey=t.date.slice(0,10);
-    if(!dayStats[dayKey]) dayStats[dayKey]=new Set();
-    dayStats[dayKey].add(t.memberId);
-  });
-  let html=Array(first).fill('<div class="cday"></div>').join('');
-  for(let d=1;d<=days;d++){
-    const ds=`${cY}-${String(cM2+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const memberSet=dayStats[ds];
-    const count=memberSet?memberSet.size:0;
-    const hasTraining=count>0;
-    const isMulti=count>=2;
-    const isT=ds===today;
-    const badge=(!mid && count>=2)?`<span class="cday-badge">${count}</span>`:'';
-    let cls='cday';
-    if(hasTraining){
-      cls+=' has';
-      if(isMulti) cls+=' has-multi';
-    }else if(isT){
-      cls+=' today';
-    }
-    html+=`<div class="${cls}">${d}${badge}</div>`;
-  }
-  document.getElementById('cbody').innerHTML=html;
-  // 会員未選択時の下部サマリー
-  const totalDays=Object.keys(dayStats).length;
-  const totalSessions=Object.values(dayStats).reduce((a,s)=>a+s.size,0);
-  let summaryEl=document.getElementById('cal-summary');
-  if(!summaryEl){
-    summaryEl=document.createElement('div');
-    summaryEl.id='cal-summary';
-    summaryEl.style.cssText='margin-top:16px;padding:12px 14px;background:#fafafa;border:.5px solid var(--g5);font-size:11px;color:var(--g1);line-height:1.8';
-    document.getElementById('cbody').parentElement.appendChild(summaryEl);
-  }
-  if(mid){
-    const allMems=getAllMembers();
-    const memName=(allMems.find(m=>m.id===mid)||{}).name||'';
-    summaryEl.innerHTML=`<strong style="color:var(--black)">${memName} さん</strong> の ${cY}年${cM2+1}月<br>実施日数：${totalDays}日`;
-  }else{
-    summaryEl.innerHTML=`<strong style="color:var(--black)">${cY}年${cM2+1}月</strong> のパーソナルトレーニング実施状況<br>実施日数：${totalDays}日 / 延べセッション数：${totalSessions}回`;
-  }
-}
-function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
-function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
-
-function calcPRs(mts){const pr={};mts.forEach(t=>t.sets.forEach(s=>{if(!pr[s.exercise]||s.weight>pr[s.exercise].weight)pr[s.exercise]={weight:s.weight,date:t.date};}));return pr;}
-function calcVolumes(mts){return mts.map(t=>({date:t.date,vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));}
-function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const k=mon.toISOString().slice(0,10);wk[k]=(wk[k]||0)+1;});return Object.entries(wk).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8);}
-
-function rPro(){
-  const mid=document.getElementById('spro').value;if(!mid)return;
-  const all=getAllMembers(),mem=all.find(m=>m.id===mid);if(!mem)return;
-  const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
-  dc('cf');dc('cv');
-  const freq=calcFreq(mts);
-  C.cf=new Chart(document.getElementById('cf'),{type:'bar',data:{labels:freq.map(f=>f[0].slice(5)),datasets:[{data:freq.map(f=>f[1]),backgroundColor:'#DB444C',borderRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f0f0f0'}}}}});
-  const vols=calcVolumes(mts);
-  C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#5BB9CD',backgroundColor:'rgba(91,185,205,0.08)',tension:0.4,pointRadius:4,pointBackgroundColor:'#5BB9CD',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
-  const prs=calcPRs(mts),pl=document.getElementById('pr-list');pl.innerHTML='';
-  if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--g3)">記録がありません</p>';return;}
-  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${formatJpDate(pr.date)}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
-  const cmp=document.getElementById('pcmp');cmp.innerHTML='';
-  if(mts.length<2){cmp.innerHTML='<p style="font-size:13px;color:var(--g3)">2回以上記録すると比較が表示されます</p>';return;}
-  const last=mts[mts.length-1],prev=mts[mts.length-2];
-  last.sets.forEach(s=>{const ps=prev.sets.find(p=>p.exercise===s.exercise);if(!ps)return;const dw=s.weight-ps.weight,dr=s.reps-ps.reps;const div=document.createElement('div');div.className='pi';div.innerHTML=`<div class="pn">${s.exercise}</div><div class="pvs"><span class="pp">${ps.weight}kg×${ps.reps}回</span><span style="color:var(--g4)">→</span><span class="pc">${s.weight}kg×${s.reps}回</span><span class="pu">${dw>0?'+'+dw.toFixed(1)+'kg':''}${dr>0?' +'+dr+'回':''}</span></div>`;cmp.appendChild(div);});
-}
-
-rCal();
-loadGasMembers();
-// ===== バージョン自動更新チェック（localStorage保存式 / ループ対策済み） =====
-(async function checkVersion(){
-  const GAS_URL_VER='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-  const VERSION_KEY='onetreTrainerVer_v4';
-  try{
-    const res=await fetch(GAS_URL_VER+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
-    const data=await res.json();
-    if(!data || !data.version) return;
-    const saved=localStorage.getItem(VERSION_KEY);
-    if(!saved){
-      // 初回アクセス：現在のバージョンを保存してダイアログは出さない
-      localStorage.setItem(VERSION_KEY, data.version);
-      return;
-    }
-    if(saved !== data.version){
-      // 先に新バージョンを保存してからリロード（ループ防止）
-      localStorage.setItem(VERSION_KEY, data.version);
-      console.log('新バージョン検出: '+saved+' → '+data.version);
-      if(confirm('新しいバージョンがあります。更新しますか？')){
-        location.reload(true);
-      }
-    }
-  }catch(e){console.log('バージョンチェック失敗:',e);}
-})();
-</script>
 </body>
 </html>
