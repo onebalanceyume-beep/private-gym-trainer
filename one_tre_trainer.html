@@ -30,7 +30,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .app{max-width:960px;margin:0 auto;background:var(--bg2)}
 .topbar{background:linear-gradient(135deg,#fff 0%,#faf3fa 100%);padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .brand-wrap{display:flex;align-items:center;gap:12px}
-.brand-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--pink),var(--lavender));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 2px 8px rgba(232,96,138,0.25)}
+.brand-ico{width:40px;height:40px;border-radius:10px;object-fit:cover;box-shadow:0 2px 8px rgba(232,96,138,0.25)}
 .brand-txt{line-height:1.2}
 .brand-name{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:.06em}
 .brand-sub{font-size:8px;color:var(--ink3);letter-spacing:.18em;margin-top:2px;font-weight:500}
@@ -49,11 +49,13 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .metric-blue{background:linear-gradient(135deg,var(--blue-bg2),var(--blue-bg))}
 .metric-green{background:linear-gradient(135deg,var(--green-bg2),var(--green-bg))}
 .metric-orange{background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg))}
+.metric-lavender{background:linear-gradient(135deg,#f5f0fa,var(--lavender-bg))}
 .metric-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px}
 .metric-pink .metric-label{color:var(--pink2)}
 .metric-blue .metric-label{color:var(--blue2)}
 .metric-green .metric-label{color:var(--green2)}
 .metric-orange .metric-label{color:var(--orange2)}
+.metric-lavender .metric-label{color:#8a5ac8}
 .metric-value{font-size:26px;font-weight:800;line-height:1;color:var(--ink);display:flex;align-items:baseline;gap:4px}
 .metric-value-lg{font-size:22px}
 .metric-unit{font-size:12px;color:var(--ink3);font-weight:500}
@@ -332,7 +334,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 <div class="app">
   <div class="topbar">
     <div class="brand-wrap">
-      <div class="brand-ico">T</div>
+      <img class="brand-ico" src="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png" alt="ONE TRE">
       <div class="brand-txt">
         <div class="brand-name">ONE TRE</div>
         <div class="brand-sub">TRAINER · YONAGO</div>
@@ -344,7 +346,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
   <div class="nav">
     <button class="nbtn active" onclick="sp('dashboard',this)"><span>📊</span>ダッシュボード</button>
     <button class="nbtn" onclick="sp('sales',this)"><span>💰</span>売上</button>
-    <button class="nbtn" onclick="sp('taiken',this)"><span>🎯</span>体験予約</button>
+    <button class="nbtn" onclick="sp('taiken',this)"><span>🎯</span>予約一覧</button>
     <button class="nbtn" onclick="sp('members',this)"><span>👥</span>会員</button>
     <button class="nbtn" onclick="sp('calendar',this)"><span>🗓️</span>来店分析</button>
   </div>
@@ -353,19 +355,19 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
   <div id="page-dashboard" class="page active">
     <div class="section-ttl">今月のKPI</div>
     <div class="metrics">
-      <div class="metric metric-pink">
+      <div class="metric metric-lavender">
         <div class="metric-ico">👥</div>
         <div class="metric-label">会員数</div>
         <div class="metric-value" id="mt">0<span class="metric-unit">名</span></div>
         <div class="metric-sub" id="mfp-sub">女性 0 / 男性 0</div>
       </div>
-      <div class="metric metric-blue">
+      <div class="metric metric-pink">
         <div class="metric-ico">♀</div>
         <div class="metric-label">女性会員</div>
         <div class="metric-value" id="mf">0<span class="metric-unit">名</span></div>
         <div class="metric-sub" id="mfp">-%</div>
       </div>
-      <div class="metric metric-green">
+      <div class="metric metric-blue">
         <div class="metric-ico">♂</div>
         <div class="metric-label">男性会員</div>
         <div class="metric-value" id="mm">0<span class="metric-unit">名</span></div>
