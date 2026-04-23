@@ -880,28 +880,41 @@ function renderAttend(){
   document.getElementById('cal-body').innerHTML=html;
 }
 
-function renderCourseStatus(){
-  // コース回数（カウンセリングから取得、なければスキップ）
+async function renderCourseStatus(){
   const wrap=document.getElementById('course-status-wrap');
-  if(!allData||!allData.counseling||!allData.counseling[urlId]){wrap.innerHTML='';return;}
-  const counsel=allData.counseling[urlId];
-  const courseSessions=counsel.courseSessions?parseInt(counsel.courseSessions):null;
-  if(!courseSessions){wrap.innerHTML='';return;}
-  const used=mts.length;
-  const remain=courseSessions-used;
-  let remClass='course-rem';
-  if(remain<=1)remClass+=' danger';
-  else if(remain<=3)remClass+=' warn';
-  wrap.innerHTML=`
-    <div class="course-card">
-      <div class="course-ico-lg">🎟️</div>
-      <div class="course-body">
-        <div class="course-label-my">コース消化状況</div>
-        <div class="course-frac"><span class="nn">${used}</span><span class="ss">/</span><span class="tt">${courseSessions} 回</span></div>
-        <div class="${remClass}">残 ${remain<0?0:remain} 回</div>
+  wrap.innerHTML='';
+  // GASからコース消化データ取得
+  try{
+    const res=await fetch(GAS_URL+'?action=getSessionCounts&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(!data.ok||!data.counts||!data.counts[urlId])return;
+    const info=data.counts[urlId];
+    if(!info.contractCount)return;
+    const contractCount=info.contractCount;
+    const usedCount=info.usedCount||0;
+    const remain=Math.max(0,contractCount-usedCount);
+    const isRenewalTime=usedCount>=contractCount;
+    let remClass='course-rem';
+    if(isRenewalTime)remClass+=' danger';
+    else if(remain<=1)remClass+=' danger';
+    else if(remain<=3)remClass+=' warn';
+    const renewalMsg=isRenewalTime?'<div style="font-size:10px;color:var(--pink2);font-weight:800;margin-top:6px">💜 コース完了！次のコースをお選びください</div>':'';
+    wrap.innerHTML=`
+      <div class="course-card">
+        <div class="course-ico-lg">🎟️</div>
+        <div class="course-body">
+          <div class="course-label-my">コース消化状況</div>
+          <div class="course-frac"><span class="nn">${usedCount}</span><span class="ss">/</span><span class="tt">${contractCount} 回</span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+            <div class="${remClass}">残 ${remain} 回</div>
+          </div>
+          ${renewalMsg}
+        </div>
       </div>
-    </div>
-  `;
+    `;
+  }catch(err){
+    console.log('renderCourseStatus error:',err);
+  }
 }
 
 function renderBody(){
