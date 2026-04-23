@@ -238,6 +238,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .act-del{background:#fff;color:var(--pink2);border-color:var(--pink)}
 
 .counsel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:10px}
+
+/* 担当トレーナー編集エリア */
+.trainer-edit-box{background:#fff;border:1.5px dashed var(--blue);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.trainer-sel{padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:12px;color:var(--ink);font-weight:700;cursor:pointer;outline:none;min-width:120px}
+.trainer-sel:focus{border-color:var(--blue)}
 .counsel-item{background:#fff;border-radius:10px;padding:10px 12px}
 .counsel-label{font-size:9px;color:var(--ink3);font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
 .counsel-value{font-size:12px;color:var(--ink);font-weight:500;line-height:1.5}
@@ -1101,6 +1106,18 @@ function renderMemberDetail(m){
     <div class="url-box" style="margin-bottom:14px">
       <span class="url-text">${url}</span>
     </div>
+
+    <div class="trainer-edit-box">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--ink2);font-weight:800;letter-spacing:.06em">👤 担当トレーナー</span>
+        <select id="trainer-sel-${m.id}" class="trainer-sel" onchange="saveTrainer('${m.id}',this.value)">
+          <option value="">— 未設定 —</option>
+          ${getTrainerList().map(t=>`<option value="${t}" ${trainer===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+        <button class="btn-ghost" onclick="event.stopPropagation();addNewTrainer('${m.id}')" style="padding:6px 12px;font-size:10px">+ 新規追加</button>
+      </div>
+      <div id="trainer-status-${m.id}" style="font-size:10px;color:var(--ink3);margin-top:6px;font-weight:500"></div>
+    </div>
   `;
 
   // ① コース消化（カウンセリングから取得）
@@ -1410,6 +1427,70 @@ function cpUrl(url,btn){
     btn.textContent='✓ コピー済';
     setTimeout(()=>btn.textContent='📋 URLコピー',2000);
   });
+}
+
+// ===== 担当トレーナー管理 =====
+function getTrainerList(){
+  // デフォルトは稲田・長尾
+  const defaultList=['稲田','長尾'];
+  // 会員データから既存の担当トレーナー名を収集（新規追加分も含めるため）
+  const fromMembers=new Set();
+  gasMembers.forEach(m=>{
+    const t=(m.raw && (m.raw['担当トレーナー']||m.raw['担当']))||'';
+    if(t)fromMembers.add(t);
+  });
+  // LocalStorageに保存した追加分も取得
+  const extra=JSON.parse(localStorage.getItem('onetreTrainerExtra')||'[]');
+  extra.forEach(t=>fromMembers.add(t));
+  // 統合してユニーク化
+  const all=[...new Set([...defaultList,...fromMembers])];
+  return all.filter(t=>t&&t.trim());
+}
+
+function saveTrainer(memberId,trainerName){
+  const statusEl=document.getElementById('trainer-status-'+memberId);
+  if(statusEl)statusEl.textContent='保存中...';
+  const params=new URLSearchParams({
+    action:'updateTrainer',
+    memberId:memberId,
+    trainerName:trainerName||''
+  });
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+    .then(r=>r.json())
+    .then(result=>{
+      if(result&&result.ok){
+        if(statusEl){statusEl.textContent='✓ 保存しました';statusEl.style.color='var(--green2)';}
+        showToast('✓ 担当トレーナーを更新しました','success');
+        // ローカルデータも更新
+        const member=gasMembers.find(m=>m.id===memberId);
+        if(member&&member.raw){
+          member.raw['担当トレーナー']=trainerName;
+        }
+        setTimeout(()=>loadGasMembers(true),800);
+      }else{
+        if(statusEl){statusEl.textContent='保存失敗：GAS側にupdateTrainer処理がない可能性があります';statusEl.style.color='var(--pink2)';}
+        showToast('保存失敗：'+(result.error||'GAS未対応'),'error');
+      }
+    })
+    .catch(err=>{
+      if(statusEl){statusEl.textContent='通信エラー';statusEl.style.color='var(--pink2)';}
+      showToast('通信エラー','error');
+    });
+}
+
+function addNewTrainer(memberId){
+  const name=prompt('新しいトレーナーの名前を入力してください（例: 山田）');
+  if(!name||!name.trim())return;
+  const trimmed=name.trim();
+  // LocalStorageに追加
+  const extra=JSON.parse(localStorage.getItem('onetreTrainerExtra')||'[]');
+  if(!extra.includes(trimmed)){
+    extra.push(trimmed);
+    localStorage.setItem('onetreTrainerExtra',JSON.stringify(extra));
+  }
+  showToast('✓ ' + trimmed + ' さんを追加しました','success');
+  // 現在展開中の会員詳細を再描画
+  rMem();
 }
 
 function pSel(){
