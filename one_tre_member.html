@@ -2,9 +2,18 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ONE TRE — My Page v2</title>
+<link rel="apple-touch-icon" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
+<link rel="icon" type="image/png" href="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ONE TRE">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — My Page</title>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -16,13 +25,8 @@
   --orange:#e8a060;--orange2:#c88040;--orange-bg:#fff0e0;--orange-bg2:#fff8ed;
   --lavender:#c0a0e8;--lavender-bg:#efe8f8;
 }
-body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:20px 12px 60px;line-height:1.5;font-weight:400}
-.wrap{max-width:420px;margin:0 auto}
-.preview-header{text-align:center;margin-bottom:20px}
-.preview-header h1{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
-.preview-header p{font-size:10px;color:var(--ink3)}
-
-.app{background:var(--bg2);border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(100,60,120,0.06);border:1px solid var(--line)}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;font-weight:400}
+.app{max-width:480px;margin:0 auto;background:var(--bg2);min-height:100vh}
 
 /* ヘッダー */
 .hd{padding:20px 20px 16px;background:linear-gradient(135deg,#fff,var(--pink-bg2))}
@@ -32,19 +36,21 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .brand-sub{font-size:8px;color:var(--ink3);letter-spacing:.18em;font-weight:500}
 .brand-catch{font-size:10px;color:var(--pink2);margin-top:1px;font-weight:700}
 .member-name{font-size:17px;color:var(--ink);margin-top:10px;font-weight:800}
+.admin-badge{display:inline-block;background:linear-gradient(135deg,#333,#666);color:#fff;font-size:9px;padding:3px 10px;border-radius:10px;margin-left:6px;letter-spacing:0.1em;font-weight:700;vertical-align:middle}
 
 /* ナビ */
-.nav{display:flex;gap:5px;padding:10px;background:var(--bg2);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.nav{display:flex;gap:5px;padding:10px;background:var(--bg2);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:10}
 .nav::-webkit-scrollbar{display:none}
-.nb{flex-shrink:0;padding:9px 14px;font-size:11px;border:none;border-radius:14px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--ink3);background:var(--bg);display:flex;align-items:center;gap:5px}
-.nb.a{color:#fff}
+.nb{flex-shrink:0;padding:9px 14px;font-size:11px;border:none;border-radius:14px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--ink3);background:var(--bg);display:flex;align-items:center;gap:5px;transition:all .2s}
+.nb.a{color:#fff;box-shadow:0 3px 10px rgba(232,96,138,0.2)}
 .nb.a.c-pink{background:linear-gradient(135deg,var(--pink2),var(--pink))}
 .nb.a.c-blue{background:linear-gradient(135deg,var(--blue2),var(--blue))}
 .nb.a.c-green{background:linear-gradient(135deg,var(--green2),var(--green))}
 .nb.a.c-orange{background:linear-gradient(135deg,var(--orange2),var(--orange))}
 .nb.a.c-lavender{background:linear-gradient(135deg,#8a5ac8,var(--lavender))}
 
-.pg{padding:18px}
+.pg{display:none;padding:18px}
+.pg.active{display:block}
 
 /* セクションタイトル */
 .st{font-size:10px;font-weight:800;color:var(--ink2);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;margin-top:4px;display:flex;align-items:center;gap:8px}
@@ -53,6 +59,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .st-blue::before{background:linear-gradient(to bottom,var(--blue2),var(--blue))}
 .st-green::before{background:linear-gradient(to bottom,var(--green2),var(--green))}
 .st-orange::before{background:linear-gradient(to bottom,var(--orange2),var(--orange))}
+.st-lavender::before{background:linear-gradient(to bottom,#8a5ac8,var(--lavender))}
 
 /* 通う */
 .att-hero{background:linear-gradient(135deg,var(--pink-bg2),var(--lavender-bg));border-radius:18px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
@@ -65,7 +72,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.5)}
 .dot.on{background:var(--pink2)}
 
-/* コース消化（マイページ） */
+/* コース消化 */
 .course-card{background:linear-gradient(135deg,var(--green-bg2),var(--green-bg));border-radius:18px;padding:18px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
 .course-ico-lg{font-size:32px;width:52px;height:52px;background:#fff;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(96,200,144,0.2)}
 .course-body{flex:1}
@@ -75,6 +82,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .course-frac .ss{color:var(--ink3);font-size:15px;margin:0 2px}
 .course-frac .tt{color:var(--ink3);font-size:14px}
 .course-rem{font-size:10px;color:var(--green2);font-weight:700;background:#fff;padding:3px 10px;border-radius:10px;margin-top:4px;display:inline-block}
+.course-rem.warn{color:var(--orange2)}
+.course-rem.danger{color:var(--pink2)}
 
 /* 予約ボタン */
 .rsv{display:block;background:linear-gradient(135deg,var(--pink2),var(--lavender));border-radius:18px;padding:16px;text-align:center;text-decoration:none;margin-bottom:16px;box-shadow:0 4px 14px rgba(232,96,138,0.25)}
@@ -97,9 +106,10 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .wt-input-row{display:flex;align-items:center;gap:8px}
 .wt-input{flex:1;border:2px solid rgba(232,96,138,0.2);border-radius:12px;padding:10px 14px;background:#fff;font-family:inherit;font-size:22px;color:var(--ink);font-weight:800;outline:none;min-width:0}
 .wt-save{background:linear-gradient(135deg,var(--pink2),var(--lavender));border:none;border-radius:12px;padding:11px 16px;font-size:11px;color:#fff;cursor:pointer;font-family:inherit;font-weight:800;white-space:nowrap}
+.wt-feedback{font-size:11px;color:var(--pink2);font-weight:700;margin-top:8px;min-height:16px}
 
 .wt-hero-card{background:linear-gradient(135deg,var(--bg),#fff);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid var(--line)}
-.wt-hero{display:flex;align-items:baseline;gap:6px}
+.wt-hero{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
 .wt-val{font-size:46px;color:var(--ink);font-weight:800;line-height:1}
 .wt-unit{font-size:14px;color:var(--ink3);font-weight:500}
 .wt-diff{font-size:13px;font-weight:800;margin-left:6px;padding:3px 10px;border-radius:10px}
@@ -116,11 +126,19 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .wt-hist-item.c1 .wt-hist-val{color:var(--blue2)}
 .wt-hist-item.c2 .wt-hist-val{color:var(--green2)}
 .wt-hist-item.c3 .wt-hist-val{color:var(--orange2)}
+.wt-hist-unit{font-size:10px;color:var(--ink3);font-weight:500;margin-left:2px}
 
 /* 目標体重 */
 .goal-box{background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg));border-radius:16px;padding:16px;margin-top:14px}
 .goal-label{font-size:9px;color:var(--orange2);font-weight:800;letter-spacing:.12em;margin-bottom:10px}
+.goal-input{flex:1;border:2px solid rgba(232,160,96,0.3);border-radius:12px;padding:10px 14px;background:#fff;font-family:inherit;font-size:20px;color:var(--ink);font-weight:800;outline:none;min-width:0}
+.goal-save{background:linear-gradient(135deg,var(--orange2),var(--orange));border:none;border-radius:12px;padding:11px 16px;font-size:11px;color:#fff;cursor:pointer;font-family:inherit;font-weight:800;white-space:nowrap}
+.goal-clear{background:#fff;border:2px solid var(--orange);border-radius:12px;padding:9px 12px;font-size:10px;color:var(--orange2);cursor:pointer;font-family:inherit;font-weight:700;white-space:nowrap}
 .goal-lock{font-size:9px;color:var(--ink3);margin-top:8px;font-weight:500;display:flex;align-items:center;gap:4px}
+.goal-display{font-size:11px;color:var(--orange2);font-weight:800;margin-top:8px}
+
+/* チャート */
+.ch-wrap{height:140px;position:relative;margin:10px 0 4px}
 
 /* トレーニング */
 .tr-card{padding:14px 16px;border-radius:14px;margin-bottom:10px;position:relative}
@@ -151,7 +169,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .sc-orange .sc-num{color:var(--orange2)}
 .sc-max{font-size:10px;color:var(--ink3);font-weight:600}
 .sc-bar-bg{height:5px;border-radius:3px;margin-top:8px;background:rgba(255,255,255,0.6);overflow:hidden}
-.sc-bar{height:100%;border-radius:3px}
+.sc-bar{height:100%;border-radius:3px;transition:width .6s}
 .sc-pink .sc-bar{background:linear-gradient(90deg,var(--pink),var(--pink2))}
 .sc-blue .sc-bar{background:linear-gradient(90deg,var(--blue),var(--blue2))}
 .sc-green .sc-bar{background:linear-gradient(90deg,var(--green),var(--green2))}
@@ -164,17 +182,30 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .total-max{font-size:13px;color:var(--ink3);margin-left:3px;font-weight:500}
 
 .pb-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:14px;margin-bottom:6px}
-.pb-row.c0{background:var(--orange-bg2)}
-.pb-row.c1{background:var(--pink-bg2)}
-.pb-row.c2{background:var(--blue-bg2)}
+.pb-row.c0{background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg))}
+.pb-row.c1{background:linear-gradient(135deg,var(--pink-bg2),var(--pink-bg))}
+.pb-row.c2{background:linear-gradient(135deg,var(--blue-bg2),var(--blue-bg))}
+.pb-row.c3{background:linear-gradient(135deg,var(--green-bg2),var(--green-bg))}
 .pb-name{font-size:12px;color:var(--ink);font-weight:700}
 .pb-date{font-size:9px;color:var(--ink3);margin-top:2px;font-weight:500}
-.pb-val-wrap{display:flex;align-items:baseline;gap:2px}
+.pb-val-wrap{display:flex;align-items:baseline;gap:2px;flex-wrap:wrap;justify-content:flex-end}
 .pb-val{font-size:22px;font-weight:800}
 .pb-row.c0 .pb-val{color:var(--orange2)}
 .pb-row.c1 .pb-val{color:var(--pink2)}
 .pb-row.c2 .pb-val{color:var(--blue2)}
+.pb-row.c3 .pb-val{color:var(--green2)}
 .pb-unit{font-size:10px;color:var(--ink3);font-weight:500}
+.pb-badge{display:inline-block;font-size:7px;padding:1px 6px;background:var(--orange);color:#fff;border-radius:6px;font-weight:800;margin-left:4px;letter-spacing:.06em;vertical-align:middle}
+
+/* 成長評価カード */
+.growth-card{background:linear-gradient(135deg,var(--bg),#fff);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.growth-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.growth-label{font-size:10px;color:var(--ink3);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.growth-badge{font-size:14px;font-weight:800}
+.growth-badge.up{color:var(--green2)}
+.growth-badge.flat{color:var(--ink3)}
+.growth-badge.down{color:var(--orange2)}
+.growth-sub{font-size:10px;color:var(--ink3);margin-top:4px;font-weight:500}
 
 /* 継続 */
 .renew-hero{background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg));border-radius:18px;padding:20px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
@@ -199,7 +230,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .pair-body{flex:1}
 .pair-title{font-size:12px;color:var(--ink);font-weight:800;margin-bottom:2px}
 .pair-desc{font-size:10px;color:var(--ink3);line-height:1.5;font-weight:500}
-.pair-sw{width:42px;height:24px;background:#ddd;border-radius:12px;position:relative;flex-shrink:0}
+.pair-sw{width:42px;height:24px;background:#ddd;border-radius:12px;position:relative;flex-shrink:0;transition:background .2s}
 .pair-toggle.on .pair-sw{background:var(--pink2)}
 .pair-sw::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 .pair-toggle.on .pair-sw::after{transform:translateX(18px)}
@@ -210,355 +241,896 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .sr-total-l{font-size:13px;color:var(--ink);font-weight:800}
 .sr-total-v{font-size:26px;color:var(--pink2);font-weight:800}
 .submit-btn{width:100%;background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;border-radius:16px;padding:16px;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.12em;cursor:pointer;margin-top:8px;box-shadow:0 4px 14px rgba(232,96,138,0.25)}
+.submit-btn:disabled{opacity:0.4;cursor:not-allowed}
 
-.note{text-align:center;padding:40px 20px;color:var(--ink3);font-size:12px;font-weight:500}
+.renew-done{text-align:center;padding:30px 16px}
+.renew-done-ic{width:56px;height:56px;background:var(--pink-bg);color:var(--pink2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;font-weight:800}
+.renew-done-ttl{font-size:15px;color:var(--ink);font-weight:800;margin-bottom:8px}
+.renew-done-msg{font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:16px;font-weight:500}
+.pay-box{background:linear-gradient(135deg,var(--pink-bg2),var(--pink-bg));border:2px solid var(--pink2);border-radius:16px;padding:20px 16px;margin-bottom:16px}
+.pay-lbl{font-size:10px;letter-spacing:.3em;color:var(--pink2);margin-bottom:8px;font-weight:800}
+.pay-amt{font-size:38px;color:var(--pink2);font-weight:800;line-height:1.1;margin-bottom:4px}
+.pay-crs{font-size:12px;color:var(--ink);font-weight:800}
+.staff-note{background:var(--orange-bg2);border:1.5px dashed var(--orange);border-radius:12px;padding:12px;margin-bottom:16px;display:flex;gap:8px;align-items:flex-start;text-align:left}
+.staff-note-ic{font-size:18px;flex-shrink:0}
+.staff-note-txt{font-size:11px;color:var(--ink2);line-height:1.6;font-weight:500}
+.staff-note-txt strong{display:block;font-size:12px;color:var(--ink);font-weight:800;margin-bottom:2px}
 
-/* 凡例 */
-.legend{background:linear-gradient(135deg,#fff,var(--pink-bg2));border-radius:16px;padding:16px;margin-top:24px;border:1px solid var(--line)}
-.legend h3{font-size:12px;font-weight:800;color:var(--ink);margin-bottom:10px}
-.legend p{font-size:10px;color:var(--ink2);line-height:1.6;font-weight:500}
+.modal-close{background:#fff;color:var(--ink2);border:1.5px solid var(--line);padding:10px 14px;border-radius:12px;font-family:inherit;font-size:12px;cursor:pointer;margin-top:10px;width:100%;font-weight:700}
+
+.nodata{text-align:center;padding:40px 20px;color:var(--ink3);font-size:12px;font-weight:500}
+
+/* 管理者モード */
+.admin-ttl{font-size:13px;color:var(--ink);font-weight:800;margin-bottom:10px;letter-spacing:.05em}
+.admin-mem-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:6px}
+.admin-mem-info{flex:1;min-width:0}
+.admin-mem-name{font-size:13px;color:var(--ink);font-weight:800;margin-bottom:2px}
+.admin-mem-sub{font-size:10px;color:var(--ink3);font-weight:500}
+.admin-btn{background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;padding:8px 14px;border-radius:10px;font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0}
+.admin-btn-sm{background:#fff;color:var(--ink);border:1.5px solid var(--line);padding:6px 10px;border-radius:10px;font-family:inherit;font-size:10px;font-weight:700;cursor:pointer}
+
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:20px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-ttl{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;text-align:center}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <div class="preview-header">
-    <h1>ONE TRE マイページ v2</h1>
-    <p>トレーナー画面と統一したパステルデザイン</p>
+<div class="app">
+  <div class="hd">
+    <div class="brand-row">
+      <div class="brand-ico">M</div>
+      <div>
+        <div class="brand-name">ONE TRE</div>
+        <div class="brand-sub">PERSONAL TRAINING</div>
+      </div>
+    </div>
+    <div class="brand-catch">私は私</div>
+    <div class="member-name" id="member-name">...</div>
   </div>
 
-  <div class="app">
+  <div class="nav" id="nav-bar">
+    <button class="nb a c-pink" onclick="sw('attend',this)">🌸 通う</button>
+    <button class="nb" onclick="sw('body',this)">⚖️ 体重</button>
+    <button class="nb" onclick="sw('training',this)">💪 記録</button>
+    <button class="nb" onclick="sw('growth',this)">📈 成長</button>
+    <button class="nb" onclick="sw('renew',this)">✨ 継続</button>
+  </div>
 
-    <div class="hd">
-      <div class="brand-row">
-        <div class="brand-ico">M</div>
-        <div>
-          <div class="brand-name">ONE TRE</div>
-          <div class="brand-sub">PERSONAL TRAINING</div>
-        </div>
+  <!-- 通う -->
+  <div id="pg-attend" class="pg active">
+    <div id="att-status"></div>
+    <div id="course-status-wrap"></div>
+    <a href="https://onebalanceyume-beep.github.io/private-gym-trainer/reservation.html" class="rsv">
+      <div class="rsv-t">次のセッションを予約する</div>
+      <div class="rsv-s">タップして予約画面へ</div>
+    </a>
+    <div class="st st-pink">今月の通い状況</div>
+    <div class="cal-hd"><div class="cal-month" id="cal-month"></div><div class="cal-count" id="cal-count"></div></div>
+    <div class="cal-grid" id="cal-hdr"></div>
+    <div class="cal-grid" style="margin-top:3px" id="cal-body"></div>
+  </div>
+
+  <!-- 体重 -->
+  <div id="pg-body" class="pg">
+    <div class="st st-blue">今日の体重を記録</div>
+    <div class="wt-input-box">
+      <div class="wt-input-label">TODAY'S WEIGHT</div>
+      <div class="wt-input-row">
+        <input type="number" id="wt-input" step="0.1" inputmode="decimal" placeholder="56.5" class="wt-input">
+        <span style="font-size:13px;color:var(--ink3);font-weight:700">kg</span>
+        <button onclick="saveWeightEntry()" class="wt-save">記録する</button>
       </div>
-      <div class="brand-catch">私は私</div>
-      <div class="member-name">長尾 儀弘 さん</div>
+      <div id="wt-feedback" class="wt-feedback"></div>
     </div>
 
-    <div class="nav">
-      <button class="nb a c-pink">🌸 通う</button>
-      <button class="nb">⚖️ 体重</button>
-      <button class="nb">💪 記録</button>
-      <button class="nb">📈 成長</button>
-      <button class="nb">✨ 継続</button>
-    </div>
+    <div class="st st-blue">体重推移</div>
+    <div id="wt-content" class="wt-hero-card"><div class="nodata">体重データがありません</div></div>
+    <div class="ch-wrap"><canvas id="cw"></canvas></div>
 
-    <div class="pg">
+    <div class="st st-blue" style="margin-top:16px">履歴</div>
+    <div id="wt-history-list"></div>
 
-      <!-- 通うページ -->
-      <div class="att-hero">
-        <div class="att-label">前回から</div>
-        <div class="att-days">3<span class="att-unit">日</span></div>
-        <div class="att-msg">いいペースです。この調子で！</div>
-        <div class="att-dots">
-          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
-          <div class="dot on"></div><div class="dot on"></div>
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
+    <div class="goal-box">
+      <div class="goal-label">🎯 目標体重（あなただけが見れます）</div>
+      <div class="wt-input-row">
+        <input type="number" id="goal-wt" step="0.1" inputmode="decimal" placeholder="50.0" class="goal-input">
+        <span style="font-size:13px;color:var(--ink3);font-weight:700">kg</span>
+        <button onclick="saveGoal()" class="goal-save">設定</button>
+        <button onclick="clearGoal()" class="goal-clear">クリア</button>
       </div>
-
-      <div class="course-card">
-        <div class="course-ico-lg">🎟️</div>
-        <div class="course-body">
-          <div class="course-label-my">コース消化状況</div>
-          <div class="course-frac">
-            <span class="nn">4</span><span class="ss">/</span><span class="tt">16 回</span>
-          </div>
-          <div class="course-rem">残 12 回</div>
-        </div>
-      </div>
-
-      <a href="#" class="rsv">
-        <div class="rsv-t">次のセッションを予約する</div>
-        <div class="rsv-s">タップして予約画面へ</div>
-      </a>
-
-      <div class="st st-pink">今月の通い状況</div>
-      <div class="cal-hd">
-        <div class="cal-month">2026年4月</div>
-        <div class="cal-count">今月 4回</div>
-      </div>
-      <div class="cal-grid">
-        <div class="cd dh">日</div><div class="cd dh">月</div><div class="cd dh">火</div>
-        <div class="cd dh">水</div><div class="cd dh">木</div><div class="cd dh">金</div><div class="cd dh">土</div>
-      </div>
-      <div class="cal-grid" style="margin-top:4px">
-        <div class="cd"></div><div class="cd"></div>
-        <div class="cd"></div><div class="cd">1</div><div class="cd">2</div>
-        <div class="cd"><span class="cd-v">3</span></div><div class="cd">4</div>
-        <div class="cd">5</div><div class="cd">6</div>
-        <div class="cd"><span class="cd-v">7</span></div>
-        <div class="cd">8</div><div class="cd">9</div>
-        <div class="cd"><span class="cd-v">10</span></div><div class="cd">11</div>
-        <div class="cd">12</div><div class="cd">13</div>
-        <div class="cd">14</div><div class="cd">15</div>
-        <div class="cd"><span class="cd-v">16</span></div>
-        <div class="cd">17</div><div class="cd">18</div>
-        <div class="cd">19</div><div class="cd">20</div>
-        <div class="cd">21</div><div class="cd">22</div>
-        <div class="cd"><span class="cd-t">23</span></div>
-        <div class="cd">24</div><div class="cd">25</div>
-        <div class="cd">26</div><div class="cd">27</div>
-        <div class="cd">28</div><div class="cd">29</div>
-        <div class="cd">30</div>
-      </div>
-
+      <div id="goal-display" class="goal-display"></div>
+      <div class="goal-lock">🔒 この体重はトレーナーには見えません</div>
     </div>
   </div>
 
-  <!-- ===== 体重ページ ===== -->
-  <div class="app" style="margin-top:20px">
-    <div class="hd">
-      <div class="brand-row">
-        <div class="brand-ico">M</div>
-        <div>
-          <div class="brand-name">ONE TRE</div>
-          <div class="brand-sub">PERSONAL TRAINING</div>
-        </div>
-      </div>
-      <div class="brand-catch">私は私</div>
-      <div class="member-name">長尾 儀弘 さん</div>
-    </div>
-    <div class="nav">
-      <button class="nb">🌸 通う</button>
-      <button class="nb a c-blue">⚖️ 体重</button>
-      <button class="nb">💪 記録</button>
-      <button class="nb">📈 成長</button>
-      <button class="nb">✨ 継続</button>
-    </div>
-
-    <div class="pg">
-      <div class="st st-blue">今日の体重を記録</div>
-      <div class="wt-input-box">
-        <div class="wt-input-label">TODAY'S WEIGHT</div>
-        <div class="wt-input-row">
-          <input type="number" class="wt-input" placeholder="56.5" step="0.1" inputmode="decimal" value="72.5">
-          <span style="font-size:13px;color:var(--ink3);font-weight:700">kg</span>
-          <button class="wt-save">記録する</button>
-        </div>
-        <div style="font-size:10px;color:var(--pink2);font-weight:700;margin-top:8px">✓ 記録しました！前回より ▼ 0.3kg 減りました</div>
-      </div>
-
-      <div class="st st-blue">体重推移</div>
-      <div class="wt-hero-card">
-        <div class="wt-hero">
-          <span class="wt-val">72.5</span>
-          <span class="wt-unit">kg</span>
-          <span class="wt-diff down">▼ 2.8kg</span>
-        </div>
-        <div style="font-size:10px;color:var(--ink3);margin-top:6px;font-weight:500">開始時 75.3kg → 現在 72.5kg</div>
-      </div>
-
-      <div class="st st-blue" style="margin-top:16px">履歴</div>
-      <div class="wt-hist-item c0"><span class="wt-hist-date">2026-04-23</span><span class="wt-hist-val">72.5<span class="pb-unit"> kg</span></span></div>
-      <div class="wt-hist-item c1"><span class="wt-hist-date">2026-04-16</span><span class="wt-hist-val">72.8<span class="pb-unit"> kg</span></span></div>
-      <div class="wt-hist-item c2"><span class="wt-hist-date">2026-04-10</span><span class="wt-hist-val">73.2<span class="pb-unit"> kg</span></span></div>
-      <div class="wt-hist-item c3"><span class="wt-hist-date">2026-04-03</span><span class="wt-hist-val">73.8<span class="pb-unit"> kg</span></span></div>
-
-      <div class="goal-box">
-        <div class="goal-label">🎯 目標体重（あなただけが見れます）</div>
-        <div class="wt-input-row">
-          <input type="number" class="wt-input" placeholder="70.0" step="0.1" inputmode="decimal" value="68.0" style="font-size:20px">
-          <span style="font-size:13px;color:var(--ink3);font-weight:700">kg</span>
-          <button class="wt-save" style="background:linear-gradient(135deg,var(--orange2),var(--orange))">設定</button>
-        </div>
-        <div style="font-size:11px;color:var(--orange2);font-weight:800;margin-top:8px">あと 4.5 kg！</div>
-        <div class="goal-lock">🔒 この体重はトレーナーには見えません</div>
-      </div>
-    </div>
+  <!-- 記録 -->
+  <div id="pg-training" class="pg">
+    <div class="st st-green">training log</div>
+    <div id="tr-list"><div class="nodata">トレーニング記録がありません</div></div>
   </div>
 
-  <!-- ===== 成長ページ ===== -->
-  <div class="app" style="margin-top:20px">
-    <div class="hd">
-      <div class="brand-row">
-        <div class="brand-ico">M</div>
-        <div>
-          <div class="brand-name">ONE TRE</div>
-          <div class="brand-sub">PERSONAL TRAINING</div>
-        </div>
-      </div>
-      <div class="brand-catch">私は私</div>
-      <div class="member-name">長尾 儀弘 さん</div>
-    </div>
-    <div class="nav">
-      <button class="nb">🌸 通う</button>
-      <button class="nb">⚖️ 体重</button>
-      <button class="nb">💪 記録</button>
-      <button class="nb a c-orange">📈 成長</button>
-      <button class="nb">✨ 継続</button>
-    </div>
-
-    <div class="pg">
-      <div class="st st-orange">BODY BALANCE</div>
+  <!-- 成長 -->
+  <div id="pg-growth" class="pg">
+    <div class="st st-orange">BODY BALANCE</div>
+    <div id="radar-wrap">
       <div class="score-grid">
         <div class="sc-card sc-pink">
           <div class="sc-label">筋力</div>
-          <div class="sc-val"><span class="sc-num">18</span><span class="sc-max">/ 25</span></div>
-          <div class="sc-bar-bg"><div class="sc-bar" style="width:72%"></div></div>
+          <div class="sc-val"><span id="score-strength-val" class="sc-num">0</span><span class="sc-max">/ 25</span></div>
+          <div class="sc-bar-bg"><div id="bar-strength" class="sc-bar" style="width:0%"></div></div>
         </div>
         <div class="sc-card sc-blue">
           <div class="sc-label">体幹</div>
-          <div class="sc-val"><span class="sc-num">15</span><span class="sc-max">/ 25</span></div>
-          <div class="sc-bar-bg"><div class="sc-bar" style="width:60%"></div></div>
+          <div class="sc-val"><span id="score-core-val" class="sc-num">0</span><span class="sc-max">/ 25</span></div>
+          <div class="sc-bar-bg"><div id="bar-core" class="sc-bar" style="width:0%"></div></div>
         </div>
         <div class="sc-card sc-green">
           <div class="sc-label">連動性</div>
-          <div class="sc-val"><span class="sc-num">12</span><span class="sc-max">/ 25</span></div>
-          <div class="sc-bar-bg"><div class="sc-bar" style="width:48%"></div></div>
+          <div class="sc-val"><span id="score-agility-val" class="sc-num">0</span><span class="sc-max">/ 25</span></div>
+          <div class="sc-bar-bg"><div id="bar-agility" class="sc-bar" style="width:0%"></div></div>
         </div>
         <div class="sc-card sc-orange">
           <div class="sc-label">柔軟性</div>
-          <div class="sc-val"><span class="sc-num">10</span><span class="sc-max">/ 25</span></div>
-          <div class="sc-bar-bg"><div class="sc-bar" style="width:40%"></div></div>
+          <div class="sc-val"><span id="score-flex-val" class="sc-num">0</span><span class="sc-max">/ 25</span></div>
+          <div class="sc-bar-bg"><div id="bar-flex" class="sc-bar" style="width:0%"></div></div>
         </div>
       </div>
 
       <div class="total-card">
         <div>
           <div class="total-l">トータルスコア</div>
-          <div class="total-s">理想に向かっています</div>
+          <div class="total-s">あなたの理想に向かっています</div>
         </div>
         <div>
-          <span class="total-val">55</span>
+          <span id="score-total-val" class="total-val">0</span>
           <span class="total-max">/ 100</span>
         </div>
       </div>
 
-      <div class="st st-orange" style="margin-top:8px">PERSONAL BEST</div>
-      <div class="pb-row c0">
-        <div>
-          <div class="pb-name">スクワット</div>
-          <div class="pb-date">2026-04-20</div>
-        </div>
-        <div class="pb-val-wrap">
-          <span class="pb-val">45</span>
-          <span class="pb-unit">kg</span>
-          <span class="tr-up">▲ +5kg</span>
-        </div>
-      </div>
-      <div class="pb-row c1">
-        <div>
-          <div class="pb-name">デッドリフト</div>
-          <div class="pb-date">2026-04-20</div>
-        </div>
-        <div class="pb-val-wrap">
-          <span class="pb-val">60</span>
-          <span class="pb-unit">kg</span>
-          <span class="tr-up">▲ +10kg</span>
-        </div>
-      </div>
-      <div class="pb-row c2">
-        <div>
-          <div class="pb-name">ベンチプレス</div>
-          <div class="pb-date">2026-04-16</div>
-        </div>
-        <div class="pb-val-wrap">
-          <span class="pb-val">30</span>
-          <span class="pb-unit">kg</span>
-        </div>
-      </div>
+      <div style="position:relative;height:240px;margin-bottom:14px"><canvas id="cr"></canvas></div>
     </div>
+    <div id="radar-nodata" style="display:none" class="nodata">スコアはまだ設定されていません</div>
+
+    <div class="st st-orange" style="margin-top:16px">成長評価</div>
+    <div id="growth-eval"><div class="nodata">2回以上記録すると成長評価が表示されます</div></div>
+
+    <div class="st st-orange" style="margin-top:16px">PERSONAL BEST</div>
+    <div id="pb-list"><div class="nodata">記録がありません</div></div>
+
+    <div class="st st-orange" style="margin-top:16px">ボリューム推移</div>
+    <div class="ch-wrap" style="height:160px"><canvas id="cv"></canvas></div>
   </div>
 
-  <!-- ===== 継続ページ ===== -->
-  <div class="app" style="margin-top:20px">
-    <div class="hd">
-      <div class="brand-row">
-        <div class="brand-ico">M</div>
-        <div>
-          <div class="brand-name">ONE TRE</div>
-          <div class="brand-sub">PERSONAL TRAINING</div>
-        </div>
-      </div>
-      <div class="brand-catch">私は私</div>
-      <div class="member-name">長尾 儀弘 さん</div>
-    </div>
-    <div class="nav">
-      <button class="nb">🌸 通う</button>
-      <button class="nb">⚖️ 体重</button>
-      <button class="nb">💪 記録</button>
-      <button class="nb">📈 成長</button>
-      <button class="nb a c-lavender">✨ 継続</button>
-    </div>
-
-    <div class="pg">
+  <!-- 継続 -->
+  <div id="pg-renew" class="pg">
+    <div id="renew-form">
       <div class="renew-hero">
         <div class="renew-hero-ttl">COURSE RENEWAL</div>
         <div class="renew-hero-sub">継続割引 10%OFF が自動適用されます<br>いつもありがとうございます</div>
       </div>
 
       <div class="st st-orange">コースを選択</div>
-      <div class="cs-opt">
-        <div class="cs-row">
-          <div class="cs-name">8回コース</div>
-          <div class="cs-price-wrap">
-            <span class="cs-orig">¥49,800</span>
-            <span class="cs-price">¥44,820</span>
+      <div id="renew-courses">
+        <div class="cs-opt" data-course="8" data-price="49800" onclick="selRenewCourse(this)">
+          <div class="cs-row">
+            <div class="cs-name">8回コース</div>
+            <div class="cs-price-wrap">
+              <span class="cs-orig">¥49,800</span>
+              <span class="cs-price" data-basic>¥44,820</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="cs-opt rec sel">
-        <div class="cs-badge">RECOMMEND</div>
-        <div class="cs-row">
-          <div class="cs-name">16回コース</div>
-          <div class="cs-price-wrap">
-            <span class="cs-orig">¥94,800</span>
-            <span class="cs-price">¥85,320</span>
+        <div class="cs-opt rec" data-course="16" data-price="94800" onclick="selRenewCourse(this)">
+          <div class="cs-badge">RECOMMEND</div>
+          <div class="cs-row">
+            <div class="cs-name">16回コース</div>
+            <div class="cs-price-wrap">
+              <span class="cs-orig">¥94,800</span>
+              <span class="cs-price" data-basic>¥85,320</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="cs-opt">
-        <div class="cs-row">
-          <div class="cs-name">32回コース</div>
-          <div class="cs-price-wrap">
-            <span class="cs-orig">¥178,000</span>
-            <span class="cs-price">¥160,200</span>
+        <div class="cs-opt" data-course="32" data-price="178000" onclick="selRenewCourse(this)">
+          <div class="cs-row">
+            <div class="cs-name">32回コース</div>
+            <div class="cs-price-wrap">
+              <span class="cs-orig">¥178,000</span>
+              <span class="cs-price" data-basic>¥160,200</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="pair-toggle on">
+      <div class="pair-toggle" id="pair-toggle" onclick="togglePair()">
         <div class="pair-ico">👫</div>
         <div class="pair-body">
-          <div class="pair-title">ペアで受ける</div>
-          <div class="pair-desc">2人同時受講の場合<br>1回あたり ¥1,500引き</div>
+          <div class="pair-title">ペアで受ける（1回あたり価格が割引）</div>
+          <div class="pair-desc">お友達・ご家族と2人同時受講の場合に適用<br>1回あたり ¥1,500引き</div>
         </div>
         <div class="pair-sw"></div>
       </div>
 
-      <div class="summary">
-        <div class="sr-row"><span>定価</span><span>¥94,800</span></div>
-        <div class="sr-row"><span>継続割引 10%OFF</span><span>-¥9,480</span></div>
-        <div class="sr-row"><span>ペア割（¥1,500×16回）</span><span>-¥24,000</span></div>
+      <div class="summary" id="renew-summary" style="display:none">
+        <div class="sr-row"><span>定価</span><span id="rs-orig">¥0</span></div>
+        <div class="sr-row"><span>継続割引 10%OFF</span><span id="rs-disc">-¥0</span></div>
+        <div class="sr-row" id="rs-pair-row" style="display:none"><span id="rs-pair-lbl">ペア割</span><span id="rs-pair">-¥0</span></div>
         <div class="sr-total">
           <span class="sr-total-l">お支払い金額</span>
-          <span class="sr-total-v">¥61,320</span>
+          <span class="sr-total-v" id="rs-total">¥0</span>
         </div>
       </div>
 
-      <button class="submit-btn">継続申込みを送信 ✨</button>
+      <button class="submit-btn" id="renew-submit" onclick="submitRenew()" disabled>継続申込みを送信</button>
+    </div>
+
+    <div id="renew-complete" style="display:none">
+      <div class="renew-done">
+        <div class="renew-done-ic">✓</div>
+        <div class="renew-done-ttl">継続お申込みありがとうございます</div>
+        <div class="renew-done-msg">下記の金額をスタッフにお見せください。<br>当日、店頭にてお支払いをお願いいたします。</div>
+        <div class="pay-box">
+          <div class="pay-lbl">お支払い金額</div>
+          <div class="pay-amt" id="done-amt">¥0</div>
+          <div class="pay-crs" id="done-crs">—</div>
+        </div>
+        <div class="staff-note">
+          <div class="staff-note-ic">📱</div>
+          <div class="staff-note-txt">
+            <strong>スタッフにこの画面を見せてください</strong>
+            お支払い確認後、次回セッションのご予約に進めます
+          </div>
+        </div>
+        <button class="modal-close" onclick="resetRenew()">閉じる</button>
+      </div>
     </div>
   </div>
 
-  <div class="legend">
-    <h3>🎨 マイページ v2 のポイント</h3>
-    <p>
-      • トレーナー画面と同じ <strong>M PLUS Rounded 1c</strong> フォント<br>
-      • 同じ4色パステルで統一感<br>
-      • コース消化を「通う」ページ上部に配置（残り何回がすぐ分かる）<br>
-      • 体重入力は <strong>inputmode="decimal"</strong> で数字キーボード<br>
-      • 金額表示もリアル（¥85,320 など）<br>
-      • 3ページ分を縦に並べてプレビュー表示
-    </p>
+  <!-- 管理者モード -->
+  <div id="pg-admin" class="pg" style="padding:16px">
+    <div class="admin-ttl">会員一覧（管理モード）</div>
+    <div id="admin-member-list" class="nodata">読み込み中...</div>
   </div>
 
 </div>
+
+<div class="modal-bg" id="admin-renew-modal">
+  <div class="modal">
+    <div class="modal-ttl" id="adm-modal-ttl">継続契約を代行入力</div>
+    <div id="adm-renew-body"></div>
+    <button class="modal-close" onclick="closeAdminModal()">キャンセル</button>
+  </div>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(location.search);
+const urlId = (() => {
+  const fromUrl = urlParams.get('id');
+  if (fromUrl) { localStorage.setItem('onetreLastId', fromUrl); return fromUrl; }
+  return localStorage.getItem('onetreLastId');
+})();
+const IS_ADMIN = urlParams.get('admin') === '1';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+let T = JSON.parse(localStorage.getItem('onetreT') || '[]');
+let mem = null, mts = [], allMembers = [], allData = null;
+let C = {};
+const now = new Date();
+const cY = now.getFullYear(), cM = now.getMonth();
+
+let renewState = { course: null, coursePrice: 0, pair: false };
+let adminRenewState = { memberId: null, memberName: '', course: null, coursePrice: 0, pair: false };
+
+function dc(k){ if(C[k]){ C[k].destroy(); delete C[k]; } }
+function daysSince(d){ if(!d)return null; return Math.floor((new Date()-new Date(d))/(1000*60*60*24)); }
+
+async function init(){
+  if (IS_ADMIN) {
+    document.body.classList.add('admin-mode');
+    initAdminMode();
+    return;
+  }
+  if(!urlId){ showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。'); return; }
+  document.getElementById('member-name').textContent='読み込み中...';
+  try{
+    const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    allData = data;
+    const gasMem=(data.members||[]).find(m=>String(m.id)===urlId);
+    mem={id:urlId,name:gasMem?gasMem.name:'会員',weights:[],dob:'',gender:gasMem&&gasMem.gender==='男性'?'m':'f'};
+    if(data.training&&data.training.length){
+      const grouped={};
+      data.training.forEach(r=>{
+        if(!grouped[r.date])grouped[r.date]={id:'gas_'+r.date,memberId:urlId,date:r.date,sets:[]};
+        grouped[r.date].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
+      });
+      mts=Object.values(grouped).sort((a,b)=>b.date.localeCompare(a.date));
+      localStorage.setItem('onetreT',JSON.stringify(mts));
+    }else{
+      mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
+    }
+    if(data.weights&&data.weights.length){
+      mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
+      localStorage.setItem('onetreWeights_'+urlId,JSON.stringify(data.weights.map(w=>({date:w.date,weight:w.weight}))));
+    }else{
+      mem.weights=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]').map(e=>e.weight).filter(w=>w>0);
+    }
+    if(data.bodyScore&&(data.bodyScore.strength||data.bodyScore.core||data.bodyScore.agility||data.bodyScore.flex)){
+      localStorage.setItem('onetreScore_'+urlId,JSON.stringify(data.bodyScore));
+    }
+  }catch(e){
+    console.log('GAS失敗:',e);
+    mem={id:urlId,name:'会員',weights:[],dob:'',gender:'f'};
+    mem.weights=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]').map(e=>e.weight).filter(w=>w>0);
+    mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
+  }
+  document.getElementById('member-name').textContent=mem.name+' さん';
+  document.title='ONE TRE — '+mem.name;
+  renderAttend();renderCourseStatus();renderBody();renderWeightHistory();renderGoal();renderTraining();renderGrowth();
+  updateRenewSummary();
+}
+
+async function initAdminMode(){
+  document.getElementById('member-name').innerHTML = 'トレーナー管理画面<span class="admin-badge">ADMIN</span>';
+  document.getElementById('nav-bar').style.display = 'none';
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('active'));
+  document.getElementById('pg-admin').classList.add('active');
+  try {
+    const res = await fetch(GAS_URL + '?t=' + Date.now(), { method:'GET', mode:'cors' });
+    const data = await res.json();
+    allMembers = data.members || [];
+    allData = data;
+    renderAdminList();
+  } catch(e) {
+    document.getElementById('admin-member-list').innerHTML = '<div class="nodata">読み込み失敗</div>';
+  }
+}
+
+function renderAdminList(){
+  const el = document.getElementById('admin-member-list');
+  if (!allMembers.length) { el.innerHTML = '<div class="nodata">会員がいません</div>'; return; }
+  el.className = '';
+  el.innerHTML = allMembers.map(m => {
+    return '<div class="admin-mem-row">'
+      + '<div class="admin-mem-info">'
+      + '<div class="admin-mem-name">' + escHtml(m.name) + '</div>'
+      + '<div class="admin-mem-sub">ID: ' + m.id + (m.gender ? ' / ' + m.gender : '') + (m.ageGroup ? ' / ' + m.ageGroup : '') + '</div>'
+      + '</div>'
+      + '<button class="admin-btn-sm" onclick="openMemberPage(\'' + m.id + '\')">マイページ</button>'
+      + '<button class="admin-btn" onclick="openAdminRenew(\'' + m.id + '\',\'' + escHtml(m.name).replace(/'/g,"\\'") + '\')">継続契約</button>'
+      + '</div>';
+  }).join('');
+}
+
+function escHtml(s){ if(!s)return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function openMemberPage(id){ window.open('https://onebalanceyume-beep.github.io/private-gym-trainer/one_tre_member.html?id='+id, '_blank'); }
+
+function openAdminRenew(memberId, memberName){
+  adminRenewState = { memberId: memberId, memberName: memberName, course: null, coursePrice: 0, pair: false };
+  document.getElementById('adm-modal-ttl').textContent = memberName + ' さんの継続契約';
+  const body = document.getElementById('adm-renew-body');
+  body.innerHTML = `
+    <div style="font-size:11px;color:var(--ink3);margin-bottom:12px;text-align:center;font-weight:500">継続割引 10%OFF 自動適用</div>
+    <div id="adm-course-list">
+      <div class="cs-opt" data-course="8" data-price="49800" onclick="selAdmCourse(this)">
+        <div class="cs-row"><div class="cs-name">8回</div><div class="cs-price-wrap"><span class="cs-orig">¥49,800</span><span class="cs-price">¥44,820</span></div></div>
+      </div>
+      <div class="cs-opt rec" data-course="16" data-price="94800" onclick="selAdmCourse(this)">
+        <div class="cs-badge">RECOMMEND</div>
+        <div class="cs-row"><div class="cs-name">16回</div><div class="cs-price-wrap"><span class="cs-orig">¥94,800</span><span class="cs-price">¥85,320</span></div></div>
+      </div>
+      <div class="cs-opt" data-course="32" data-price="178000" onclick="selAdmCourse(this)">
+        <div class="cs-row"><div class="cs-name">32回</div><div class="cs-price-wrap"><span class="cs-orig">¥178,000</span><span class="cs-price">¥160,200</span></div></div>
+      </div>
+    </div>
+    <div class="pair-toggle" id="adm-pair" onclick="toggleAdmPair()">
+      <div class="pair-ico">👫</div>
+      <div class="pair-body">
+        <div class="pair-title">ペアで受ける</div>
+        <div class="pair-desc">1回あたり ¥1,500引き</div>
+      </div>
+      <div class="pair-sw"></div>
+    </div>
+    <div class="summary" id="adm-summary" style="display:none">
+      <div class="sr-row"><span>定価</span><span id="adm-orig">¥0</span></div>
+      <div class="sr-row"><span>継続割引 10%OFF</span><span id="adm-disc">-¥0</span></div>
+      <div class="sr-row" id="adm-pair-row" style="display:none"><span>ペア割</span><span id="adm-pair-val">-¥0</span></div>
+      <div class="sr-total"><span class="sr-total-l">お支払い金額</span><span class="sr-total-v" id="adm-total">¥0</span></div>
+    </div>
+    <button class="submit-btn" id="adm-submit" onclick="submitAdminRenew()" disabled style="margin-top:10px">契約を登録</button>
+  `;
+  document.getElementById('admin-renew-modal').classList.add('show');
+}
+
+function closeAdminModal(){ document.getElementById('admin-renew-modal').classList.remove('show'); }
+
+function selAdmCourse(el){
+  document.querySelectorAll('#adm-course-list .cs-opt').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  adminRenewState.course = el.dataset.course;
+  adminRenewState.coursePrice = parseInt(el.dataset.price);
+  updateAdmSummary();
+}
+
+function toggleAdmPair(){
+  adminRenewState.pair = !adminRenewState.pair;
+  document.getElementById('adm-pair').classList.toggle('on', adminRenewState.pair);
+  updateAdmSummary();
+}
+
+function updateAdmSummary(){
+  if (!adminRenewState.course) return;
+  const orig = adminRenewState.coursePrice;
+  const disc = Math.round(orig * 0.1);
+  const afterDisc = orig - disc;
+  const sessions = parseInt(adminRenewState.course) || 0;
+  const pairAmt = adminRenewState.pair ? (1500 * sessions) : 0;
+  const total = afterDisc - pairAmt;
+  document.getElementById('adm-orig').textContent = '¥' + orig.toLocaleString();
+  document.getElementById('adm-disc').textContent = '-¥' + disc.toLocaleString();
+  if (adminRenewState.pair) {
+    document.getElementById('adm-pair-row').style.display = 'flex';
+    document.getElementById('adm-pair-val').textContent = '-¥' + pairAmt.toLocaleString();
+  } else {
+    document.getElementById('adm-pair-row').style.display = 'none';
+  }
+  document.getElementById('adm-total').textContent = '¥' + total.toLocaleString();
+  document.getElementById('adm-summary').style.display = 'block';
+  document.getElementById('adm-submit').disabled = false;
+}
+
+async function submitAdminRenew(){
+  const btn = document.getElementById('adm-submit');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  try {
+    const params = new URLSearchParams({
+      action: 'renewMembership',
+      memberId: adminRenewState.memberId,
+      course: adminRenewState.course,
+      coursePrice: adminRenewState.coursePrice,
+      pair: adminRenewState.pair ? '1' : '0'
+    });
+    const res = await fetch(GAS_URL + '?' + params.toString(), { method: 'GET', mode: 'cors' });
+    const data = await res.json();
+    if (data.ok) {
+      alert('継続契約を登録しました');
+      closeAdminModal();
+    } else {
+      alert('エラー: ' + (data.error || '不明'));
+      btn.disabled = false;
+      btn.textContent = '契約を登録';
+    }
+  } catch(e) {
+    alert('通信エラー: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '契約を登録';
+  }
+}
+
+function selRenewCourse(el){
+  document.querySelectorAll('#renew-courses .cs-opt').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  renewState.course = el.dataset.course;
+  renewState.coursePrice = parseInt(el.dataset.price);
+  updateRenewSummary();
+}
+
+function togglePair(){
+  renewState.pair = !renewState.pair;
+  document.getElementById('pair-toggle').classList.toggle('on', renewState.pair);
+  updateRenewSummary();
+}
+
+function updateRenewSummary(){
+  if (!renewState.course) {
+    document.getElementById('renew-summary').style.display = 'none';
+    document.getElementById('renew-submit').disabled = true;
+    return;
+  }
+  const orig = renewState.coursePrice;
+  const disc = Math.round(orig * 0.1);
+  const afterDisc = orig - disc;
+  const sessions = parseInt(renewState.course) || 0;
+  const pairAmt = renewState.pair ? (1500 * sessions) : 0;
+  const total = afterDisc - pairAmt;
+  document.getElementById('rs-orig').textContent = '¥' + orig.toLocaleString();
+  document.getElementById('rs-disc').textContent = '-¥' + disc.toLocaleString();
+  if (renewState.pair) {
+    document.getElementById('rs-pair-row').style.display = 'flex';
+    document.getElementById('rs-pair-lbl').textContent = 'ペア割（¥1,500×' + sessions + '回）';
+    document.getElementById('rs-pair').textContent = '-¥' + pairAmt.toLocaleString();
+  } else {
+    document.getElementById('rs-pair-row').style.display = 'none';
+  }
+  document.getElementById('rs-total').textContent = '¥' + total.toLocaleString();
+  document.getElementById('renew-summary').style.display = 'block';
+  document.getElementById('renew-submit').disabled = false;
+  document.querySelectorAll('#renew-courses .cs-opt').forEach(card => {
+    const o = parseInt(card.dataset.price);
+    const s = parseInt(card.dataset.course);
+    const d = Math.round(o * 0.1);
+    const pa = renewState.pair ? (1500 * s) : 0;
+    const f = o - d - pa;
+    const el = card.querySelector('[data-basic]');
+    if(el) el.textContent = '¥' + f.toLocaleString();
+  });
+}
+
+async function submitRenew(){
+  const btn = document.getElementById('renew-submit');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  try {
+    const params = new URLSearchParams({
+      action: 'renewMembership',
+      memberId: urlId,
+      course: renewState.course,
+      coursePrice: renewState.coursePrice,
+      pair: renewState.pair ? '1' : '0'
+    });
+    const res = await fetch(GAS_URL + '?' + params.toString(), { method: 'GET', mode: 'cors' });
+    const data = await res.json();
+    if (data.ok) {
+      const orig = renewState.coursePrice;
+      const disc = Math.round(orig * 0.1);
+      const afterDisc = orig - disc;
+      const sessions = parseInt(renewState.course) || 0;
+      const pairAmt = renewState.pair ? (1500 * sessions) : 0;
+      const total = afterDisc - pairAmt;
+      document.getElementById('done-amt').textContent = '¥' + total.toLocaleString();
+      document.getElementById('done-crs').textContent = renewState.course + '回コース' + (renewState.pair ? '（ペア）' : '');
+      document.getElementById('renew-form').style.display = 'none';
+      document.getElementById('renew-complete').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert('エラー: ' + (data.error || '不明'));
+      btn.disabled = false;
+      btn.textContent = '継続申込みを送信';
+    }
+  } catch(e) {
+    alert('通信エラー: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '継続申込みを送信';
+  }
+}
+
+function resetRenew(){
+  renewState = { course: null, coursePrice: 0, pair: false };
+  document.querySelectorAll('#renew-courses .cs-opt').forEach(c => c.classList.remove('sel'));
+  document.getElementById('pair-toggle').classList.remove('on');
+  document.getElementById('renew-summary').style.display = 'none';
+  document.getElementById('renew-submit').disabled = true;
+  document.getElementById('renew-submit').textContent = '継続申込みを送信';
+  document.getElementById('renew-form').style.display = 'block';
+  document.getElementById('renew-complete').style.display = 'none';
+  updateRenewSummary();
+}
+
+function showError(msg){
+  document.getElementById('member-name').textContent='';
+  document.querySelector('.nav').style.display='none';
+  document.getElementById('pg-attend').innerHTML='<div class="nodata" style="padding:60px 20px">'+msg.replace(/\n/g,'<br>')+'</div>';
+  document.getElementById('pg-attend').classList.add('active');
+}
+
+function sw(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>{b.classList.remove('a');b.classList.remove('c-pink','c-blue','c-green','c-orange','c-lavender');});
+  document.getElementById('pg-'+id).classList.add('active');
+  btn.classList.add('a');
+  // ページごとの色
+  const colorMap={'attend':'c-pink','body':'c-blue','training':'c-green','growth':'c-orange','renew':'c-lavender'};
+  if(colorMap[id])btn.classList.add(colorMap[id]);
+}
+
+function renderAttend(){
+  const last=mts.length?mts[0].date:null;
+  const days=daysSince(last);
+  const box=document.getElementById('att-status');
+  if(last){
+    let msg='';
+    if(days===0)msg='今日もお疲れさまでした！';
+    else if(days<=3)msg='いいペースです。この調子で！';
+    else if(days<=6)msg='次のセッションが近づいています';
+    else if(days<=10)msg='そろそろ次のセッションを';
+    else msg='お体の調子はいかがですか？';
+    let dotHtml='';
+    const dayMod=Math.min(days,8);
+    for(let i=0;i<8;i++){dotHtml+='<div class="dot'+(i<(8-dayMod)?' on':'')+'"></div>';}
+    box.innerHTML='<div class="att-hero"><div class="att-label">前回から</div><div class="att-days">'+days+'<span class="att-unit">日</span></div><div class="att-msg">'+msg+'</div><div class="att-dots">'+dotHtml+'</div></div>';
+  }else{
+    box.innerHTML='<div class="att-hero"><div class="att-label">来店記録</div><div class="att-msg">トレーニング記録がまだありません</div></div>';
+  }
+  document.getElementById('cal-month').textContent=cY+'年'+(cM+1)+'月';
+  const mv=mts.filter(t=>t.date.startsWith(cY+'-'+String(cM+1).padStart(2,'0')));
+  document.getElementById('cal-count').textContent='今月 '+mv.length+'回';
+  document.getElementById('cal-hdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>'<div class="cd dh">'+d+'</div>').join('');
+  const first=new Date(cY,cM,1).getDay();
+  const dim=new Date(cY,cM+1,0).getDate();
+  const ts=now.toISOString().slice(0,10);
+  let html=Array(first).fill('<div class="cd"></div>').join('');
+  for(let d=1;d<=dim;d++){
+    const ds=cY+'-'+String(cM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const vis=mts.some(t=>t.date===ds);
+    const isT=ds===ts;
+    if(vis)html+='<div class="cd"><span class="cd-v">'+d+'</span></div>';
+    else if(isT)html+='<div class="cd"><span class="cd-t">'+d+'</span></div>';
+    else html+='<div class="cd">'+d+'</div>';
+  }
+  document.getElementById('cal-body').innerHTML=html;
+}
+
+function renderCourseStatus(){
+  // コース回数（カウンセリングから取得、なければスキップ）
+  const wrap=document.getElementById('course-status-wrap');
+  if(!allData||!allData.counseling||!allData.counseling[urlId]){wrap.innerHTML='';return;}
+  const counsel=allData.counseling[urlId];
+  const courseSessions=counsel.courseSessions?parseInt(counsel.courseSessions):null;
+  if(!courseSessions){wrap.innerHTML='';return;}
+  const used=mts.length;
+  const remain=courseSessions-used;
+  let remClass='course-rem';
+  if(remain<=1)remClass+=' danger';
+  else if(remain<=3)remClass+=' warn';
+  wrap.innerHTML=`
+    <div class="course-card">
+      <div class="course-ico-lg">🎟️</div>
+      <div class="course-body">
+        <div class="course-label-my">コース消化状況</div>
+        <div class="course-frac"><span class="nn">${used}</span><span class="ss">/</span><span class="tt">${courseSessions} 回</span></div>
+        <div class="${remClass}">残 ${remain<0?0:remain} 回</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderBody(){
+  const weights=mem.weights||[];
+  const content=document.getElementById('wt-content');
+  if(!weights.length){content.innerHTML='<div class="nodata">体重データがありません</div>';return;}
+  const cur=weights[weights.length-1],first=weights[0];
+  const diff=(cur-first).toFixed(1);
+  content.innerHTML='<div class="wt-hero"><span class="wt-val">'+cur+'</span><span class="wt-unit">kg</span><span class="wt-diff '+(diff<=0?'down':'up')+'">'+(diff<=0?'▼':'▲')+' '+Math.abs(diff)+'kg</span></div><div style="font-size:10px;color:var(--ink3);margin-top:6px;font-weight:500">開始時 '+first+'kg → 現在 '+cur+'kg</div>';
+  dc('cw');
+  C.cw=new Chart(document.getElementById('cw'),{
+    type:'line',
+    data:{
+      labels:weights.map((_,i)=>i===0?'開始':'記録'+(i+1)),
+      datasets:[{data:weights,borderColor:'#5a78c8',backgroundColor:'rgba(128,160,232,0.15)',tension:0.4,pointRadius:5,pointBackgroundColor:'#5a78c8',fill:true}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8a7e9a',font:{size:9,family:'M PLUS Rounded 1c'}}},y:{ticks:{color:'#8a7e9a',font:{family:'M PLUS Rounded 1c'},callback:v=>v+'kg'},grid:{color:'#f0e8f0'}}}}
+  });
+}
+
+function renderTraining(){
+  const list=document.getElementById('tr-list');
+  if(!mts.length){list.innerHTML='<div class="nodata">トレーニング記録がありません</div>';return;}
+  list.innerHTML='';
+  mts.slice(0,10).forEach((t,i)=>{
+    const div=document.createElement('div');
+    div.className='tr-card '+(i===0?'tr-latest':'tr-normal');
+    const prev=mts[i+1];
+    const setLines=t.sets.map(s=>{
+      let upStr='';
+      if(prev){
+        const ps=prev.sets.find(p=>p.exercise===s.exercise);
+        if(ps&&s.weight>ps.weight)upStr='<span class="tr-up">▲ +'+(s.weight-ps.weight).toFixed(1)+'kg</span>';
+      }
+      return '<div style="padding:2px 0">'+s.exercise+' <span style="color:var(--blue2);font-weight:700">'+s.weight+'kg × '+s.reps+'回 × '+(s.sets||1)+'セット</span>'+upStr+'</div>';
+    }).join('');
+    div.innerHTML='<div class="tr-date">'+t.date+(i===0?'<span class="tr-badge">LATEST</span>':'')+'</div><div class="tr-set">'+setLines+'</div>';
+    list.appendChild(div);
+  });
+}
+
+function renderGrowth(){
+  const score=JSON.parse(localStorage.getItem('onetreScore_'+urlId)||'null');
+  dc('cr');
+  if(score&&(score.strength||score.core||score.agility||score.flex)){
+    document.getElementById('radar-wrap').style.display='block';
+    document.getElementById('radar-nodata').style.display='none';
+    const s=score.strength||0,c=score.core||0,a=score.agility||0,f=score.flex||0;
+    const total=s+c+a+f;
+    document.getElementById('score-strength-val').textContent=s;
+    document.getElementById('score-core-val').textContent=c;
+    document.getElementById('score-agility-val').textContent=a;
+    document.getElementById('score-flex-val').textContent=f;
+    document.getElementById('score-total-val').textContent=total;
+    document.getElementById('bar-strength').style.width=(s/25*100)+'%';
+    document.getElementById('bar-core').style.width=(c/25*100)+'%';
+    document.getElementById('bar-agility').style.width=(a/25*100)+'%';
+    document.getElementById('bar-flex').style.width=(f/25*100)+'%';
+    C.cr=new Chart(document.getElementById('cr'),{
+      type:'radar',
+      data:{
+        labels:['筋力','体幹','連動性','柔軟性'],
+        datasets:[{
+          label:'現在',data:[s,c,a,f],
+          backgroundColor:'rgba(240,160,184,0.2)',borderColor:'#e8608a',borderWidth:2.5,
+          pointBackgroundColor:['#e8608a','#5a78c8','#3a9a68','#c88040'],pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:6
+        },{
+          label:'理想',data:[25,25,25,25],
+          backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(180,180,180,0.3)',borderWidth:1.5,borderDash:[5,4],
+          pointBackgroundColor:'rgba(180,180,180,0.2)',pointRadius:3,pointBorderWidth:0
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,
+        scales:{r:{min:0,max:25,ticks:{stepSize:5,color:'#ccc',font:{size:9,family:'M PLUS Rounded 1c'},backdropColor:'transparent'},grid:{color:'rgba(240,160,184,0.15)'},angleLines:{color:'rgba(240,160,184,0.15)'},pointLabels:{color:['#e8608a','#5a78c8','#3a9a68','#c88040'],font:{size:13,family:'M PLUS Rounded 1c',weight:'800'}}}},
+        plugins:{legend:{display:false}}}
+    });
+  }else{
+    document.getElementById('radar-wrap').style.display='none';
+    document.getElementById('radar-nodata').style.display='block';
+  }
+
+  // 成長評価（ボリュームベース）
+  const growthEl=document.getElementById('growth-eval');
+  if(mts.length<2){
+    growthEl.innerHTML='<div class="nodata">2回以上記録すると成長評価が表示されます</div>';
+  }else{
+    const volumes=mts.slice().reverse().map(t=>({
+      date:t.date,
+      vol:t.sets.reduce((a,s)=>a+(s.weight*s.reps*(s.sets||1)),0)
+    }));
+    const latestVol=volumes[volumes.length-1].vol;
+    const prevVol=volumes[volumes.length-2].vol;
+    const diffVol=latestVol-prevVol;
+    const diffPct=prevVol>0?Math.round(diffVol/prevVol*100):0;
+    let badge='',bdgClass='';
+    if(diffVol>0){badge='▲ 成長 +'+diffPct+'%';bdgClass='up';}
+    else if(diffVol===0){badge='→ 維持';bdgClass='flat';}
+    else{badge='▼ 低下 '+diffPct+'%';bdgClass='down';}
+
+    let volPB=0,volPBDate='';
+    volumes.forEach(v=>{if(v.vol>volPB){volPB=v.vol;volPBDate=v.date;}});
+
+    growthEl.innerHTML=`
+      <div class="growth-card">
+        <div class="growth-row">
+          <div>
+            <div class="growth-label">前回比</div>
+            <div class="growth-sub">${prevVol.toLocaleString()}kg → ${latestVol.toLocaleString()}kg</div>
+          </div>
+          <div class="growth-badge ${bdgClass}">${badge}</div>
+        </div>
+      </div>
+      <div class="growth-card" style="background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg));border:none">
+        <div class="growth-row">
+          <div>
+            <div class="growth-label" style="color:var(--orange2)">ボリュームPB</div>
+            <div class="growth-sub">${volPBDate}</div>
+          </div>
+          <div style="font-size:22px;color:var(--orange2);font-weight:800">${volPB.toLocaleString()}<span style="font-size:11px;color:var(--ink3);font-weight:500"> kg</span></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // PB一覧（重量PB）
+  const prs={};
+  mts.forEach(t=>t.sets.forEach(s=>{if(!prs[s.exercise]||s.weight>prs[s.exercise].w){prs[s.exercise]={w:s.weight,date:t.date};}}));
+  const pbList=document.getElementById('pb-list');
+  if(!Object.keys(prs).length){
+    pbList.innerHTML='<div class="nodata">記録がありません</div>';
+  }else{
+    pbList.innerHTML='';
+    let colorIdx=0;
+    Object.entries(prs).forEach(([ex,pr])=>{
+      let firstW=null;
+      for(let i=mts.length-1;i>=0;i--){
+        const s=mts[i].sets.find(s=>s.exercise===ex);
+        if(s){firstW=s.weight;break;}
+      }
+      const upStr=firstW&&pr.w>firstW?'<span class="tr-up">▲ +'+(pr.w-firstW).toFixed(1)+'kg</span>':'';
+      const div=document.createElement('div');
+      div.className='pb-row c'+(colorIdx%4);
+      div.innerHTML='<div><div class="pb-name">'+ex+'<span class="pb-badge">BEST</span></div><div class="pb-date">'+pr.date+'</div></div><div class="pb-val-wrap"><span class="pb-val">'+pr.w+'</span><span class="pb-unit"> kg</span>'+upStr+'</div>';
+      pbList.appendChild(div);
+      colorIdx++;
+    });
+  }
+
+  // ボリューム推移グラフ
+  if(mts.length>=2){
+    const vols=[...mts].reverse().map(t=>({
+      date:t.date.slice(5),
+      vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))
+    }));
+    dc('cv');
+    C.cv=new Chart(document.getElementById('cv'),{
+      type:'bar',
+      data:{labels:vols.map(v=>v.date),datasets:[{data:vols.map(v=>v.vol),backgroundColor:'#c88040',borderRadius:8,borderSkipped:false}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8a7e9a',font:{size:9,family:'M PLUS Rounded 1c'}}},y:{ticks:{color:'#8a7e9a',font:{family:'M PLUS Rounded 1c'},callback:v=>v.toLocaleString()+'kg'},grid:{color:'#f0e8f0'}}}}
+    });
+  }
+}
+
+function saveWeightEntry(){
+  const v=parseFloat(document.getElementById('wt-input').value);
+  if(!v||v<20||v>200){document.getElementById('wt-feedback').textContent='正しい体重を入力してください';return;}
+  const today=new Date().toISOString().slice(0,10);
+  const key='onetreWeights_'+urlId;
+  const entries=JSON.parse(localStorage.getItem(key)||'[]');
+  const existing=entries.findIndex(e=>e.date===today);
+  if(existing>=0)entries[existing].weight=v;
+  else entries.push({date:today,weight:v});
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  localStorage.setItem(key,JSON.stringify(entries));
+  const prev=entries.length>=2?entries[entries.length-2]:null;
+  const diff=prev?(v-prev.weight).toFixed(1):null;
+  const fb=document.getElementById('wt-feedback');
+  if(diff!==null){
+    fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');
+    fb.style.color=diff<=0?'var(--green2)':'var(--pink2)';
+  }else{
+    fb.textContent='記録しました！';
+    fb.style.color='var(--pink2)';
+  }
+  if(mem)mem.weights=entries.map(e=>e.weight);
+  document.getElementById('wt-input').value='';
+  renderBody();renderWeightHistory();
+}
+
+function renderWeightHistory(){
+  const entries=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]');
+  const el=document.getElementById('wt-history-list');
+  if(!el)return;
+  if(!entries.length){el.innerHTML='';return;}
+  el.innerHTML='';
+  [...entries].reverse().slice(0,6).forEach((e,i)=>{
+    const div=document.createElement('div');
+    div.className='wt-hist-item c'+(i%4);
+    div.innerHTML='<div class="wt-hist-date">'+e.date+'</div><div><span class="wt-hist-val">'+e.weight+'</span><span class="wt-hist-unit"> kg</span></div>';
+    el.appendChild(div);
+  });
+}
+
+function saveGoal(){
+  const v=parseFloat(document.getElementById('goal-wt').value);
+  if(!v||v<20||v>200){alert('正しい体重を入力してください');return;}
+  localStorage.setItem('onetreGoal_'+urlId,v);
+  renderGoal();
+}
+
+function clearGoal(){
+  localStorage.removeItem('onetreGoal_'+urlId);
+  document.getElementById('goal-wt').value='';
+  renderGoal();
+}
+
+function renderGoal(){
+  const goal=parseFloat(localStorage.getItem('onetreGoal_'+urlId));
+  const el=document.getElementById('goal-display');
+  if(!goal){el.innerHTML='<div style="font-size:11px;color:var(--ink3);font-weight:500">目標未設定</div>';return;}
+  const cur=mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:null;
+  const diff=cur?+(cur-goal).toFixed(1):null;
+  const diffStr=diff!==null?(diff===0?'目標達成！':(diff>0?'あと'+diff+'kg':'目標達成！ '+Math.abs(diff)+'kgオーバー')):'';
+  el.innerHTML='<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap"><span style="font-size:28px;color:var(--ink);font-weight:800">'+goal+'</span><span style="font-size:11px;color:var(--ink3);font-weight:500">kg</span>'+(diff!==null?'<span style="font-size:12px;color:var(--orange2);font-weight:800;margin-left:4px">'+diffStr+'</span>':'')+'</div>';
+  document.getElementById('goal-wt').value=goal;
+}
+
+init();
+
+// バージョンチェック
+(async function checkVersion(){
+  const VERSION_KEY='onetreMemberVer_v5';
+  try{
+    const res=await fetch(GAS_URL+'?action=getVersion&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(!data || !data.version) return;
+    const saved=localStorage.getItem(VERSION_KEY);
+    if(!saved){
+      localStorage.setItem(VERSION_KEY, data.version);
+      return;
+    }
+    if(saved !== data.version){
+      localStorage.setItem(VERSION_KEY, data.version);
+      if(confirm('新しいバージョンがあります。更新しますか？')){
+        location.reload(true);
+      }
+    }
+  }catch(e){console.log('バージョンチェック失敗:',e);}
+})();
+</script>
 </body>
 </html>
