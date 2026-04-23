@@ -346,8 +346,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <button class="nbtn" onclick="sp('sales',this)"><span>💰</span>売上</button>
     <button class="nbtn" onclick="sp('taiken',this)"><span>🎯</span>体験予約</button>
     <button class="nbtn" onclick="sp('members',this)"><span>👥</span>会員</button>
-    <button class="nbtn" onclick="sp('calendar',this)"><span>📅</span>カレンダー</button>
-    <button class="nbtn" onclick="sp('progress',this)"><span>📈</span>成長グラフ</button>
+    <button class="nbtn" onclick="sp('calendar',this)"><span>🗓️</span>来店分析</button>
   </div>
 
   <!-- ダッシュボード -->
@@ -488,29 +487,80 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
-  <!-- カレンダー -->
+  <!-- 来店分析（経営ダッシュボード） -->
   <div id="page-calendar" class="page">
+
+    <!-- 月カレンダー（全員の来店ドット重ね） -->
     <div class="card">
+      <div class="section-ttl">月間来店カレンダー（全員）</div>
       <div class="msel">
-        <select id="scal" onchange="rCal()"><option value="">全会員</option></select>
+        <select id="scal" onchange="rCal()"><option value="">全会員（全体傾向）</option></select>
         <button class="btn-ghost" onclick="cPrev()">&#8249;</button>
         <span style="font-size:15px;color:var(--ink);font-weight:800" id="ctitle"></span>
         <button class="btn-ghost" onclick="cNext()">&#8250;</button>
       </div>
+      <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500;line-height:1.5">ピンク=1人、オレンジ=2人以上、数字=その日の来店人数</div>
       <div class="cal-grid" id="chdr"></div>
       <div class="cal-grid" style="margin-top:4px" id="cbody"></div>
     </div>
-  </div>
 
-  <!-- 成長グラフ -->
-  <div id="page-progress" class="page">
-    <div class="msel"><select id="spro" onchange="rPro()"><option value="">会員を選択</option></select></div>
-    <div class="charts-row">
-      <div class="card"><div class="section-ttl">週トレーニング頻度</div><div style="position:relative;height:180px"><canvas id="cf"></canvas></div></div>
-      <div class="card"><div class="section-ttl">総ボリューム推移</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
+    <!-- 経営KPI -->
+    <div class="section-ttl">来店傾向 KPI</div>
+    <div class="metrics">
+      <div class="metric metric-pink">
+        <div class="metric-ico">🏆</div>
+        <div class="metric-label">人気曜日</div>
+        <div class="metric-value metric-value-lg" id="kpi-popular-day">-</div>
+        <div class="metric-sub" id="kpi-popular-day-sub">-</div>
+      </div>
+      <div class="metric metric-blue">
+        <div class="metric-ico">⏰</div>
+        <div class="metric-label">人気時間帯</div>
+        <div class="metric-value metric-value-lg" id="kpi-popular-hour">-</div>
+        <div class="metric-sub" id="kpi-popular-hour-sub">-</div>
+      </div>
+      <div class="metric metric-green">
+        <div class="metric-ico">📆</div>
+        <div class="metric-label">今月の来店数</div>
+        <div class="metric-value" id="kpi-total-visits">0<span class="metric-unit">件</span></div>
+        <div class="metric-sub" id="kpi-total-visits-sub">延べセッション数</div>
+      </div>
+      <div class="metric metric-orange">
+        <div class="metric-ico">🎯</div>
+        <div class="metric-label">稼働率</div>
+        <div class="metric-value" id="kpi-utilization">-<span class="metric-unit">%</span></div>
+        <div class="metric-sub">営業時間に対する比率</div>
+      </div>
     </div>
-    <div class="card"><div class="section-ttl">自己ベスト</div><div id="pr-list" class="pr-list"></div></div>
-    <div class="card"><div class="section-ttl">前回比較</div><div id="pcmp"></div></div>
+
+    <!-- 曜日ヒートマップ -->
+    <div class="card">
+      <div class="section-ttl">曜日別 来店ヒートマップ</div>
+      <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">色が濃いほど来店が多い曜日です</div>
+      <div id="heatmap-weekday"></div>
+    </div>
+
+    <!-- 時間帯ヒートマップ -->
+    <div class="card">
+      <div class="section-ttl">時間帯別 来店ヒートマップ</div>
+      <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">どの時間が埋まりやすいかがわかります</div>
+      <div id="heatmap-hour"></div>
+    </div>
+
+    <!-- 曜日×時間帯マトリックス -->
+    <div class="card">
+      <div class="section-ttl">曜日 × 時間帯 マトリックス</div>
+      <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">縦=曜日 / 横=時間帯（記録に時刻が入っていない場合は非表示）</div>
+      <div id="matrix-grid" style="overflow-x:auto"></div>
+    </div>
+
+    <!-- 空き枠TOP3（経営ヒント） -->
+    <div class="card">
+      <div class="section-ttl">空き枠TOP3（体験予約の誘導候補）</div>
+      <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">稼働率が低い枠に体験予約を誘導すると効率的です</div>
+      <div id="empty-slots"></div>
+    </div>
+
   </div>
 
 </div>
@@ -932,8 +982,7 @@ function sp(name,btn){
   if(name==='sales')rSales();
   if(name==='taiken')loadTaikenList();
   if(name==='members')rMem();
-  if(name==='calendar'){pSel();rCal();}
-  if(name==='progress')pSel();
+  if(name==='calendar'){pSel();rCal();renderCalendarAnalysis();}
 }
 
 function getAllMembers(){return gasMembers;}
@@ -1130,8 +1179,70 @@ function renderMemberDetail(m){
   }
   html+='</div>';
 
-  // ④ カウンセリング
-  html+='<div class="section-order"><span class="order-label">04</span>カウンセリング内容</div>';
+  // ④ 成長グラフ
+  html+=`
+    <div class="section-order"><span class="order-label">04</span>成長グラフ</div>
+    <div class="form-section">
+  `;
+  if(mts.length<2){
+    html+='<p style="font-size:12px;color:var(--ink3);font-weight:500">2回以上記録すると成長グラフが表示されます</p>';
+  }else{
+    const volumes=mts.slice().reverse().map(t=>({
+      date:t.date,
+      vol:t.sets.reduce((a,s)=>a+(s.weight*s.reps*(s.sets||1)),0)
+    }));
+    // 成長評価（最新 vs 前回）
+    const latestVol=volumes[volumes.length-1].vol;
+    const prevVol=volumes[volumes.length-2].vol;
+    const diffVol=latestVol-prevVol;
+    const diffPct=prevVol>0?Math.round(diffVol/prevVol*100):0;
+    let growthBadge='',growthColor='';
+    if(diffVol>0){growthBadge='▲ 成長 +'+diffPct+'%';growthColor='var(--green2)';}
+    else if(diffVol===0){growthBadge='→ 維持';growthColor='var(--ink3)';}
+    else{growthBadge='▼ 低下 '+diffPct+'%';growthColor='var(--orange2)';}
+
+    // ボリュームPB
+    let volPB=0,volPBDate='';
+    volumes.forEach(v=>{if(v.vol>volPB){volPB=v.vol;volPBDate=v.date;}});
+
+    html+=`
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px">
+        <div style="background:${diffVol>0?'var(--green-bg2)':(diffVol<0?'var(--orange-bg2)':'var(--bg)')};border-radius:12px;padding:12px 14px">
+          <div style="font-size:9px;color:var(--ink3);font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">前回比</div>
+          <div style="font-size:16px;color:${growthColor};font-weight:800">${growthBadge}</div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:3px;font-weight:500">${prevVol.toLocaleString()}kg → ${latestVol.toLocaleString()}kg</div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--orange-bg2),var(--orange-bg));border-radius:12px;padding:12px 14px">
+          <div style="font-size:9px;color:var(--orange2);font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">ボリュームPB</div>
+          <div style="font-size:20px;color:var(--orange2);font-weight:800">${volPB.toLocaleString()}<span style="font-size:11px;color:var(--ink3);font-weight:500"> kg</span></div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:3px;font-weight:500">${formatJpDate(volPBDate)}</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;padding:14px">
+        <div style="font-size:10px;color:var(--ink2);font-weight:800;margin-bottom:8px">総ボリューム推移（重量×回数×セット）</div>
+        <div style="position:relative;height:180px"><canvas id="mem-vol-${m.id}"></canvas></div>
+      </div>
+    `;
+  }
+  html+='</div>';
+
+  // ⑤ 来店カレンダー
+  html+=`
+    <div class="section-order"><span class="order-label">05</span>来店カレンダー</div>
+    <div class="form-section">
+  `;
+  if(mts.length===0){
+    html+='<p style="font-size:12px;color:var(--ink3);font-weight:500">来店記録がありません</p>';
+  }else{
+    // 直近3ヶ月分のカレンダー
+    const today=new Date();
+    const visitDates=new Set(mts.map(t=>t.date));
+    html+=`<div id="mem-cal-${m.id}" style="display:grid;grid-template-columns:1fr;gap:12px"></div>`;
+  }
+  html+='</div>';
+
+  // ⑥ カウンセリング
+  html+='<div class="section-order"><span class="order-label">06</span>カウンセリング内容</div>';
   if(!counseling){
     html+='<div class="form-section"><p style="font-size:12px;color:var(--ink3);font-weight:500">カウンセリング未登録</p></div>';
   }else{
@@ -1210,7 +1321,84 @@ function renderMemberDetail(m){
   detail.innerHTML=html;
 
   // 種目行を初期状態で1つ入れる
-  setTimeout(()=>{addS(m.id);},10);
+  setTimeout(()=>{
+    addS(m.id);
+
+    // 成長グラフ描画
+    if(mts.length>=2){
+      const volumes=mts.slice().reverse().map(t=>({
+        date:t.date,
+        vol:t.sets.reduce((a,s)=>a+(s.weight*s.reps*(s.sets||1)),0)
+      }));
+      const canvas=document.getElementById('mem-vol-'+m.id);
+      if(canvas){
+        dc('mv-'+m.id);
+        C['mv-'+m.id]=new Chart(canvas,{
+          type:'line',
+          data:{
+            labels:volumes.map(v=>v.date.slice(5)),
+            datasets:[{
+              data:volumes.map(v=>v.vol),
+              borderColor:'#c88040',
+              backgroundColor:'rgba(232,160,96,0.15)',
+              tension:0.4,
+              pointRadius:4,
+              pointBackgroundColor:'#c88040',
+              fill:true
+            }]
+          },
+          options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            plugins:{legend:{display:false}},
+            scales:{
+              x:{ticks:{color:'#8a7e9a',font:{size:9,family:'M PLUS Rounded 1c'}}},
+              y:{ticks:{color:'#8a7e9a',font:{family:'M PLUS Rounded 1c'},callback:v=>v.toLocaleString()+'kg'},grid:{color:'#f0e8f0'}}
+            }
+          }
+        });
+      }
+    }
+
+    // 来店カレンダー描画（直近3ヶ月）
+    const memCalEl=document.getElementById('mem-cal-'+m.id);
+    if(memCalEl && mts.length>0){
+      const visitDates=new Set(mts.map(t=>t.date));
+      const today=new Date();
+      const today_s=today.toISOString().slice(0,10);
+      let calHtml='';
+      for(let offset=2;offset>=0;offset--){
+        const d=new Date(today.getFullYear(),today.getMonth()-offset,1);
+        const yy=d.getFullYear(),mm=d.getMonth();
+        const first=new Date(yy,mm,1).getDay();
+        const days=new Date(yy,mm+1,0).getDate();
+        const visitInMonth=mts.filter(t=>t.date.startsWith(`${yy}-${String(mm+1).padStart(2,'0')}-`)).length;
+        calHtml+=`
+          <div style="background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div style="font-size:12px;font-weight:800;color:var(--ink)">${yy}年${mm+1}月</div>
+              <div style="font-size:10px;color:var(--pink2);background:var(--pink-bg);padding:3px 10px;border-radius:10px;font-weight:700">${visitInMonth}回</div>
+            </div>
+            <div class="cal-grid">
+              ${['日','月','火','水','木','金','土'].map(d=>`<div class="cday hdr">${d}</div>`).join('')}
+            </div>
+            <div class="cal-grid" style="margin-top:3px">
+        `;
+        calHtml+=Array(first).fill('<div class="cday"></div>').join('');
+        for(let day=1;day<=days;day++){
+          const ds=`${yy}-${String(mm+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          const has=visitDates.has(ds);
+          const isT=ds===today_s;
+          let cls='cday';
+          if(has)cls+=' has';
+          else if(isT)cls+=' today';
+          calHtml+=`<div class="${cls}">${day}</div>`;
+        }
+        calHtml+='</div></div>';
+      }
+      memCalEl.innerHTML=calHtml;
+    }
+  },10);
 
   return detail;
 }
@@ -1224,7 +1412,7 @@ function cpUrl(url,btn){
 
 function pSel(){
   const all=getAllMembers();
-  ['scal','spro','score-member'].forEach(id=>{
+  ['scal','score-member'].forEach(id=>{
     const s=document.getElementById(id);if(!s)return;
     const ha=s.options[0]&&s.options[0].value==='';
     while(s.options.length>(ha?1:0))s.remove(ha?1:0);
@@ -1441,22 +1629,191 @@ function calcPRs(mts){const pr={};mts.forEach(t=>t.sets.forEach(s=>{if(!pr[s.exe
 function calcVolumes(mts){return mts.map(t=>({date:t.date,vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));}
 function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const k=mon.toISOString().slice(0,10);wk[k]=(wk[k]||0)+1;});return Object.entries(wk).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8);}
 
-function rPro(){
-  const mid=document.getElementById('spro').value;if(!mid)return;
-  const all=getAllMembers(),mem=all.find(m=>m.id===mid);if(!mem)return;
-  const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
-  dc('cf');dc('cv');
-  const freq=calcFreq(mts);
-  C.cf=new Chart(document.getElementById('cf'),{type:'bar',data:{labels:freq.map(f=>f[0].slice(5)),datasets:[{data:freq.map(f=>f[1]),backgroundColor:'#e8608a',borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8a7e9a',font:{size:9,family:'M PLUS Rounded 1c'}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#8a7e9a',font:{family:'M PLUS Rounded 1c'}},grid:{color:'#f0e8f0'}}}}});
-  const vols=calcVolumes(mts);
-  C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#80a0e8',backgroundColor:'rgba(128,160,232,0.15)',tension:0.4,pointRadius:4,pointBackgroundColor:'#80a0e8',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8a7e9a',font:{size:9,family:'M PLUS Rounded 1c'}}},y:{ticks:{color:'#8a7e9a',font:{family:'M PLUS Rounded 1c'},callback:v=>v+'kg'},grid:{color:'#f0e8f0'}}}}});
-  const prs=calcPRs(mts),pl=document.getElementById('pr-list');pl.innerHTML='';
-  if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--ink3);font-weight:500">記録がありません</p>';return;}
-  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${formatJpDate(pr.date)}</div></div><div class="pr-val">${pr.weight} <span style="font-size:11px;color:var(--ink3);font-weight:500">kg</span></div>`;pl.appendChild(div);});
-  const cmp=document.getElementById('pcmp');cmp.innerHTML='';
-  if(mts.length<2){cmp.innerHTML='<p style="font-size:13px;color:var(--ink3);font-weight:500">2回以上記録すると比較が表示されます</p>';return;}
-  const last=mts[mts.length-1],prev=mts[mts.length-2];
-  last.sets.forEach(s=>{const ps=prev.sets.find(p=>p.exercise===s.exercise);if(!ps)return;const dw=s.weight-ps.weight,dr=s.reps-ps.reps;const div=document.createElement('div');div.className='pi';div.innerHTML=`<div class="pn">${s.exercise}</div><div class="pvs"><span class="pp">${ps.weight}kg×${ps.reps}回</span><span style="color:var(--ink3)">→</span><span class="pc">${s.weight}kg×${s.reps}回</span><span class="pu">${dw>0?'+'+dw.toFixed(1)+'kg':''}${dr>0?' +'+dr+'回':''}</span></div>`;cmp.appendChild(div);});
+// ===== 来店分析（経営ダッシュボード） =====
+function renderCalendarAnalysis(){
+  // 今月のデータを対象
+  const now=new Date();
+  const curY=now.getFullYear(),curM=now.getMonth();
+  const monthPrefix=`${curY}-${String(curM+1).padStart(2,'0')}-`;
+  const monthVisits=T.filter(t=>t.date&&t.date.startsWith(monthPrefix));
+
+  // 延べセッション数（日付ごとの会員ユニーク数ではなく、レコード数）
+  const totalVisits=monthVisits.length;
+  document.getElementById('kpi-total-visits').innerHTML=totalVisits+'<span class="metric-unit">件</span>';
+
+  // 曜日別カウント
+  const weekdayNames=['日','月','火','水','木','金','土'];
+  const weekdayCount=[0,0,0,0,0,0,0];
+  // 全期間の統計（傾向分析なので過去分も含める）
+  T.forEach(t=>{
+    if(!t.date)return;
+    const d=new Date(t.date);
+    if(!isNaN(d))weekdayCount[d.getDay()]++;
+  });
+
+  // 人気曜日
+  const maxWd=Math.max(...weekdayCount);
+  const popularWdIdx=weekdayCount.indexOf(maxWd);
+  if(maxWd>0){
+    document.getElementById('kpi-popular-day').textContent=weekdayNames[popularWdIdx]+'曜日';
+    document.getElementById('kpi-popular-day-sub').textContent=maxWd+'件の来店';
+  }
+
+  // 時間帯別カウント（データに時刻が入っていれば）
+  const hourCount={};
+  let hasHourData=false;
+  T.forEach(t=>{
+    if(t.time||t.datetime){
+      hasHourData=true;
+      const timeStr=t.time||t.datetime;
+      const h=new Date('2000-01-01T'+timeStr).getHours();
+      if(!isNaN(h))hourCount[h]=(hourCount[h]||0)+1;
+    }
+  });
+
+  if(hasHourData&&Object.keys(hourCount).length>0){
+    let maxH=0,popularH=0;
+    Object.entries(hourCount).forEach(([h,c])=>{if(c>maxH){maxH=c;popularH=parseInt(h);}});
+    document.getElementById('kpi-popular-hour').textContent=popularH+':00〜';
+    document.getElementById('kpi-popular-hour-sub').textContent=maxH+'件の来店';
+  }else{
+    document.getElementById('kpi-popular-hour').textContent='データなし';
+    document.getElementById('kpi-popular-hour-sub').textContent='時刻データが記録されていません';
+  }
+
+  // 稼働率計算（営業時間：月〜金 16-22時=6h、土 16-20時=4h、日祝 0h）
+  const daysInMonth=new Date(curY,curM+1,0).getDate();
+  let totalBusinessHours=0;
+  for(let d=1;d<=daysInMonth;d++){
+    const dt=new Date(curY,curM,d);
+    const dw=dt.getDay();
+    if(dw===0)continue; // 日曜休み
+    else if(dw===6)totalBusinessHours+=4; // 土曜
+    else totalBusinessHours+=6; // 平日
+  }
+  // 1セッション=1時間として計算
+  const utilPct=totalBusinessHours>0?Math.round(totalVisits/totalBusinessHours*100):0;
+  document.getElementById('kpi-utilization').innerHTML=utilPct+'<span class="metric-unit">%</span>';
+
+  // 曜日ヒートマップ
+  const wdHeat=document.getElementById('heatmap-weekday');
+  let wdHtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">';
+  const maxWdForScale=Math.max(...weekdayCount,1);
+  weekdayCount.forEach((c,i)=>{
+    const intensity=c/maxWdForScale;
+    const bgColor=`rgba(232,96,138,${0.1+intensity*0.8})`;
+    const isClosedDay=i===0;
+    wdHtml+=`
+      <div style="background:${isClosedDay?'var(--bg)':bgColor};border-radius:10px;padding:14px 6px;text-align:center;${isClosedDay?'opacity:0.5':''}">
+        <div style="font-size:11px;color:var(--ink2);font-weight:700;margin-bottom:4px">${weekdayNames[i]}</div>
+        <div style="font-size:18px;color:${intensity>0.5?'#fff':'var(--ink)'};font-weight:800">${c}</div>
+        <div style="font-size:8px;color:${intensity>0.5?'rgba(255,255,255,0.8)':'var(--ink3)'};margin-top:2px;font-weight:500">${isClosedDay?'定休':'回'}</div>
+      </div>
+    `;
+  });
+  wdHtml+='</div>';
+  wdHeat.innerHTML=wdHtml;
+
+  // 時間帯ヒートマップ
+  const hourHeat=document.getElementById('heatmap-hour');
+  if(hasHourData&&Object.keys(hourCount).length>0){
+    const hours=[];
+    for(let h=9;h<=21;h++)hours.push(h);
+    const maxHcount=Math.max(...Object.values(hourCount),1);
+    let hHtml='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px">';
+    hours.forEach(h=>{
+      const c=hourCount[h]||0;
+      const intensity=c/maxHcount;
+      const bgColor=`rgba(128,160,232,${0.1+intensity*0.8})`;
+      hHtml+=`
+        <div style="background:${bgColor};border-radius:10px;padding:12px 6px;text-align:center">
+          <div style="font-size:10px;color:var(--ink2);font-weight:700;margin-bottom:3px">${h}:00</div>
+          <div style="font-size:16px;color:${intensity>0.5?'#fff':'var(--ink)'};font-weight:800">${c}</div>
+        </div>
+      `;
+    });
+    hHtml+='</div>';
+    hourHeat.innerHTML=hHtml;
+  }else{
+    hourHeat.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">時刻データが記録されていないため表示できません</p>';
+  }
+
+  // 曜日×時間帯マトリックス
+  const matrixEl=document.getElementById('matrix-grid');
+  if(hasHourData){
+    const matrix={};
+    T.forEach(t=>{
+      if(!t.date)return;
+      const d=new Date(t.date);
+      const wd=d.getDay();
+      const timeStr=t.time||t.datetime;
+      if(!timeStr)return;
+      const h=new Date('2000-01-01T'+timeStr).getHours();
+      if(isNaN(h))return;
+      const key=wd+'_'+h;
+      matrix[key]=(matrix[key]||0)+1;
+    });
+    const hoursM=[];for(let h=9;h<=21;h++)hoursM.push(h);
+    const maxM=Math.max(...Object.values(matrix),1);
+    let mHtml='<table style="border-collapse:separate;border-spacing:3px;width:100%;min-width:600px"><tr><th style="font-size:9px;color:var(--ink3);padding:4px">曜日＼時間</th>';
+    hoursM.forEach(h=>{mHtml+=`<th style="font-size:9px;color:var(--ink3);padding:4px;font-weight:700">${h}</th>`;});
+    mHtml+='</tr>';
+    for(let wd=1;wd<=6;wd++){ // 日曜除く
+      mHtml+=`<tr><td style="font-size:10px;color:var(--ink2);padding:4px;font-weight:700">${weekdayNames[wd]}</td>`;
+      hoursM.forEach(h=>{
+        const c=matrix[wd+'_'+h]||0;
+        const intensity=c/maxM;
+        const bgColor=c>0?`rgba(192,160,232,${0.2+intensity*0.7})`:'var(--bg)';
+        mHtml+=`<td style="background:${bgColor};border-radius:6px;padding:8px 4px;text-align:center;font-size:10px;color:${intensity>0.5?'#fff':'var(--ink)'};font-weight:700;min-width:36px">${c||''}</td>`;
+      });
+      mHtml+='</tr>';
+    }
+    mHtml+='</table>';
+    matrixEl.innerHTML=mHtml;
+  }else{
+    matrixEl.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">時刻データが記録されていないため表示できません</p>';
+  }
+
+  // 空き枠TOP3
+  const emptyEl=document.getElementById('empty-slots');
+  if(hasHourData){
+    const matrix2={};
+    for(let wd=1;wd<=6;wd++){
+      for(let h=(wd===6?16:16);h<=(wd===6?19:21);h++){ // 営業時間内
+        matrix2[wd+'_'+h]=0;
+      }
+    }
+    T.forEach(t=>{
+      if(!t.date)return;
+      const d=new Date(t.date);
+      const wd=d.getDay();
+      const timeStr=t.time||t.datetime;
+      if(!timeStr)return;
+      const h=new Date('2000-01-01T'+timeStr).getHours();
+      const key=wd+'_'+h;
+      if(matrix2[key]!==undefined)matrix2[key]++;
+    });
+    // 少ない順にソート
+    const sorted=Object.entries(matrix2).sort((a,b)=>a[1]-b[1]).slice(0,3);
+    let eHtml='';
+    sorted.forEach(([key,c],i)=>{
+      const[wd,h]=key.split('_');
+      const colors=['var(--orange-bg)','var(--blue-bg)','var(--green-bg)'];
+      const textColors=['var(--orange2)','var(--blue2)','var(--green2)'];
+      eHtml+=`
+        <div style="background:${colors[i]};border-radius:12px;padding:12px 16px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:12px;color:var(--ink);font-weight:800">${weekdayNames[parseInt(wd)]}曜日 ${h}:00〜</div>
+            <div style="font-size:10px;color:var(--ink3);margin-top:2px;font-weight:500">過去の来店 ${c}件</div>
+          </div>
+          <div style="font-size:22px;color:${textColors[i]};font-weight:800">#${i+1}</div>
+        </div>
+      `;
+    });
+    emptyEl.innerHTML=eHtml;
+  }else{
+    emptyEl.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">時刻データが記録されていないため表示できません</p>';
+  }
 }
 
 // 初期化
