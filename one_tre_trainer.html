@@ -396,6 +396,44 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <div class="card"><div class="section-ttl">男女比</div><div style="position:relative;height:180px"><canvas id="cg"></canvas></div></div>
       <div class="card"><div class="section-ttl">年代別</div><div style="position:relative;height:180px"><canvas id="ca"></canvas></div></div>
     </div>
+
+    <!-- 人件費（時間外手当） -->
+    <div class="section-ttl">💰 今月の人件費（16-22時外の時間外手当）</div>
+    <div id="payroll-loading" style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">Googleカレンダーから読み取り中...</div>
+    <div id="payroll-content" style="display:none">
+      <div class="metrics" style="margin-bottom:14px">
+        <div class="metric metric-lavender">
+          <div class="metric-ico">💴</div>
+          <div class="metric-label">合計人件費</div>
+          <div class="metric-value metric-value-lg" id="pay-total">¥0</div>
+          <div class="metric-sub" id="pay-total-count">0件のセッション</div>
+        </div>
+        <div class="metric metric-pink">
+          <div class="metric-ico">👤</div>
+          <div class="metric-label">稲田</div>
+          <div class="metric-value" id="pay-inada">¥0</div>
+          <div class="metric-sub" id="pay-inada-count">0件</div>
+        </div>
+        <div class="metric metric-blue">
+          <div class="metric-ico">👤</div>
+          <div class="metric-label">長尾</div>
+          <div class="metric-value" id="pay-nagao">¥0</div>
+          <div class="metric-sub" id="pay-nagao-count">0件</div>
+        </div>
+        <div class="metric metric-green">
+          <div class="metric-ico">👥</div>
+          <div class="metric-label">その他</div>
+          <div class="metric-value" id="pay-other">¥0</div>
+          <div class="metric-sub" id="pay-other-count">0件</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-ttl">対象セッション一覧</div>
+        <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">16-22時外のパーソナルセッション（1本 ¥2,000）</div>
+        <div id="pay-sessions" style="max-height:300px;overflow-y:auto"></div>
+      </div>
+    </div>
+    <div id="payroll-error" style="display:none;padding:14px;background:var(--pink-bg2);border-radius:12px;color:var(--pink2);font-size:12px;font-weight:700"></div>
   </div>
 
   <!-- 売上 -->
@@ -428,6 +466,29 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
           <div class="metric-sub" id="s-yoy-sub"></div>
         </div>
       </div>
+
+      <!-- 営業利益セクション -->
+      <div class="section-ttl" style="margin-top:18px">💼 今月の営業指標</div>
+      <div class="sales-kpi">
+        <div class="metric metric-pink">
+          <div class="metric-ico">💰</div>
+          <div class="metric-label">今月の売上</div>
+          <div class="metric-value" id="profit-sales">¥0</div>
+          <div class="metric-sub">月間契約売上</div>
+        </div>
+        <div class="metric metric-orange">
+          <div class="metric-ico">👥</div>
+          <div class="metric-label">今月の人件費</div>
+          <div class="metric-value" id="profit-payroll">¥0</div>
+          <div class="metric-sub" id="profit-payroll-sub">時間外手当</div>
+        </div>
+        <div class="metric metric-lavender">
+          <div class="metric-ico">📊</div>
+          <div class="metric-label">営業利益</div>
+          <div class="metric-value metric-value-lg" id="profit-total">¥0</div>
+          <div class="metric-sub" id="profit-rate">利益率 -%</div>
+        </div>
+      </div>
       <div class="charts-row">
         <div class="card"><div class="section-ttl" id="cs-month-title">月別売上</div><div style="position:relative;height:200px"><canvas id="cs-month"></canvas></div></div>
         <div class="card"><div class="section-ttl">今年 vs 去年</div><div style="position:relative;height:200px"><canvas id="cs-yoy"></canvas></div></div>
@@ -443,8 +504,24 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 
   <!-- 体験予約 -->
   <div id="page-taiken" class="page">
+
+    <!-- カレンダー予約（全セッション） -->
     <div class="card">
-      <div class="section-ttl">体験予約一覧</div>
+      <div class="section-ttl">📅 Googleカレンダー予約一覧</div>
+      <div style="font-size:11px;color:var(--ink2);margin-bottom:12px;line-height:1.6;font-weight:500">Googleカレンダーに登録された今後2週間の予約を表示します。カレンダーを更新すると反映されます。</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="loadCalendarReservations()">&#8634; 更新</button>
+        <select id="cal-filter-trainer" onchange="renderCalendarReservations()" style="padding:7px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:11px;font-weight:700">
+          <option value="">全トレーナー</option>
+          <option value="稲田">稲田</option>
+          <option value="長尾">長尾</option>
+        </select>
+      </div>
+      <div id="calendar-reservations-list" style="font-size:11px;color:var(--ink3);font-weight:500">読み込み中...</div>
+    </div>
+
+    <div class="card">
+      <div class="section-ttl">🎯 体験予約一覧</div>
       <div style="font-size:11px;color:var(--ink2);margin-bottom:12px;line-height:1.6;font-weight:500">予約された体験のリストです。キャンセルボタンでGoogleカレンダーから自動で削除、予約者にキャンセル通知メールが送信されます。</div>
       <div style="display:flex;gap:8px;margin-bottom:12px">
         <button class="btn-ghost" onclick="loadTaikenList()">&#8634; 更新</button>
@@ -800,7 +877,22 @@ async function loadGasMembers(forceRefresh){
     });
     T=Object.values(grouped);
   }
+  // 各会員のコース予約数をGASから取得（別エンドポイント）
+  loadSessionCounts();
   pSel();rMem();rDash();
+}
+
+// コース消化数（カレンダー予約数）を取得
+async function loadSessionCounts(){
+  try{
+    const res=await fetch(GAS_URL+'?action=getSessionCount&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(data&&data.ok){
+      window.sessionCountData=data.counts||{};
+      // 会員一覧を再描画して予約数反映
+      rMem();
+    }
+  }catch(err){console.log('sessionCount error:',err);}
 }
 
 let salesCache=null;
@@ -985,11 +1077,170 @@ function sp(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
-  if(name==='dashboard')rDash();
-  if(name==='sales')rSales();
-  if(name==='taiken')loadTaikenList();
+  if(name==='dashboard'){rDash();loadPayroll();}
+  if(name==='sales'){rSales();loadProfit();}
+  if(name==='taiken'){loadTaikenList();loadCalendarReservations();}
   if(name==='members')rMem();
   if(name==='calendar'){pSel();rCal();renderCalendarAnalysis();}
+}
+
+// ===== 営業利益計算 =====
+let payrollCache=null;
+async function loadProfit(){
+  // 人件費をキャッシュから取得 or 新規取得
+  if(!payrollCache){
+    try{
+      const res=await fetch(GAS_URL+'?action=getPayroll&t='+Date.now(),{method:'GET',mode:'cors'});
+      payrollCache=await res.json();
+    }catch(e){payrollCache={ok:false};}
+  }
+  // 今月売上取得（既にrenderSalesで計算済み）
+  const monthSales=parseInt(document.getElementById('s-month').textContent.replace(/[¥,]/g,''))||0;
+  const payroll=(payrollCache&&payrollCache.ok)?(payrollCache.totalAmount||0):0;
+  const profit=monthSales-payroll;
+  const rate=monthSales>0?Math.round(profit/monthSales*100):0;
+  document.getElementById('profit-sales').textContent='¥'+monthSales.toLocaleString();
+  document.getElementById('profit-payroll').textContent='¥'+payroll.toLocaleString();
+  document.getElementById('profit-total').textContent='¥'+profit.toLocaleString();
+  document.getElementById('profit-rate').textContent='利益率 '+rate+'%';
+  if(payrollCache&&payrollCache.totalCount){
+    document.getElementById('profit-payroll-sub').textContent=payrollCache.totalCount+'件の時間外';
+  }
+}
+
+// ===== カレンダー予約一覧 =====
+let calendarReservationsData=null;
+async function loadCalendarReservations(){
+  const listEl=document.getElementById('calendar-reservations-list');
+  listEl.innerHTML='<div style="padding:10px;color:var(--ink3)">読み込み中...</div>';
+  try{
+    const res=await fetch(GAS_URL+'?action=getCalendarReservations&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(!data.ok){
+      listEl.innerHTML='<div style="padding:10px;color:var(--pink2)">エラー: '+(data.error||'不明')+'</div>';
+      return;
+    }
+    calendarReservationsData=data;
+    renderCalendarReservations();
+  }catch(err){
+    listEl.innerHTML='<div style="padding:10px;color:var(--pink2)">通信エラー</div>';
+  }
+}
+
+function renderCalendarReservations(){
+  if(!calendarReservationsData||!calendarReservationsData.ok)return;
+  const listEl=document.getElementById('calendar-reservations-list');
+  const filter=document.getElementById('cal-filter-trainer').value;
+  let list=calendarReservationsData.list||[];
+  if(filter){list=list.filter(r=>r.trainer===filter);}
+  if(!list.length){
+    listEl.innerHTML='<div style="padding:10px;color:var(--ink3)">予約がありません</div>';
+    return;
+  }
+  // 日付ごとにグループ化
+  const byDate={};
+  list.forEach(r=>{
+    if(!byDate[r.startDate])byDate[r.startDate]=[];
+    byDate[r.startDate].push(r);
+  });
+  let html='';
+  Object.keys(byDate).sort().forEach(date=>{
+    const items=byDate[date];
+    const dow=items[0].dayOfWeek;
+    const dowColor=dow==='日'?'var(--pink2)':(dow==='土'?'var(--blue2)':'var(--ink2)');
+    html+=`<div style="margin-bottom:14px">
+      <div style="font-size:12px;color:${dowColor};font-weight:800;margin-bottom:6px;padding-bottom:4px;border-bottom:1.5px solid var(--line)">${date} (${dow}) ${items.length}件</div>`;
+    items.forEach(r=>{
+      const trainerColor=r.trainer==='稲田'?'var(--pink2)':(r.trainer==='長尾'?'var(--blue2)':'var(--green2)');
+      html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg);border-radius:10px;margin-bottom:4px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;color:var(--ink);font-weight:700;margin-bottom:2px">⏰ ${r.startTime}〜${r.endTime}</div>
+          <div style="font-size:11px;color:var(--ink2);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</div>
+        </div>
+        <div style="background:${trainerColor};color:#fff;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:800;margin-left:8px;flex-shrink:0">${r.trainer}</div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  listEl.innerHTML=html;
+}
+
+// ===== コース消化数を全会員分取得 =====
+let sessionCountsData=null;
+async function loadSessionCounts(){
+  try{
+    const res=await fetch(GAS_URL+'?action=getSessionCounts&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(data.ok){
+      sessionCountsData=data.counts||{};
+    }
+  }catch(err){console.log('sessionCounts error:',err);}
+}
+
+function getSessionInfo(memberId){
+  if(!sessionCountsData||!sessionCountsData[memberId])return null;
+  return sessionCountsData[memberId];
+}
+
+// ===== 人件費（時間外手当）ロード =====
+async function loadPayroll(){
+  const loadingEl=document.getElementById('payroll-loading');
+  const contentEl=document.getElementById('payroll-content');
+  const errorEl=document.getElementById('payroll-error');
+  if(!loadingEl||!contentEl||!errorEl)return;
+  loadingEl.style.display='block';
+  contentEl.style.display='none';
+  errorEl.style.display='none';
+  try{
+    const res=await fetch(GAS_URL+'?action=getPayroll&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    if(!data.ok){
+      loadingEl.style.display='none';
+      errorEl.textContent='読み取りエラー: '+(data.error||'不明');
+      errorEl.style.display='block';
+      return;
+    }
+    loadingEl.style.display='none';
+    contentEl.style.display='block';
+    // 合計
+    document.getElementById('pay-total').textContent='¥'+(data.totalAmount||0).toLocaleString();
+    document.getElementById('pay-total-count').textContent=(data.totalCount||0)+'件のセッション';
+    // トレーナー別
+    const byT=data.byTrainer||{};
+    const inada=byT['稲田']||{count:0,amount:0};
+    const nagao=byT['長尾']||{count:0,amount:0};
+    document.getElementById('pay-inada').textContent='¥'+(inada.amount||0).toLocaleString();
+    document.getElementById('pay-inada-count').textContent=(inada.count||0)+'件';
+    document.getElementById('pay-nagao').textContent='¥'+(nagao.amount||0).toLocaleString();
+    document.getElementById('pay-nagao-count').textContent=(nagao.count||0)+'件';
+    // その他（稲田・長尾以外）
+    let otherCount=0,otherAmount=0;
+    Object.entries(byT).forEach(([name,info])=>{
+      if(name!=='稲田'&&name!=='長尾'){otherCount+=info.count||0;otherAmount+=info.amount||0;}
+    });
+    document.getElementById('pay-other').textContent='¥'+otherAmount.toLocaleString();
+    document.getElementById('pay-other-count').textContent=otherCount+'件';
+    // セッション一覧
+    const sessEl=document.getElementById('pay-sessions');
+    if(!data.allSessions||!data.allSessions.length){
+      sessEl.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">対象セッションはありません</p>';
+    }else{
+      sessEl.innerHTML=data.allSessions.map(s=>{
+        const trainerColor=s.trainer==='稲田'?'var(--pink2)':(s.trainer==='長尾'?'var(--blue2)':'var(--green2)');
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:11px">
+          <div style="flex:1">
+            <div style="color:var(--ink2);font-weight:700">${s.date}</div>
+            <div style="color:var(--ink3);margin-top:2px">${s.title}</div>
+          </div>
+          <div style="background:${trainerColor};color:#fff;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:800">${s.trainer}</div>
+        </div>`;
+      }).join('');
+    }
+  }catch(err){
+    loadingEl.style.display='none';
+    errorEl.textContent='通信エラー: '+err.message;
+    errorEl.style.display='block';
+  }
 }
 
 function getAllMembers(){return gasMembers;}
@@ -1120,27 +1371,56 @@ function renderMemberDetail(m){
     </div>
   `;
 
-  // ① コース消化（カウンセリングから取得）
-  const courseSessions=counseling && counseling.courseSessions ? parseInt(counseling.courseSessions) : null;
-  const usedCount=mts.length;
-  if(courseSessions){
-    const remain=courseSessions-usedCount;
+  // ① コース消化（スプレッドシート契約コース + カレンダー予約数）
+  const sessionInfo=getSessionInfo(m.id);
+  const actualCount=mts.length;
+  if(sessionInfo&&sessionInfo.contractCount){
+    const contractCount=sessionInfo.contractCount;
+    const usedCount=sessionInfo.usedCount||0;
+    const remain=Math.max(0,contractCount-usedCount);
+    const isRenewalTime=usedCount>=contractCount;
     let remClass='course-remaining';
-    if(remain<=1)remClass+=' danger';
+    if(isRenewalTime)remClass+=' danger';
+    else if(remain<=1)remClass+=' danger';
     else if(remain<=3)remClass+=' warn';
     html+=`
       <div class="section-order"><span class="order-label">01</span>コース消化状況</div>
       <div class="course-status">
         <div class="course-ico">🎟️</div>
         <div class="course-body">
-          <div class="course-title">${courseSessions}回コース</div>
+          <div class="course-title">${contractCount}回コース</div>
           <div class="course-fraction">
-            <span class="num">${usedCount}</span><span class="slash">/</span><span class="total">${courseSessions} 回</span>
+            <span class="num">${usedCount}</span><span class="slash">/</span><span class="total">${contractCount} 回</span>
           </div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:3px;font-weight:600">※Googleカレンダー予約数 / 実施済み記録 ${actualCount}回</div>
+          ${isRenewalTime?'<div style="font-size:11px;color:var(--pink2);font-weight:800;margin-top:4px">💜 更新時期です！継続提案を</div>':''}
         </div>
-        <div class="${remClass}">残 ${remain<0?0:remain} 回</div>
+        <div class="${remClass}">残 ${remain} 回</div>
       </div>
     `;
+  }
+  // カウンセリング側の契約回数（旧方式）は、スプレッドシートに契約コースが無い場合のフォールバック
+  else {
+    const courseSessions=counseling && counseling.courseSessions ? parseInt(counseling.courseSessions) : null;
+    if(courseSessions){
+      const remain=courseSessions-actualCount;
+      let remClass='course-remaining';
+      if(remain<=1)remClass+=' danger';
+      else if(remain<=3)remClass+=' warn';
+      html+=`
+        <div class="section-order"><span class="order-label">01</span>コース消化状況</div>
+        <div class="course-status">
+          <div class="course-ico">🎟️</div>
+          <div class="course-body">
+            <div class="course-title">${courseSessions}回コース</div>
+            <div class="course-fraction">
+              <span class="num">${actualCount}</span><span class="slash">/</span><span class="total">${courseSessions} 回</span>
+            </div>
+          </div>
+          <div class="${remClass}">残 ${remain<0?0:remain} 回</div>
+        </div>
+      `;
+    }
   }
 
   // ② トレーニング記録入力
@@ -1902,6 +2182,8 @@ function renderCalendarAnalysis(){
 // 初期化
 rCal();
 loadGasMembers();
+loadPayroll();
+loadSessionCounts();
 
 // バージョンチェック
 (async function checkVersion(){
