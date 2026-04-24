@@ -16,7 +16,6 @@
 <style>
   *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;background:#ffffff;font-family:'Hiragino Sans','Yu Gothic',sans-serif;color:#1a1a1a;-webkit-text-size-adjust:100%;overflow-x:hidden;transition:background .4s;}
-  /* 性別モード別の背景色（bodyに付与） */
   body.gender-women{background:#ffffff;}
   body.gender-men{background:#ffffff;}
   body{min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);}
@@ -24,11 +23,9 @@
   .logo-head{text-align:center;padding:20px 0 24px;}
   .logo-head img{max-width:140px;height:auto;}
   .logo-head .sub{font-size:10px;letter-spacing:0.3em;color:#999;margin-top:8px;}
-  /* カード：性別モード別に枠線色も変化 */
   .card{background:#fff;border-radius:20px;overflow:hidden;border:1px solid #eeeeee;box-shadow:0 2px 12px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04);transition:border-color .4s,box-shadow .4s;}
   body.gender-women .card{border-color:#f0d0dc;box-shadow:0 2px 12px rgba(232,96,138,0.06),0 8px 24px rgba(232,96,138,0.04);}
   body.gender-men .card{border-color:#d8d8d8;}
-  /* ヒーロー：男性は真っ黒→ソフトブラックへ */
   .hero{padding:44px 24px;text-align:center;transition:background .4s ease;}
   .hero.women{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);}
   .hero.men{background:linear-gradient(135deg,#3a3a3a 0%,#4a4a4a 100%);}
@@ -51,7 +48,6 @@
   .step{text-align:center;margin-bottom:18px;}
   .step .lbl{font-size:10px;letter-spacing:0.3em;color:#888;margin-bottom:6px;}
   .step .nm{font-size:14px;font-weight:500;color:#222;}
-  /* 性別選択：女性=ピンク、男性=ソフトブラック */
   .gender-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
   .gender-card{padding:18px 12px;border-radius:14px;text-align:center;cursor:pointer;transition:all .3s;background:#fff;border:1px solid #e5e5e5;}
   .gender-card.active.women{border:2px solid #e8608a;background:#fde8f0;padding:17px 11px;}
@@ -62,7 +58,6 @@
   .gender-card .gc-sub{font-size:11px;color:#bbb;}
   .gender-card.active.women .gc-sub{color:#993556;}
   .gender-card.active.men .gc-sub{color:#555;}
-  /* 入力欄 */
   .field{margin-bottom:16px;}
   .field label{display:block;font-size:12px;color:#555;margin-bottom:6px;font-weight:500;}
   .field label .req{color:#e8608a;margin-left:4px;}
@@ -71,7 +66,6 @@
   body.gender-women .field input:focus,body.gender-women .field textarea:focus,body.gender-women .field select:focus{outline:none;border-color:#e8608a;box-shadow:0 0 0 3px rgba(232,96,138,0.1);}
   body.gender-men .field input:focus,body.gender-men .field textarea:focus,body.gender-men .field select:focus{outline:none;border-color:#3a3a3a;box-shadow:0 0 0 3px rgba(58,58,58,0.08);}
   .field textarea{resize:vertical;min-height:70px;}
-  /* 年代チップ：性別モードで選択色が切替 */
   .radio-row{display:flex;gap:8px;flex-wrap:wrap;}
   .radio-chip{flex:1;min-width:70px;padding:10px 8px;text-align:center;border:1px solid #e0e0e0;border-radius:10px;font-size:13px;cursor:pointer;background:#fff;transition:all .2s;color:#555;}
   body.gender-women .radio-chip.active{border-color:#e8608a;background:#e8608a;color:#fff;font-weight:500;}
@@ -80,7 +74,6 @@
   .section-ttl .lbl{font-size:10px;letter-spacing:0.3em;color:#888;margin-bottom:4px;}
   .section-ttl .nm{font-family:serif;font-size:22px;color:#1a1a1a;letter-spacing:0.05em;}
   .section-ttl .sub{font-size:12px;color:#888;margin-top:4px;}
-  /* コース：性別モードで選択色が切替 */
   .course-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
   .course-card{border:1px solid #e0e0e0;border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .3s;background:#fff;position:relative;}
   body.gender-women .course-card.selected{border:2px solid #e8608a;padding:15px 17px;background:#fef4f7;}
@@ -101,7 +94,6 @@
   .entry-fee .strike{text-decoration:line-through;color:#aaa;margin:0 4px;}
   .entry-fee .free{color:#b8860b;font-weight:500;}
   .entry-sub{text-align:center;font-size:11px;color:#aaa;letter-spacing:0.1em;margin-bottom:22px;}
-  /* モニター割引バナー：男性はソフトブラック */
   .auto-discount{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);border-radius:12px;padding:16px;margin-bottom:22px;text-align:center;transition:all .3s;display:none;}
   .auto-discount.men{background:linear-gradient(135deg,#3a3a3a 0%,#4a4a4a 100%);}
   .auto-discount.show{display:block;}
@@ -111,7 +103,6 @@
   .auto-discount.men .ad-main{color:#fff;}
   .auto-discount .ad-sub{font-size:11px;color:#993556;margin-top:4px;}
   .auto-discount.men .ad-sub{color:#c8b080;}
-  /* ペア割：性別モードで切替 */
   .pair-toggle{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:14px 16px;margin-bottom:22px;cursor:pointer;transition:all .3s;}
   body.gender-women .pair-toggle.active{border:2px solid #e8608a;padding:13px 15px;background:#fef4f7;}
   body.gender-men .pair-toggle.active{border:2px solid #3a3a3a;padding:13px 15px;}
@@ -129,7 +120,6 @@
   .pair-toggle.active .pt-switch::after{transform:translateX(20px);}
   .pair-detail{font-size:11px;color:#555;margin-top:8px;padding-top:8px;border-top:1px dashed #ccc;display:none;}
   .pair-toggle.active .pair-detail{display:block;}
-  /* 価格サマリー：合計文字色が性別で切替 */
   .price-summary{background:#fafafa;border-radius:12px;padding:16px;margin-bottom:22px;border:1px solid #f0f0f0;}
   .price-summary .ps-row{display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:6px;}
   .price-summary .ps-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:10px;border-top:1px dashed #ddd;}
@@ -137,21 +127,18 @@
   .price-summary .ps-total .r{font-family:serif;font-size:26px;color:#1a1a1a;font-weight:500;}
   body.gender-women .price-summary .ps-total .r{color:#e8608a;}
   body.gender-men .price-summary .ps-total .r{color:#3a3a3a;}
-  /* 規約ボックス */
   .regulations{background:#fafafa;border-radius:12px;padding:14px 16px;margin-bottom:18px;font-size:12px;line-height:1.8;color:#555;border:1px solid #f0f0f0;}
   .regulations .rt{font-size:12px;font-weight:500;color:#333;margin-bottom:10px;letter-spacing:0.05em;}
   .regulations label{display:flex;align-items:flex-start;margin-bottom:10px;cursor:pointer;gap:8px;}
   .regulations label:last-child{margin-bottom:0;}
   .regulations label span{flex:1;line-height:1.7;}
   .regulations input[type=checkbox]{margin:4px 0 0;flex-shrink:0;}
-  /* 送信ボタン：男性はソフトブラック */
   .submit-btn{width:100%;padding:18px;border:none;border-radius:12px;background:linear-gradient(135deg,#f0a0b8,#e8608a);color:#fff;font-size:15px;font-weight:500;letter-spacing:0.15em;cursor:pointer;transition:all .3s;font-family:inherit;}
   .submit-btn:active{transform:scale(0.98);}
   .submit-btn:disabled{opacity:0.4;cursor:not-allowed;}
   .submit-btn.men{background:linear-gradient(135deg,#4a4a4a,#3a3a3a);}
   .loading{display:none;text-align:center;padding:20px;color:#888;font-size:13px;}
   .loading.show{display:block;}
-  /* 完了画面 */
   .complete{display:none;text-align:center;padding:36px 22px 40px;}
   .complete.show{display:block;}
   .complete .check{width:64px;height:64px;border-radius:50%;background:#fde8f0;color:#e8608a;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px;font-weight:500;}
@@ -160,7 +147,6 @@
   .complete .sub{font-size:13px;color:#666;line-height:1.9;margin-bottom:24px;}
   .complete a{color:#e8608a;text-decoration:underline;font-weight:500;}
   body.gender-men .complete a{color:#3a3a3a;}
-  /* 支払いボックス：男性はソフトブラック */
   .payment-box{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);border:2px solid #e8608a;border-radius:18px;padding:26px 20px 24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(232,96,138,0.15);}
   .payment-box.men{background:linear-gradient(135deg,#3a3a3a 0%,#4a4a4a 100%);border-color:#c8b080;box-shadow:0 4px 16px rgba(200,176,128,0.2);}
   .pb-lbl{font-size:11px;letter-spacing:0.3em;color:#993556;margin-bottom:10px;font-weight:500;}
@@ -190,7 +176,6 @@
   .coupon-input-wrap.show{display:block;}
   .coupon-input-wrap input{width:100%;padding:10px 14px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;}
 
-  /* ===== 隠しボタン発動時の特別割引モーダル ===== */
   .staff-modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9998;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;backdrop-filter:blur(4px);}
   .staff-modal-bg.show{display:flex;}
   .staff-modal{background:linear-gradient(135deg,#1a1a1a,#3a3a3a);max-width:400px;width:100%;margin:auto;padding:22px;border-radius:16px;color:#fff;font-family:'Hiragino Sans','Yu Gothic',sans-serif;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
@@ -219,14 +204,12 @@
   .sm-btn-apply{flex:2;padding:11px;background:#c8b080;color:#1a1a1a;border:none;border-radius:8px;font-size:12px;font-weight:500;letter-spacing:0.1em;cursor:pointer;font-family:inherit;}
   .sm-btn-apply:disabled{opacity:0.4;cursor:not-allowed;}
   .sm-btn-clear{padding:11px 16px;background:none;color:#888;border:1px solid #555;border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit;}
-  /* 特別割引適用中の表示 */
   .staff-applied-badge{background:linear-gradient(135deg,#3a3a3a,#1a1a1a);color:#c8b080;padding:10px 14px;border-radius:10px;font-size:11px;margin-bottom:14px;display:none;align-items:center;justify-content:space-between;letter-spacing:0.05em;border:1px solid #c8b080;}
   .staff-applied-badge.show{display:flex;}
   .staff-applied-badge .sab-info{flex:1;}
   .staff-applied-badge .sab-lbl{font-size:8px;color:#888;letter-spacing:0.2em;margin-bottom:2px;}
   .staff-applied-badge .sab-main{color:#c8b080;font-weight:500;}
   .staff-applied-badge .sab-clear{font-size:16px;color:#888;cursor:pointer;padding:0 4px;margin-left:8px;}
-  /* ロゴ長押し時のフィードバック */
   .logo-head img{transition:all .3s;}
   .logo-head img.pressing{opacity:0.5;transform:scale(0.95);}
 
@@ -295,11 +278,6 @@
   </div>
   <span class="sab-clear" onclick="clearStaffDiscount();updateStaffAppliedBadge();updatePrice();" title="解除">×</span>
 </div>
-
-<!-- スタッフ限定：割引パネル（ロゴ2秒長押しで開く） -->
-
-
-
 
 <div class="wrap">
 
@@ -384,7 +362,8 @@
         <div class="sub">1回50分／男女共通</div>
       </div>
 
-      <div class="auto-discount" id="auto-discount">
+      <!-- ★ AUTO APPLIEDバナーは非表示化（データは保持） ★ -->
+      <div class="auto-discount" id="auto-discount" style="display:none !important;">
         <div class="ad-lbl">AUTO APPLIED</div>
         <div class="ad-main" id="discount-label">モニター価格 20%OFF 自動適用</div>
         <div class="ad-sub" id="discount-sub">初めての方限定特典</div>
@@ -400,7 +379,7 @@
           <div class="pt-switch"></div>
         </div>
         <div class="pair-detail" id="pair-detail">
-          <span id="pair-detail-text">モニター適用時：1回あたり ¥1,200引き</span>
+          <span id="pair-detail-text">1回あたり ¥1,200引き</span>
         </div>
       </div>
 
@@ -501,10 +480,8 @@
 </div>
 
 <script>
-// ========== 設定（デプロイ時にGAS URLを書き換える）==========
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 
-// ========== キャッシュクリア ==========
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
 }
@@ -512,19 +489,17 @@ if (window.caches) {
   caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
 }
 
-// ========== 状態 ==========
 let state = {
   gender: 'female',
   course: null,
   coursePrice: 0,
-  memberType: 'new', // new / monitor / continue
-  discountRate: 0.20, // 初回は自動で20%OFF
+  memberType: 'new',
+  discountRate: 0.20,
   age: '',
   emailCheckedFor: '',
-  pair: false // ペア割
+  pair: false
 };
 
-// ========== DOM参照 ==========
 const $ = id => document.getElementById(id);
 const hero = $('hero');
 const heroEyebrow = $('hero-eyebrow');
@@ -536,7 +511,6 @@ const discountLabel = $('discount-label');
 const discountSub = $('discount-sub');
 const priceSummary = $('price-summary');
 
-// ========== 性別切替 ==========
 document.querySelectorAll('.gender-card').forEach(el => {
   el.addEventListener('click', () => {
     const g = el.dataset.gender;
@@ -556,10 +530,8 @@ function updateGenderUI(){
   hero.classList.add(isW ? 'women' : 'men');
   autoDisc.classList.toggle('men', !isW);
   submitBtn.classList.toggle('men', !isW);
-  // body全体のモードクラスも切替（年代・コース・ペア割の配色連動用）
   document.body.classList.remove('gender-women','gender-men');
   document.body.classList.add(isW ? 'gender-women' : 'gender-men');
-  // 名前・ふりがなのプレースホルダーを男女で切替
   const nameInput = document.getElementById('f-name');
   const kanaInput = document.getElementById('f-kana');
   if(isW){
@@ -577,7 +549,6 @@ function updateGenderUI(){
   }
 }
 
-// ========== 年代選択 ==========
 document.querySelectorAll('#age-group .radio-chip').forEach(el => {
   el.addEventListener('click', () => {
     document.querySelectorAll('#age-group .radio-chip').forEach(c => c.classList.remove('active'));
@@ -587,7 +558,6 @@ document.querySelectorAll('#age-group .radio-chip').forEach(el => {
   });
 });
 
-// ========== コース選択 ==========
 document.querySelectorAll('.course-card').forEach(el => {
   el.addEventListener('click', () => {
     document.querySelectorAll('.course-card').forEach(c => c.classList.remove('selected'));
@@ -599,14 +569,13 @@ document.querySelectorAll('.course-card').forEach(el => {
   });
 });
 
-// ========== ペア割トグル ==========
 $('pair-toggle').addEventListener('click', () => {
   state.pair = !state.pair;
   $('pair-toggle').classList.toggle('active', state.pair);
   updatePrice();
 });
 
-// ========== 金額計算 ==========
+// ========== 金額計算（割引合算版）==========
 function updatePrice(){
   if(!state.course) { priceSummary.style.display='none'; return; }
   const orig = state.coursePrice;
@@ -614,16 +583,14 @@ function updatePrice(){
   const afterRateDiscount = Math.round(orig * (1 - rate));
   const rateDiscountAmt = orig - afterRateDiscount;
 
-  // ペア割額を計算
   const sessions = parseInt(state.course) || 0;
   const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
   const pairDiscountAmt = state.pair ? (pairPerSession * sessions) : 0;
 
-  // ★特別割引（隠しボタン）
   const sd = window.staffDiscount || {applied:false};
   let staffDiscAmt = 0;
   if(sd.applied && sd.value > 0){
-    const base = afterRateDiscount; // 通常割引適用後の金額が対象
+    const base = afterRateDiscount;
     if(sd.type === 'percent'){
       staffDiscAmt = Math.round(base * (sd.value / 100));
     } else if(sd.type === 'yen'){
@@ -632,58 +599,33 @@ function updatePrice(){
   }
 
   const total = Math.max(0, afterRateDiscount - pairDiscountAmt - staffDiscAmt);
+  // ★合算割引額（自動20%＋ペア割＋特別割引を1行にまとめる）
+  const totalDiscount = rateDiscountAmt + pairDiscountAmt + staffDiscAmt;
 
-  // サマリー更新
   $('ps-original').textContent = '¥' + orig.toLocaleString();
   $('ps-total').textContent = '¥' + total.toLocaleString();
 
-  // 通常割引の表示
-  if(rate > 0){
+  // ★★★ 割引は全部まとめて1行表示 ★★★
+  if(totalDiscount > 0){
     $('ps-discount-row').style.display = 'flex';
-    $('ps-discount-lbl').textContent = state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF';
-    $('ps-discount-amount').textContent = '-¥' + rateDiscountAmt.toLocaleString();
+    $('ps-discount-lbl').textContent = '割引';
+    $('ps-discount-amount').textContent = '-¥' + totalDiscount.toLocaleString();
   } else {
     $('ps-discount-row').style.display = 'none';
   }
 
-  // ペア割の表示
-  if(state.pair){
-    $('ps-pair-row').style.display = 'flex';
-    $('ps-pair-lbl').textContent = 'ペア割（¥' + pairPerSession.toLocaleString() + '×' + sessions + '回）';
-    $('ps-pair-amount').textContent = '-¥' + pairDiscountAmt.toLocaleString();
-  } else {
-    $('ps-pair-row').style.display = 'none';
-  }
-
-  // 特別割引の表示
+  // ペア割・特別割引の個別行は非表示
+  $('ps-pair-row').style.display = 'none';
   let staffRow = $('ps-staff-row');
-  if(!staffRow){
-    staffRow = document.createElement('div');
-    staffRow.id = 'ps-staff-row';
-    staffRow.className = 'ps-row';
-    staffRow.style.color = '#c8b080';
-    staffRow.innerHTML = '<span id="ps-staff-lbl">特別割引</span><span id="ps-staff-amount">-¥0</span>';
-    const totalRow = document.querySelector('.price-summary .ps-total');
-    if(totalRow) totalRow.parentNode.insertBefore(staffRow, totalRow);
-  }
-  if(sd.applied && staffDiscAmt > 0){
-    staffRow.style.display = 'flex';
-    const lbl = sd.type === 'percent' ? ('特別 ' + sd.value + '%OFF') : ('特別 ¥' + sd.value.toLocaleString() + '引き');
-    $('ps-staff-lbl').textContent = lbl + (sd.memo ? '（' + sd.memo + '）' : '');
-    $('ps-staff-amount').textContent = '-¥' + staffDiscAmt.toLocaleString();
-  } else {
-    staffRow.style.display = 'none';
-  }
+  if(staffRow) staffRow.style.display = 'none';
 
   priceSummary.style.display = 'block';
 
-  // 各コースカードの価格表示を更新（特別割引も反映）
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
     const sess = parseInt(card.dataset.course);
     const afterRate = Math.round(origin * (1 - rate));
     const pairAmt = state.pair ? (pairPerSession * sess) : 0;
-    // このカード単位で特別割引も再計算
     let cardStaffAmt = 0;
     if(sd.applied && sd.value > 0){
       if(sd.type === 'percent') cardStaffAmt = Math.round(afterRate * (sd.value / 100));
@@ -704,14 +646,12 @@ function updatePrice(){
     }
   });
 
-  // ペア割の説明文を更新
   const pairDetailText = state.memberType === 'new'
-    ? 'モニター適用時：1回あたり ¥1,200引き'
+    ? '1回あたり ¥1,200引き'
     : '1回あたり ¥1,500引き';
   $('pair-detail-text').textContent = pairDetailText;
 }
 
-// ========== メールアドレスで会員種別判定 ==========
 let emailCheckTimer = null;
 $('f-email').addEventListener('input', e => {
   clearTimeout(emailCheckTimer);
@@ -741,14 +681,13 @@ async function checkMemberType(email){
       discountLabel.textContent = 'モニター価格 20%OFF 自動適用';
       discountSub.textContent = '初めての方限定特典';
     }
-    autoDisc.classList.add('show');
+    // ★バナー表示はしない（内部データのみ更新）
     updatePrice();
   } catch(err) {
     console.log('check failed', err);
   }
 }
 
-// ========== バリデーション ==========
 const fields = ['f-name','f-kana','f-email','f-phone','f-address'];
 fields.forEach(id => $(id).addEventListener('input', validate));
 document.querySelectorAll('.reg').forEach(el => el.addEventListener('change', validate));
@@ -761,7 +700,6 @@ function validate(){
   submitBtn.disabled = !(allFilled && ageOk && courseOk && regsAllChecked);
 }
 
-// ========== 送信 ==========
 submitBtn.addEventListener('click', async () => {
   if(submitBtn.disabled) return;
   submitBtn.disabled = true;
@@ -784,7 +722,6 @@ submitBtn.addEventListener('click', async () => {
     pair: state.pair ? '1' : '0',
     pairDiscount: state.pair ? ((state.memberType === 'new' ? 1200 : 1500) * parseInt(state.course)) : 0,
     regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(','),
-    // 特別割引（隠しボタン）
     staffDiscountType: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.type : '',
     staffDiscountValue: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.value : 0,
     staffDiscountMemo: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.memo : ''
@@ -800,52 +737,31 @@ submitBtn.addEventListener('click', async () => {
     const data = await res.json();
     $('loading').classList.remove('show');
     if(data.ok){
-      // 支払い金額を完了画面に反映（ペア割＋特別割引も加味）
       const sessions = parseInt(state.course) || 0;
       const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
       const pairAmt = state.pair ? (pairPerSession * sessions) : 0;
-
-      // 通常割引後
       const afterAutoDisc = Math.round(state.coursePrice * (1 - state.discountRate));
       const autoDiscAmt = state.coursePrice - afterAutoDisc;
-
-      // 特別割引（隠しボタン）
       const sd = window.staffDiscount || {applied:false};
       let staffAmt = 0;
       if(sd.applied && sd.value > 0){
         if(sd.type === 'percent') staffAmt = Math.round(afterAutoDisc * (sd.value / 100));
         else if(sd.type === 'yen') staffAmt = Math.min(sd.value, afterAutoDisc);
       }
-
       const finalPrice = Math.max(0, afterAutoDisc - pairAmt - staffAmt);
-
-      // ラベル組み立て
-      let discountLabel = '';
-      if(state.discountRate > 0){
-        discountLabel = state.memberType === 'continue' ? '継続割引 10%OFF' : 'モニター価格 20%OFF';
-      }
+      const totalDiscountShow = autoDiscAmt + pairAmt + staffAmt;
 
       $('pb-amount').textContent = '¥' + finalPrice.toLocaleString();
       $('pb-course').textContent = state.course + '回コース' + (state.pair ? '（ペア）' : '');
-      const parts = [];
-      if(discountLabel) parts.push(discountLabel);
-      if(state.pair){
-        parts.push('ペア割 ¥' + pairAmt.toLocaleString() + '引き');
-      }
-      if(sd.applied && staffAmt > 0){
-        const sLabel = sd.type === 'percent' ? ('特別 ' + sd.value + '%OFF') : ('特別 ¥' + sd.value.toLocaleString() + '引き');
-        parts.push(sLabel + (sd.memo ? '（' + sd.memo + '）' : ''));
-      }
-      if(parts.length > 0){
-        $('pb-discount').textContent = parts.join(' + ') + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
+      // ★完了画面も合算で表示
+      if(totalDiscountShow > 0){
+        $('pb-discount').textContent = '割引 -¥' + totalDiscountShow.toLocaleString() + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
       } else {
         $('pb-discount').textContent = '';
       }
-      // 男性モードなら黒背景に
       if(state.gender === 'male'){
         $('payment-box').classList.add('men');
       }
-      // マイページURL
       if(data.memberUrl){
         $('mypage-btn').href = data.memberUrl;
       }
@@ -865,16 +781,9 @@ submitBtn.addEventListener('click', async () => {
   }
 });
 
-// ========== 初期化 ==========
 updateGenderUI();
-// 初期状態でモニター価格表示
-autoDisc.classList.add('show');
+// ★初期のバナー自動表示は削除（ヨシさん指示：非表示）
 
-
-
-
-
-// ===== 隠しボタン：ロゴ長押しで割引パネル起動 =====
 (function(){
   const logoImg = document.querySelector('.logo-head img');
   if(!logoImg) return;
@@ -888,7 +797,6 @@ autoDisc.classList.add('show');
     pressTimer = setTimeout(()=>{
       logoImg.classList.remove('pressing');
       openStaffModal();
-      // 触覚フィードバック（対応端末のみ）
       if(navigator.vibrate) navigator.vibrate(50);
     }, LONG_PRESS_MS);
   }
@@ -896,7 +804,6 @@ autoDisc.classList.add('show');
     logoImg.classList.remove('pressing');
     if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; }
   }
-  // タッチ・マウス両対応
   logoImg.addEventListener('touchstart', startPress, {passive:true});
   logoImg.addEventListener('touchend', cancelPress);
   logoImg.addEventListener('touchcancel', cancelPress);
@@ -904,20 +811,17 @@ autoDisc.classList.add('show');
   logoImg.addEventListener('mousedown', startPress);
   logoImg.addEventListener('mouseup', cancelPress);
   logoImg.addEventListener('mouseleave', cancelPress);
-  // 右クリック（長押し判定用の補助）無効化
   logoImg.addEventListener('contextmenu', e=>e.preventDefault());
 })();
 
-// グローバルな特別割引state
 window.staffDiscount = {
-  type: '',        // '' / 'percent' / 'yen'
+  type: '',
   value: 0,
   memo: '',
   applied: false
 };
 
 function openStaffModal(){
-  // 現在の入力値を復元
   document.querySelectorAll('.sm-type').forEach(el => {
     el.classList.toggle('sel', el.dataset.type === (window.staffDiscount.type || 'percent'));
   });
@@ -953,7 +857,6 @@ function updateStaffPreview(){
     return;
   }
 
-  // 現在のコース情報を取得（signup本体のstate.courseから）
   const selectedCourse = document.querySelector('.course-card.selected');
   if(!selectedCourse){
     prev.style.display = 'none';
@@ -963,8 +866,7 @@ function updateStaffPreview(){
   const orig = parseInt(selectedCourse.dataset.price) || 0;
   const sessions = parseInt(selectedCourse.dataset.course) || 0;
 
-  // 通常割引率（モニター or 継続）を取得
-  const memberType = window.currentMemberType || 'new';
+  const memberType = state.memberType || 'new';
   let autoRate = 0;
   let autoLbl = '割引なし';
   if(memberType === 'new'){ autoRate = 0.20; autoLbl = 'モニター 20%OFF'; }
@@ -972,7 +874,6 @@ function updateStaffPreview(){
   const autoAmt = Math.round(orig * autoRate);
   const afterAuto = orig - autoAmt;
 
-  // 特別割引
   let staffAmt = 0;
   let discLbl = '';
   if(type === 'percent'){
@@ -1040,10 +941,9 @@ function updateStaffAppliedBadge(){
   document.getElementById('sab-main-text').textContent = label;
   badge.classList.add('show');
 
-  // バッジを自動適用バナー（.auto-discount）の直後に移動
-  const autoDisc = document.querySelector('.auto-discount');
-  if(autoDisc && autoDisc.nextSibling !== badge){
-    autoDisc.parentNode.insertBefore(badge, autoDisc.nextSibling);
+  const priceSum = document.querySelector('.price-summary');
+  if(priceSum && priceSum.parentNode && badge.parentNode !== priceSum.parentNode){
+    priceSum.parentNode.insertBefore(badge, priceSum);
   }
 }
 
