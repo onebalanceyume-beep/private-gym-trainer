@@ -21,6 +21,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .fg label{font-size:10px;color:#888;font-weight:500}
 .fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
+.trainer-label{font-size:10px;color:#888;font-weight:500;margin-bottom:10px}
+.trainer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:4px}
+.trainer-btn{padding:12px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:14px;font-weight:600;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;transition:all 0.15s}
+.trainer-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.trainer-note{font-size:10px;color:#aaa;margin-top:8px}
 .time-label{font-size:10px;color:#888;font-weight:500;margin-bottom:10px}
 .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .time-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;transition:all 0.15s}
@@ -54,10 +59,16 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
           <label>お名前</label>
           <input type="text" id="name" placeholder="長尾 儀弘">
         </div>
-        <div class="fg" style="margin-bottom:0">
+        <div class="fg" style="margin-bottom:16px">
           <label>希望日</label>
           <input type="date" id="date" onchange="loadSlots()">
         </div>
+        <div class="trainer-label">担当トレーナー（任意）</div>
+        <div class="trainer-grid">
+          <button type="button" class="trainer-btn" onclick="selectTrainer('稲田',this)">稲田</button>
+          <button type="button" class="trainer-btn" onclick="selectTrainer('長尾',this)">長尾</button>
+        </div>
+        <div class="trainer-note">※ 選択しなくても予約できます</div>
       </div>
       <div class="card" id="slot-card" style="display:none">
         <div class="card-title">希望時間帯（50分セッション）</div>
@@ -80,12 +91,24 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 let selectedStart=null,selectedEnd=null;
+let selectedTrainer='';
 
 const today=new Date();
 const tomorrow=new Date(today);
 tomorrow.setDate(tomorrow.getDate()+1);
 document.getElementById('date').setAttribute('min',tomorrow.toISOString().slice(0,10));
 document.getElementById('date').value=tomorrow.toISOString().slice(0,10);
+
+function selectTrainer(name,btn){
+  if(selectedTrainer===name){
+    selectedTrainer='';
+    btn.classList.remove('selected');
+  }else{
+    selectedTrainer=name;
+    document.querySelectorAll('.trainer-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+}
 
 async function loadSlots(){
   const date=document.getElementById('date').value;
@@ -143,7 +166,7 @@ async function submitForm(){
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='送信中...';
   try{
-    const params=new URLSearchParams({action:'submitReservation',name,email:'',phone:'',start:selectedStart,end:selectedEnd});
+    const params=new URLSearchParams({action:'submitReservation',name,email:'',phone:'',start:selectedStart,end:selectedEnd,trainer:selectedTrainer});
     const res=await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
     const data=await res.json();
     if(data.success){
