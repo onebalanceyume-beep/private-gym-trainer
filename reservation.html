@@ -4,43 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ONE TRE — 予約</title>
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;}
-body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh}
+:root{
+  --bg:#fafaf8;
+  --card-bg:#f5f3ef;
+  --card-border:#e8e4dc;
+  --accent:#8a7f6f;
+  --accent2:#5a5046;
+  --text:#2a2826;
+  --text-sub:#8a7f6f;
+  --white:#ffffff;
+  --btn-gradient:linear-gradient(135deg,#5a5046,#2a2826);
+}
+body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
-.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff}
-.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#222;letter-spacing:.32em}
-.logo-sub{font-size:7px;color:#ccc;letter-spacing:.22em;margin-top:3px}
-.logo-catch{font-size:11px;color:var(--pink);margin-top:4px}
+.hd{padding:20px 20px 14px;border-bottom:1px solid var(--card-border);background:#fff}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--text);letter-spacing:.32em}
+.logo-sub{font-size:7px;color:#bbb;letter-spacing:.22em;margin-top:3px}
 .body{padding:20px}
-.title{font-size:18px;color:#222;font-weight:700;margin-bottom:24px}
-.card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
-.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
+.title{font-size:18px;color:var(--text);font-weight:700;margin-bottom:24px;font-family:'Noto Serif JP',serif}
+.card{background:var(--card-bg);border-radius:16px;padding:20px;margin-bottom:16px}
+.card-title{font-size:11px;color:var(--accent);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.fg label{font-size:10px;color:#888;font-weight:500}
-.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;outline:none}
-.trainer-label{font-size:10px;color:#888;font-weight:500;margin-bottom:10px}
+.fg label{font-size:10px;color:var(--text-sub);font-weight:500}
+.fg input{font-size:14px;padding:10px 14px;border:1px solid var(--card-border);border-radius:10px;background:#fff;color:var(--text);font-family:inherit;width:100%;outline:none;-webkit-appearance:none;appearance:none;box-sizing:border-box;max-width:100%}
+.fg input[type=date]{min-height:44px;display:block;width:100%;max-width:100%}
+.trainer-label{font-size:10px;color:var(--text-sub);font-weight:500;margin-bottom:10px}
 .trainer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:4px}
-.trainer-btn{padding:12px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:14px;font-weight:600;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;transition:all 0.15s}
-.trainer-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.trainer-btn{padding:12px 6px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.trainer-btn:hover{background:#faf9f5}
+.trainer-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
 .trainer-note{font-size:10px;color:#aaa;margin-top:8px}
-.time-label{font-size:10px;color:#888;font-weight:500;margin-bottom:10px}
 .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.time-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;transition:all 0.15s}
-.time-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
-.selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--pink2);text-align:center;font-weight:500}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-top:4px}
+.time-btn{padding:10px 6px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.time-btn:hover{background:#faf9f5}
+.time-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
+.selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--accent2);text-align:center;font-weight:500;border:1px solid var(--card-border)}
+.btn{width:100%;padding:14px;background:var(--btn-gradient);border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.05em;margin-top:4px}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
-.note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
+.note{font-size:11px;color:#888;text-align:center;margin-top:14px;line-height:1.6}
+.line-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:10px 20px;background:#06C755;color:#fff;border-radius:22px;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.05em;transition:opacity 0.2s}
+.line-btn:hover{opacity:0.85}
+.line-btn-icon{font-size:14px}
 .loading{text-align:center;padding:16px;font-size:12px;color:#aaa;display:none}
-.error-msg{font-size:12px;color:#e86060;text-align:center;padding:12px;display:none}
+.error-msg{font-size:12px;color:#c94a4a;text-align:center;padding:12px;display:none}
 .success{display:none;text-align:center;padding:40px 20px}
 .success-icon{font-size:60px;margin-bottom:16px}
-.success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
+.success-msg{font-size:16px;color:var(--text);font-weight:700;margin-bottom:8px}
 .success-sub{font-size:12px;color:#888;line-height:1.6}
-.back-btn{display:inline-block;margin-top:20px;padding:10px 24px;background:var(--pink-bg);color:var(--pink2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
+.back-btn{display:inline-block;margin-top:20px;padding:10px 24px;background:var(--card-bg);color:var(--accent2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
 </style>
 </head>
 <body>
@@ -48,7 +62,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   <div class="hd">
     <div class="logo">ONE TRE</div>
     <div class="logo-sub">PERSONAL TRAINING GYM</div>
-    <div class="logo-catch">私は私</div>
   </div>
   <div class="body">
     <div id="form-area">
@@ -78,7 +91,12 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
         <div class="selected-info" id="selected-info"></div>
         <button class="btn" id="submit-btn" onclick="submitForm()" disabled>予約する</button>
       </div>
-      <div class="note">キャンセルはセッション前日までにご連絡ください。</div>
+      <div class="note">
+        キャンセルはセッション前日までにご連絡ください。<br>
+        <a href="https://lin.ee/qA9QvFh" class="line-btn" target="_blank" rel="noopener">
+          <span class="line-btn-icon">💬</span>公式LINEで問い合わせる
+        </a>
+      </div>
     </div>
     <div class="success" id="success-area">
       <div class="success-icon">🎉</div>
@@ -138,6 +156,7 @@ async function loadSlots(){
     data.slots.forEach(slot=>{
       const btn=document.createElement('button');
       btn.className='time-btn';
+      btn.type='button';
       btn.textContent=slot.label;
       btn.onclick=()=>{
         document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
