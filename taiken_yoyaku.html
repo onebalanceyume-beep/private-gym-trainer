@@ -4,67 +4,147 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ONE TRE — 体験予約</title>
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;}
-body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh}
-.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
-.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff}
-.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#222;letter-spacing:.32em}
+:root{
+  --pink:#f0a0b8;--pink2:#e8608a;--pink-bg:#fde8f0;--purple:#c0a0e8;
+  --men-bg:#1a1a1a;--men-bg2:#2a2a2a;--men-gold:#c8b080;--men-gold2:#d4bc8a;--men-text:#f0ead6;--men-sub:#9a8c7a;--men-card:#161410;
+  --accent:var(--pink);--accent2:var(--pink2);--card-bg:var(--pink-bg);--btn-gradient:linear-gradient(135deg,var(--pink),var(--purple));
+}
+body[data-mode="men"]{
+  --accent:var(--men-gold);--accent2:var(--men-gold2);--card-bg:#f5f2ed;--btn-gradient:linear-gradient(135deg,#3a3530,#1a1a1a);
+}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;min-height:100vh;transition:background 0.3s}
+body[data-mode="men"]{background:#f5f3ef;font-family:'Noto Serif JP','M PLUS Rounded 1c',serif}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;transition:background 0.3s}
+body[data-mode="men"] .app{background:#fafaf8}
+.hd{padding:20px 20px 14px;border-bottom:2px solid var(--pink-bg);background:#fff;transition:border-color 0.3s}
+body[data-mode="men"] .hd{border-bottom:1px solid #2a2a2a;background:var(--men-bg);color:var(--men-text)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#222;letter-spacing:.32em;transition:color 0.3s}
+body[data-mode="men"] .logo{color:var(--men-text)}
 .logo-sub{font-size:7px;color:#ccc;letter-spacing:.22em;margin-top:3px}
-.logo-catch{font-size:11px;color:var(--pink);margin-top:4px}
+body[data-mode="men"] .logo-sub{color:var(--men-gold)}
+.logo-catch{font-size:11px;color:var(--pink);margin-top:4px;transition:color 0.3s}
+body[data-mode="men"] .logo-catch{color:var(--men-gold);font-family:'Noto Serif JP',serif}
 .body{padding:20px}
-.title{font-size:18px;color:#222;font-weight:700;margin-bottom:24px}
-.card{background:var(--pink-bg);border-radius:16px;padding:20px;margin-bottom:16px}
-.card-title{font-size:11px;color:var(--pink2);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
-.mochimono-list{background:#fff;border-radius:10px;padding:14px 16px}
+.title{font-size:18px;color:#222;font-weight:700;margin-bottom:24px;transition:color 0.3s}
+body[data-mode="men"] .title{color:#1a1a1a;font-family:'Noto Serif JP',serif}
+
+/* モード選択カード */
+.mode-select{background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;border:1.5px solid #f0d0dc;transition:all 0.3s}
+body[data-mode="men"] .mode-select{background:var(--men-card);border-color:var(--men-gold)}
+.mode-title{font-size:12px;color:#888;text-align:center;margin-bottom:8px;letter-spacing:.1em}
+body[data-mode="men"] .mode-title{color:var(--men-sub)}
+.mode-step{font-size:10px;letter-spacing:0.3em;color:var(--accent2);text-align:center;margin-bottom:12px}
+body[data-mode="men"] .mode-step{color:var(--men-gold)}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-btn{padding:20px 12px;border:1.5px solid #ddd;border-radius:12px;background:#fafafa;cursor:pointer;text-align:center;transition:all 0.2s;font-family:inherit}
+.mode-btn:hover{transform:translateY(-1px)}
+.mode-btn.selected-women{background:linear-gradient(135deg,var(--pink-bg),#fff);border-color:var(--pink2);box-shadow:0 2px 8px rgba(232,96,138,0.2)}
+.mode-btn.selected-men{background:var(--men-bg);border-color:var(--men-gold);color:var(--men-text);box-shadow:0 2px 8px rgba(200,176,128,0.3)}
+.mode-label{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:0.2em;color:#aaa;margin-bottom:4px}
+.mode-btn.selected-women .mode-label{color:var(--pink2)}
+.mode-btn.selected-men .mode-label{color:var(--men-gold)}
+.mode-sub{font-size:10px;color:#aaa;letter-spacing:.05em}
+.mode-btn.selected-women .mode-sub{color:#666}
+.mode-btn.selected-men .mode-sub{color:var(--men-sub)}
+
+/* 入力エリア（モード未選択時はグレーアウト） */
+.form-content{opacity:0.3;pointer-events:none;transition:opacity 0.3s}
+.form-content.active{opacity:1;pointer-events:auto}
+
+.card{background:var(--card-bg);border-radius:16px;padding:20px;margin-bottom:16px;transition:background 0.3s}
+body[data-mode="men"] .card{background:var(--men-card);color:var(--men-text)}
+.card-title{font-size:11px;color:var(--accent2);letter-spacing:.1em;margin-bottom:16px;font-weight:700;transition:color 0.3s}
+body[data-mode="men"] .card-title{color:var(--men-gold)}
+
+.mochimono-list{background:#fff;border-radius:10px;padding:14px 16px;transition:background 0.3s}
+body[data-mode="men"] .mochimono-list{background:#1f1d1a}
 .mochimono-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:#444;border-bottom:1px dashed #f0d0dc}
+body[data-mode="men"] .mochimono-item{color:var(--men-text);border-bottom-color:#3a332a}
 .mochimono-item:last-child{border-bottom:none}
 .mochimono-icon{flex-shrink:0;font-size:16px}
 .mochimono-text{flex:1;line-height:1.5}
-.mochimono-note{font-size:10px;color:var(--pink2);font-weight:500;margin-left:4px}
-.price-box{background:#fff;border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.mochimono-note{font-size:10px;color:var(--accent2);font-weight:500;margin-left:4px}
+body[data-mode="men"] .mochimono-note{color:var(--men-gold)}
+
+.price-box{background:#fff;border-radius:10px;padding:16px;text-align:center;margin-bottom:12px;transition:background 0.3s}
+body[data-mode="men"] .price-box{background:#1f1d1a}
 .price-label{font-size:11px;color:#888;margin-bottom:6px;letter-spacing:.08em}
-.price-value{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--pink2);font-weight:400;line-height:1}
+body[data-mode="men"] .price-label{color:var(--men-sub)}
+.price-value{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--accent2);font-weight:400;line-height:1}
+body[data-mode="men"] .price-value{color:var(--men-gold)}
 .price-yen{font-size:18px;margin-right:2px}
 .price-sub{font-size:10px;color:#aaa;margin-top:4px}
-.payment-box{background:#fff;border-radius:10px;padding:14px 16px}
+body[data-mode="men"] .price-sub{color:var(--men-sub)}
+
+.payment-box{background:#fff;border-radius:10px;padding:14px 16px;transition:background 0.3s}
+body[data-mode="men"] .payment-box{background:#1f1d1a}
 .payment-title{font-size:10px;color:#888;font-weight:500;margin-bottom:10px;letter-spacing:.06em}
+body[data-mode="men"] .payment-title{color:var(--men-sub)}
 .payment-grid{display:flex;flex-wrap:wrap;gap:6px}
-.payment-tag{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--pink-bg);border-radius:6px;font-size:11px;color:var(--pink2);font-weight:500}
+.payment-tag{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--card-bg);border-radius:6px;font-size:11px;color:var(--accent2);font-weight:500}
+body[data-mode="men"] .payment-tag{background:#2a2218;color:var(--men-gold)}
 .payment-tag-icon{font-size:12px}
+
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .fg label{font-size:10px;color:#888;font-weight:500}
-.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:'M PLUS Rounded 1c',sans-serif;width:100%;max-width:100%;outline:none;-webkit-appearance:none;appearance:none}
+body[data-mode="men"] .fg label{color:var(--men-sub)}
+.fg input{font-size:14px;padding:10px 14px;border:1.5px solid rgba(232,96,138,0.2);border-radius:10px;background:#fff;color:#222;font-family:inherit;width:100%;outline:none;-webkit-appearance:none;appearance:none;transition:border-color 0.3s,background 0.3s}
+body[data-mode="men"] .fg input{background:#1f1d1a;border-color:#3a332a;color:var(--men-text)}
 .fg input[type=date]{min-height:44px;display:block}
-.fg-note{font-size:10px;color:var(--pink2);margin-top:4px;line-height:1.5}
+.fg-note{font-size:10px;color:var(--accent2);margin-top:4px;line-height:1.5}
+body[data-mode="men"] .fg-note{color:var(--men-gold)}
+
 .choice-label{font-size:10px;color:#888;font-weight:500;margin-bottom:8px}
+body[data-mode="men"] .choice-label{color:var(--men-sub)}
+
 .radio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.radio-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:12px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:center;transition:all 0.15s}
-.radio-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.radio-btn{padding:10px 6px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--accent2);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-align:center;transition:all 0.15s}
+body[data-mode="men"] .radio-btn{background:#1f1d1a;border-color:var(--men-gold);color:var(--men-gold)}
+.radio-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
+
 .check-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.check-btn{padding:10px 14px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:12px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:left;transition:all 0.15s}
-.check-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
+.check-btn{padding:10px 14px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--accent2);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-align:left;transition:all 0.15s}
+body[data-mode="men"] .check-btn{background:#1f1d1a;border-color:var(--men-gold);color:var(--men-gold)}
+.check-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
+
 .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.time-btn{padding:10px 6px;border:1.5px solid var(--pink);border-radius:10px;background:#fff;color:var(--pink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;text-align:center;transition:all 0.15s}
-.time-btn.selected{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:transparent}
-.selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--pink2);text-align:center;font-weight:500}
+.time-btn{padding:10px 6px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--accent2);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-align:center;transition:all 0.15s}
+body[data-mode="men"] .time-btn{background:#1f1d1a;border-color:var(--men-gold);color:var(--men-gold)}
+.time-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
+
+.selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--accent2);text-align:center;font-weight:500}
+body[data-mode="men"] .selected-info{background:#1f1d1a;color:var(--men-gold)}
+
 .kiyaku-box{background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;font-size:11px;color:#555;line-height:1.8}
-.kiyaku-box strong{color:#e8608a;display:block;margin-bottom:6px}
+body[data-mode="men"] .kiyaku-box{background:#1f1d1a;color:var(--men-text)}
+.kiyaku-box strong{color:var(--accent2);display:block;margin-bottom:6px}
+body[data-mode="men"] .kiyaku-box strong{color:var(--men-gold)}
+
 .agree-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.agree-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--pink2);cursor:pointer;flex-shrink:0}
+.agree-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent2);cursor:pointer;flex-shrink:0}
 .agree-row label{font-size:12px;color:#555;cursor:pointer}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em}
+body[data-mode="men"] .agree-row label{color:var(--men-text)}
+
+.btn{width:100%;padding:14px;background:var(--btn-gradient);border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.05em;transition:all 0.3s}
+body[data-mode="men"] .btn{background:linear-gradient(135deg,var(--men-gold),#8a7440);color:#1a1a1a;font-weight:700}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
+
 .loading{text-align:center;padding:16px;font-size:12px;color:#aaa;display:none}
 .error-msg{font-size:12px;color:#e86060;text-align:center;padding:12px;display:none}
 .note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
+body[data-mode="men"] .note{color:var(--men-sub)}
+
 .success{display:none;text-align:center;padding:40px 20px}
 .success-icon{font-size:60px;margin-bottom:16px}
 .success-msg{font-size:16px;color:#222;font-weight:700;margin-bottom:8px}
+body[data-mode="men"] .success-msg{color:var(--men-text)}
 .success-sub{font-size:12px;color:#888;line-height:1.6}
-.back-btn{display:inline-block;margin-top:20px;padding:10px 24px;background:var(--pink-bg);color:var(--pink2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
+body[data-mode="men"] .success-sub{color:var(--men-sub)}
+.back-btn{display:inline-block;margin-top:20px;padding:10px 24px;background:var(--card-bg);color:var(--accent2);border-radius:20px;font-size:12px;font-weight:700;text-decoration:none}
+body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)}
 </style>
 </head>
 <body>
@@ -77,6 +157,24 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
   <div class="body">
     <div id="form-area">
       <div class="title">体験予約フォーム</div>
+
+      <!-- モード選択 -->
+      <div class="mode-select">
+        <div class="mode-step">STEP 1</div>
+        <div class="mode-title">性別を選択してください</div>
+        <div class="mode-grid">
+          <button type="button" class="mode-btn" id="btn-women" onclick="selectMode('women')">
+            <div class="mode-label">FOR WOMEN</div>
+            <div class="mode-sub">女性メニュー</div>
+          </button>
+          <button type="button" class="mode-btn" id="btn-men" onclick="selectMode('men')">
+            <div class="mode-label">FOR MEN</div>
+            <div class="mode-sub">男性メニュー</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-content" id="form-content">
 
       <!-- 0. 持ってくるもの -->
       <div class="card">
@@ -159,24 +257,18 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
         <div class="selected-info" id="selected-info"></div>
       </div>
 
-      <!-- 3. プロフィール -->
+      <!-- 3. プロフィール（性別は削除） -->
       <div class="card">
         <div class="card-title">プロフィール</div>
-        <div class="choice-label">性別 *</div>
-        <div class="radio-grid">
-          <button class="radio-btn" onclick="selectRadio('gender','男性',this)">男性</button>
-          <button class="radio-btn" onclick="selectRadio('gender','女性',this)">女性</button>
-          <button class="radio-btn" onclick="selectRadio('gender','どちらでもない',this)">どちらでもない</button>
-        </div>
         <div class="choice-label">年代 *</div>
         <div class="radio-grid" style="margin-bottom:0">
-          <button class="radio-btn" onclick="selectRadio('age','10代',this)">10代</button>
-          <button class="radio-btn" onclick="selectRadio('age','20代',this)">20代</button>
-          <button class="radio-btn" onclick="selectRadio('age','30代',this)">30代</button>
-          <button class="radio-btn" onclick="selectRadio('age','40代',this)">40代</button>
-          <button class="radio-btn" onclick="selectRadio('age','50代',this)">50代</button>
-          <button class="radio-btn" onclick="selectRadio('age','60代',this)">60代</button>
-          <button class="radio-btn" onclick="selectRadio('age','70代以上',this)">70代以上</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','10代',this)">10代</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','20代',this)">20代</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','30代',this)">30代</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','40代',this)">40代</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','50代',this)">50代</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','60代',this)">60代</button>
+          <button type="button" class="radio-btn" onclick="selectRadio('age','70代以上',this)">70代以上</button>
         </div>
       </div>
 
@@ -184,12 +276,12 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
       <div class="card">
         <div class="card-title">知ったキッカケ *（複数選択可）</div>
         <div class="check-grid" style="margin-bottom:0">
-          <button class="check-btn" onclick="toggleCheck('kikkake','Instagram',this)">Instagram</button>
-          <button class="check-btn" onclick="toggleCheck('kikkake','YouTube',this)">YouTube</button>
-          <button class="check-btn" onclick="toggleCheck('kikkake','Google検索',this)">Google検索</button>
-          <button class="check-btn" onclick="toggleCheck('kikkake','友人の紹介',this)">友人の紹介</button>
-          <button class="check-btn" onclick="toggleCheck('kikkake','看板・通りがかり',this)">看板・通りがかり</button>
-          <button class="check-btn" onclick="toggleCheck('kikkake','その他',this)" style="margin-bottom:0">その他</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','Instagram',this)">Instagram</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','YouTube',this)">YouTube</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','Google検索',this)">Google検索</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','友人の紹介',this)">友人の紹介</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','看板・通りがかり',this)">看板・通りがかり</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','その他',this)" style="margin-bottom:0">その他</button>
         </div>
       </div>
 
@@ -197,11 +289,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
       <div class="card">
         <div class="card-title">運動経験(これまで) *</div>
         <div class="check-grid" style="margin-bottom:0">
-          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','ない',this)">ない</button>
-          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','少しある',this)">少しある</button>
-          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','部活経験がある',this)">部活経験がある</button>
-          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','スポーツジム経験がある',this)">スポーツジム経験がある</button>
-          <button class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','現在運動している',this)">現在運動している</button>
+          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','ない',this)">ない</button>
+          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','少しある',this)">少しある</button>
+          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','部活経験がある',this)">部活経験がある</button>
+          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','スポーツジム経験がある',this)">スポーツジム経験がある</button>
+          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','現在運動している',this)">現在運動している</button>
         </div>
       </div>
 
@@ -218,10 +310,12 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
           <input type="checkbox" id="agree">
           <label for="agree">上記の体験利用規約をすべて読み、内容に同意します</label>
         </div>
-        <button class="btn" id="submit-btn" onclick="submitForm()">体験を予約する</button>
+        <button type="button" class="btn" id="submit-btn" onclick="submitForm()">体験を予約する</button>
       </div>
 
       <div class="note">ご不明な点はお気軽にご連絡ください。</div>
+
+      </div> <!-- form-content end -->
     </div>
 
     <div class="success" id="success-area">
@@ -234,7 +328,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
 </div>
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
-const selected={gender:'',age:'',undou:''};
+let selectedMode='';
+const selected={age:'',undou:''};
 const checked={kikkake:[]};
 let selectedStart=null,selectedEnd=null;
 
@@ -243,6 +338,23 @@ const tomorrow=new Date(today);
 tomorrow.setDate(tomorrow.getDate()+1);
 document.getElementById('date').setAttribute('min',tomorrow.toISOString().slice(0,10));
 document.getElementById('date').value=tomorrow.toISOString().slice(0,10);
+
+function selectMode(mode){
+  selectedMode=mode;
+  const body=document.body;
+  const btnW=document.getElementById('btn-women');
+  const btnM=document.getElementById('btn-men');
+  btnW.classList.remove('selected-women','selected-men');
+  btnM.classList.remove('selected-women','selected-men');
+  if(mode==='women'){
+    body.removeAttribute('data-mode');
+    btnW.classList.add('selected-women');
+  }else{
+    body.setAttribute('data-mode','men');
+    btnM.classList.add('selected-men');
+  }
+  document.getElementById('form-content').classList.add('active');
+}
 
 function selectRadio(key,val,btn){
   selected[key]=val;
@@ -281,6 +393,7 @@ async function loadSlots(){
     data.slots.forEach(slot=>{
       const btn=document.createElement('button');
       btn.className='time-btn';
+      btn.type='button';
       btn.textContent=slot.label;
       btn.onclick=()=>{
         document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
@@ -306,6 +419,7 @@ function isValidEmail(email){
 }
 
 async function submitForm(){
+  if(!selectedMode){alert('性別を選択してください');return;}
   const name=document.getElementById('name').value.trim();
   const phone=document.getElementById('phone').value.trim();
   const email=document.getElementById('email').value.trim();
@@ -314,18 +428,18 @@ async function submitForm(){
   const agree=document.getElementById('agree').checked;
   if(!name||!phone||!email||!address){alert('お名前・電話番号・メールアドレス・住所を入力してください');return;}
   if(!isValidEmail(email)){alert('メールアドレスの形式が正しくありません');return;}
-  if(!selected.gender){alert('性別を選択してください');return;}
   if(!selected.age){alert('年代を選択してください');return;}
   if(checked.kikkake.length===0){alert('知ったキッカケを選択してください');return;}
   if(!selected.undou){alert('運動経験を選択してください');return;}
   if(!date||!selectedStart){alert('希望日と時間を選択してください');return;}
   if(!agree){alert('体験規約に同意してください');return;}
+  const genderLabel=selectedMode==='women'?'女性':'男性';
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='送信中...';
   const params=new URLSearchParams({
     action:'saveTaiken',
     name,phone,email,address,
-    gender:selected.gender,
+    gender:genderLabel,
     age:selected.age,
     kikkake:checked.kikkake.join('・'),
     undou:selected.undou,
@@ -341,8 +455,6 @@ async function submitForm(){
     document.getElementById('success-area').style.display='block';
   }
 }
-
-loadSlots();
 </script>
 </body>
 </html>
