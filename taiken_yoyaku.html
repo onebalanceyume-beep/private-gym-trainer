@@ -136,6 +136,9 @@ body[data-mode="men"] .btn{background:linear-gradient(135deg,var(--men-gold),#8a
 .error-msg{font-size:12px;color:#e86060;text-align:center;padding:12px;display:none}
 .note{font-size:10px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
 body[data-mode="men"] .note{color:var(--men-sub)}
+.line-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:10px 20px;background:#06C755;color:#fff;border-radius:22px;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.05em;transition:opacity 0.2s}
+.line-btn:hover{opacity:0.85}
+.line-btn-icon{font-size:14px}
 
 .success{display:none;text-align:center;padding:40px 20px}
 .success-icon{font-size:60px;margin-bottom:16px}
@@ -304,7 +307,7 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
           <strong>▼ 体験利用規約</strong>
           ■ 原則として体験は1度だけとなります。<br>
           ■ 体験中に万が一、ケガや体調不良等が発生した場合は自己責任となります。<br>
-          ■ キャンセルは予約日時の24時間前までにお願いします。24時間を過ぎる場合はお電話にてご連絡ください。
+          ■ キャンセルは予約日時の24時間前までにお願いします。24時間を過ぎる場合はご連絡ください。
         </div>
         <div class="agree-row">
           <input type="checkbox" id="agree">
@@ -313,7 +316,12 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
         <button type="button" class="btn" id="submit-btn" onclick="submitForm()">体験を予約する</button>
       </div>
 
-      <div class="note">ご不明な点はお気軽にご連絡ください。</div>
+      <div class="note">
+        ご不明な点はお気軽にご連絡ください。<br>
+        <a href="https://lin.ee/qA9QvFh" class="line-btn" target="_blank" rel="noopener">
+          <span class="line-btn-icon">💬</span>公式LINEで問い合わせる
+        </a>
+      </div>
 
       </div> <!-- form-content end -->
     </div>
