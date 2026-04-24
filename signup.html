@@ -789,9 +789,28 @@ updateGenderUI();
   if(!logoImg) return;
   let pressTimer = null;
   let startTime = 0;
-  const LONG_PRESS_MS = 2000;
+  const LONG_PRESS_MS = 1000;
+
+  // ★右端エリア判定：タッチ/クリック位置がロゴ画像の右1/3以内か
+  function isRightEdge(ev){
+    const rect = logoImg.getBoundingClientRect();
+    let clientX = 0;
+    if(ev.touches && ev.touches.length > 0){
+      clientX = ev.touches[0].clientX;
+    } else if(typeof ev.clientX === 'number'){
+      clientX = ev.clientX;
+    } else {
+      return false;
+    }
+    // ロゴの左端からの相対位置
+    const relX = clientX - rect.left;
+    // 右側2/3以降（右端33%エリア）のみ有効
+    return relX >= rect.width * 0.66;
+  }
 
   function startPress(ev){
+    // ★右端じゃなかったら何もしない
+    if(!isRightEdge(ev)) return;
     startTime = Date.now();
     logoImg.classList.add('pressing');
     pressTimer = setTimeout(()=>{
