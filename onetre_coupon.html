@@ -1,0 +1,266 @@
+<!-- ============================================
+     ワントレ スタッフ専用クーポン機能
+     3種類：モニター20%OFF / 継続10%OFF / カスタム割引額
+     設置場所：signup.html
+     ============================================ -->
+
+<!-- 【ステップ1】既存のロゴ部分を以下に差し替え -->
+<div class="logo-head">
+  <img id="logoImg" src="https://onebalanceyume-beep.github.io/private-gym-trainer/onetre_logo.png" alt="ONE-TRE">
+  <div class="sub">PERSONAL TRAINING GYM</div>
+</div>
+
+<!-- 【ステップ2】<body>の最後（</body>の直前）に以下を追加 -->
+
+<!-- スタッフ専用クーポンモーダル -->
+<div id="couponModal" class="coupon-modal-overlay">
+  <div class="coupon-modal">
+    <div class="coupon-header">
+      <div class="coupon-title">STAFF ONLY</div>
+      <div class="coupon-subtitle">クーポン適用</div>
+      <button class="coupon-close" onclick="closeCouponModal()">×</button>
+    </div>
+
+    <div class="coupon-body">
+      <div class="coupon-warn">⚠ この画面はスタッフ専用です</div>
+
+      <!-- モニター価格 20%OFF -->
+      <label class="coupon-item">
+        <input type="radio" name="couponType" value="monitor" id="couponMonitor">
+        <div class="coupon-item-text">
+          <div class="coupon-item-title">モニター価格</div>
+          <div class="coupon-item-desc">20%OFF（新規モニター契約時）</div>
+        </div>
+        <div class="coupon-badge-tag tag-pink">-20%</div>
+      </label>
+
+      <!-- 継続価格 10%OFF -->
+      <label class="coupon-item">
+        <input type="radio" name="couponType" value="continue" id="couponContinue">
+        <div class="coupon-item-text">
+          <div class="coupon-item-title">継続価格</div>
+          <div class="coupon-item-desc">10%OFF（2回目以降の会員）</div>
+        </div>
+        <div class="coupon-badge-tag tag-blue">-10%</div>
+      </label>
+
+      <!-- カスタム割引額 -->
+      <label class="coupon-item">
+        <input type="radio" name="couponType" value="custom" id="couponCustom">
+        <div class="coupon-item-text">
+          <div class="coupon-item-title">カスタム割引額</div>
+          <div class="coupon-item-desc">
+            ¥<input type="number" id="couponCustomAmount" placeholder="0" min="0" class="coupon-amount" onclick="document.getElementById('couponCustom').checked=true">
+            <span>を引く</span>
+          </div>
+        </div>
+        <div class="coupon-badge-tag tag-gold">自由</div>
+      </label>
+
+      <!-- 適用理由 -->
+      <div class="coupon-reason-wrap">
+        <div class="coupon-reason-label">適用理由（必須）</div>
+        <input type="text" id="couponReason" placeholder="例：紹介、モニター、スタッフ判断 など" class="coupon-reason">
+      </div>
+
+      <!-- スタッフ名 -->
+      <div class="coupon-reason-wrap">
+        <div class="coupon-reason-label">適用スタッフ名（必須）</div>
+        <input type="text" id="couponStaff" placeholder="例：ヨシ" class="coupon-reason">
+      </div>
+
+      <button class="coupon-apply-btn" onclick="applyCoupon()">このクーポンを適用する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 適用中バッジ -->
+<div id="couponBadge" class="coupon-badge" style="display:none;">
+  <span class="coupon-badge-label">適用中</span>
+  <span id="couponBadgeText">クーポン適用中</span>
+  <button onclick="clearCoupon()" class="coupon-badge-clear">×</button>
+</div>
+
+<style>
+#logoImg{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer;}
+
+.coupon-modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  z-index:9999;align-items:center;justify-content:center;padding:20px;
+  animation:fadeIn .2s ease;
+}
+.coupon-modal-overlay.active{display:flex;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.coupon-modal{
+  background:#fff;border-radius:20px;width:100%;max-width:440px;
+  max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+.coupon-header{
+  background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:#fff;
+  padding:20px 24px;position:relative;border-radius:20px 20px 0 0;
+}
+.coupon-title{font-size:11px;letter-spacing:0.4em;color:#ffcc66;font-weight:bold;}
+.coupon-subtitle{font-size:18px;margin-top:6px;letter-spacing:0.1em;}
+.coupon-close{
+  position:absolute;top:16px;right:16px;background:transparent;border:0;
+  color:#fff;font-size:28px;line-height:1;cursor:pointer;padding:4px 10px;
+}
+
+.coupon-body{padding:20px 24px 24px;}
+.coupon-warn{
+  background:#fff4e5;color:#a64c00;padding:10px 14px;border-radius:10px;
+  font-size:12px;margin-bottom:16px;text-align:center;
+}
+
+.coupon-item{
+  display:flex;align-items:center;gap:12px;padding:14px;
+  border:1px solid #eee;border-radius:12px;margin-bottom:10px;
+  cursor:pointer;transition:all .2s;position:relative;
+}
+.coupon-item:has(input:checked){border-color:#e8608a;background:#fff5f8;}
+.coupon-item input[type="radio"]{width:20px;height:20px;accent-color:#e8608a;flex-shrink:0;}
+.coupon-item-text{flex:1;}
+.coupon-item-title{font-weight:600;font-size:15px;margin-bottom:4px;}
+.coupon-item-desc{font-size:13px;color:#666;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+
+.coupon-amount{
+  width:90px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;
+  font-size:14px;text-align:right;
+}
+
+.coupon-badge-tag{
+  font-size:11px;font-weight:bold;padding:4px 10px;border-radius:20px;
+  letter-spacing:0.05em;flex-shrink:0;
+}
+.tag-pink{background:#ffe0ec;color:#c13366;}
+.tag-blue{background:#e0ecff;color:#3366c1;}
+.tag-gold{background:#fff4cc;color:#996600;}
+
+.coupon-reason-wrap{margin-top:16px;}
+.coupon-reason-label{font-size:12px;color:#666;margin-bottom:6px;font-weight:600;}
+.coupon-reason{
+  width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;
+  font-size:14px;
+}
+
+.coupon-apply-btn{
+  width:100%;margin-top:20px;padding:14px;background:#e8608a;color:#fff;
+  border:0;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;
+  letter-spacing:0.1em;
+}
+.coupon-apply-btn:active{transform:scale(0.98);}
+
+.coupon-badge{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#333;color:#fff;padding:10px 14px 10px 18px;border-radius:50px;
+  font-size:13px;z-index:100;display:flex;align-items:center;gap:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+.coupon-badge-label{background:#ffcc66;color:#333;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:bold;}
+.coupon-badge-clear{background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;}
+</style>
+
+<script>
+/* ============================================
+   スタッフ専用クーポン機能（ワントレ3種）
+   ============================================ */
+
+(function(){
+  const logo = document.getElementById('logoImg');
+  let pressTimer = null;
+  let pressStarted = false;
+
+  function startPress(e){
+    pressStarted = true;
+    pressTimer = setTimeout(()=>{
+      if(pressStarted){
+        document.getElementById('couponModal').classList.add('active');
+        if(navigator.vibrate) navigator.vibrate(50);
+      }
+    },3000);
+  }
+  function endPress(){
+    pressStarted = false;
+    if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; }
+  }
+
+  logo.addEventListener('touchstart',startPress,{passive:true});
+  logo.addEventListener('touchend',endPress);
+  logo.addEventListener('touchcancel',endPress);
+  logo.addEventListener('touchmove',endPress);
+  logo.addEventListener('mousedown',startPress);
+  logo.addEventListener('mouseup',endPress);
+  logo.addEventListener('mouseleave',endPress);
+  logo.addEventListener('contextmenu',e=>e.preventDefault());
+})();
+
+function closeCouponModal(){
+  document.getElementById('couponModal').classList.remove('active');
+}
+
+window.appliedCoupon = null;
+function applyCoupon(){
+  const selected = document.querySelector('input[name="couponType"]:checked');
+  const customAmt = parseInt(document.getElementById('couponCustomAmount').value)||0;
+  const reason    = document.getElementById('couponReason').value.trim();
+  const staff     = document.getElementById('couponStaff').value.trim();
+
+  if(!selected){ alert('クーポンを1つ選択してください');return; }
+  if(selected.value === 'custom' && !customAmt){ alert('カスタム割引額を入力してください');return; }
+  if(!reason){ alert('適用理由を入力してください');return; }
+  if(!staff){ alert('適用スタッフ名を入力してください');return; }
+
+  const type = selected.value;
+  let label = '';
+  let discRate = 1.0;
+  let discAmt = 0;
+
+  if(type === 'monitor'){    label = 'モニター価格 -20%'; discRate = 0.8; }
+  else if(type === 'continue'){ label = '継続価格 -10%';   discRate = 0.9; }
+  else if(type === 'custom'){   label = `カスタム -¥${customAmt.toLocaleString()}`; discAmt = customAmt; }
+
+  window.appliedCoupon = {
+    type, label, discRate, discAmt,
+    customAmt: (type==='custom') ? customAmt : 0,
+    reason, staff,
+    appliedAt: new Date().toISOString()
+  };
+
+  document.getElementById('couponBadgeText').textContent = label;
+  document.getElementById('couponBadge').style.display = 'flex';
+
+  closeCouponModal();
+  alert('クーポンを適用しました。このまま申込を進めてください。');
+}
+
+function clearCoupon(){
+  if(!confirm('クーポンを解除しますか？')) return;
+  window.appliedCoupon = null;
+  document.getElementById('couponBadge').style.display = 'none';
+  document.querySelectorAll('input[name="couponType"]').forEach(r=>r.checked=false);
+  document.getElementById('couponCustomAmount').value = '';
+  document.getElementById('couponReason').value = '';
+  document.getElementById('couponStaff').value = '';
+}
+</script>
+
+<!-- 【ステップ3】既存の送信処理に以下を追加 -->
+<script>
+/*
+  既存の fetch(GAS_URL, { body: formData }) の formData に以下を追加：
+
+  if(window.appliedCoupon){
+    formData.append('coupon_type',    window.appliedCoupon.type);      // monitor / continue / custom
+    formData.append('coupon_label',   window.appliedCoupon.label);
+    formData.append('coupon_rate',    window.appliedCoupon.discRate);  // 0.8 / 0.9 / 1.0
+    formData.append('coupon_amount',  window.appliedCoupon.customAmt); // カスタム額（customのみ）
+    formData.append('coupon_reason',  window.appliedCoupon.reason);
+    formData.append('coupon_staff',   window.appliedCoupon.staff);
+  }
+*/
+</script>
