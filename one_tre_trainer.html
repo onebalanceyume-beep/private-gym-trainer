@@ -73,13 +73,13 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .follow-sub{font-size:11px;color:var(--ink2);margin-top:4px;font-weight:500;line-height:1.6}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
 .fg label{font-size:10px;color:var(--ink2);letter-spacing:.06em;font-weight:700}
-.fg input,.fg select{font-size:13px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-family:inherit;width:100%;transition:border-color .2s}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--pink)}
+.fg input,.fg select,.fg textarea{font-size:13px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-family:inherit;width:100%;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--pink)}
+.fg textarea{resize:vertical;min-height:60px}
 .btn-black{background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;padding:10px 22px;border-radius:12px;font-size:11px;cursor:pointer;letter-spacing:.08em;margin-top:12px;font-family:inherit;font-weight:800;box-shadow:0 3px 10px rgba(232,96,138,0.2)}
 .btn-ghost{background:#fff;border:1.5px solid var(--line);padding:7px 14px;border-radius:10px;font-size:11px;cursor:pointer;color:var(--ink2);font-family:inherit;letter-spacing:.06em;font-weight:700}
 .btn-ghost:hover{border-color:var(--pink);color:var(--pink2)}
 
-/* 会員行 */
 .member-row{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border-radius:14px;margin-bottom:8px;cursor:pointer;border:1.5px solid transparent;transition:all .2s}
 .member-row:hover{background:var(--bg2);border-color:var(--pink);transform:translateX(2px);box-shadow:0 3px 10px rgba(100,60,120,0.05)}
 .member-row.expanded{background:linear-gradient(135deg,var(--pink-bg2),var(--lavender-bg));border-color:var(--pink);transform:none}
@@ -102,13 +102,24 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .copy-btn{font-size:9px;padding:5px 10px;background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;cursor:pointer;letter-spacing:.04em;white-space:nowrap;flex-shrink:0;border-radius:8px;font-family:inherit;font-weight:700}
 .renew-btn-inline{font-size:9px;padding:5px 10px;background:linear-gradient(135deg,#e8a030,#c88020);color:#fff;border:none;cursor:pointer;letter-spacing:.04em;white-space:nowrap;flex-shrink:0;font-family:inherit;font-weight:700;border-radius:8px}
 
-/* トレーニング記録 */
-.set-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 30px;gap:6px;align-items:center;margin-bottom:6px}
-.set-row input,.set-row select{font-size:12px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-family:inherit;font-weight:500}
-.set-row input:focus,.set-row select:focus{outline:none;border-color:var(--pink)}
-.set-row .wt-input{background:linear-gradient(135deg,#fff,var(--blue-bg2));border-color:var(--blue-bg);font-weight:700;color:var(--blue2);text-align:center}
-.del-btn{width:28px;height:28px;border:none;background:transparent;cursor:pointer;color:var(--ink3);font-size:14px;border-radius:8px}
-.del-btn:hover{background:var(--pink-bg);color:var(--pink2)}
+/* ★★★ 案B：2段レイアウト ★★★ */
+.set-card{background:var(--bg);border-radius:12px;padding:12px;margin-bottom:8px;position:relative;border:1.5px solid var(--line)}
+.set-card-del{position:absolute;top:6px;right:8px;width:26px;height:26px;background:transparent;border:none;color:var(--ink3);font-size:18px;cursor:pointer;border-radius:8px;line-height:1;padding:0}
+.set-card-del:hover{background:var(--pink-bg);color:var(--pink2)}
+.set-card-row1{margin-bottom:10px}
+.set-card-exercise{font-size:13px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-family:inherit;font-weight:600;width:100%;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 10px center;background-size:18px;padding-right:34px}
+.set-card-exercise:focus{outline:none;border-color:var(--pink)}
+.set-card-row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.set-input-box{background:#fff;border-radius:8px;padding:6px}
+.set-input-label{font-size:9px;color:var(--ink3);font-weight:700;letter-spacing:.05em;margin-bottom:3px;text-align:center}
+.set-input-label.kg{color:var(--blue2)}
+.set-input-field{width:100%;font-size:15px;padding:6px 4px;border:1px solid var(--line);border-radius:6px;text-align:center;font-weight:700;font-family:inherit;color:var(--ink);background:#fff}
+.set-input-field.kg{color:var(--blue2);border-color:var(--blue-bg);background:var(--blue-bg2)}
+.set-input-field:focus{outline:none;border-color:var(--pink)}
+.set-input-unit{font-size:8px;color:var(--ink3);text-align:center;margin-top:2px;font-weight:500}
+.set-input-unit.kg{color:var(--blue2)}
+
+.exercise-add-btn{font-size:10px;padding:5px 10px;background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;letter-spacing:.04em;flex-shrink:0;margin-left:6px}
 
 .pi{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--line)}
 .pi:last-child{border:none}
@@ -151,7 +162,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .taiken-cancel{font-size:10px;padding:6px 14px;background:#fff;border:1.5px solid var(--pink);color:var(--pink2);cursor:pointer;font-family:inherit;letter-spacing:.04em;border-radius:8px;font-weight:700}
 .taiken-cancel:hover{background:var(--pink2);color:#fff}
 
-/* モーダル */
 .renew-modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9998;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px}
 .renew-modal{background:#fff;max-width:480px;width:100%;margin:auto;padding:24px;border-radius:20px;font-family:inherit}
 .renew-modal-head{border-bottom:1.5px solid var(--line);padding-bottom:14px;margin-bottom:18px}
@@ -187,13 +197,11 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .toast.error{background:var(--pink2)}
 .toast.success{background:var(--green2)}
 
-/* カウンセリングセクション */
 .counsel-section{background:var(--bg);padding:16px;border-radius:14px;margin-bottom:12px;border-left:3px solid var(--green)}
 .counsel-section-title{font-size:11px;color:var(--green2);font-weight:800;letter-spacing:.1em;margin-bottom:12px}
 .counsel-section.diet{border-left-color:var(--pink2)}
 .counsel-section.diet .counsel-section-title{color:var(--pink2)}
 
-/* 会員詳細 */
 .member-detail{background:linear-gradient(135deg,var(--pink-bg2),var(--lavender-bg));border-radius:16px;padding:18px;margin:12px 0;border:1.5px solid var(--pink-bg);animation:slideDown .3s ease}
 @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .detail-header{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1.5px dashed rgba(232,96,138,0.2);margin-bottom:14px;flex-wrap:wrap}
@@ -223,9 +231,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 .form-section{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px}
 .form-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .form-head-ttl{font-size:12px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:6px}
-.row-labels{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 30px;gap:6px;padding:0 10px;margin-bottom:6px}
-.row-label{font-size:9px;font-weight:800;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase}
-.row-label-weight{color:var(--blue2)}
+
 .hint-weight{font-size:10px;color:var(--blue2);background:var(--blue-bg2);padding:6px 10px;border-radius:8px;margin-top:8px;display:flex;align-items:center;gap:6px;font-weight:500}
 
 .recent-log{background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--blue)}
@@ -239,7 +245,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 
 .counsel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:10px}
 
-/* 担当トレーナー編集エリア */
 .trainer-edit-box{background:#fff;border:1.5px dashed var(--blue);border-radius:12px;padding:12px 14px;margin-bottom:14px}
 .trainer-sel{padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-family:inherit;font-size:12px;color:var(--ink);font-weight:700;cursor:pointer;outline:none;min-width:120px}
 .trainer-sel:focus{border-color:var(--blue)}
@@ -255,7 +260,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 <body>
 <div class="toast" id="toast"></div>
 
-<!-- 継続契約モーダル -->
 <div class="renew-modal-bg" id="renew-modal-bg" style="display:none">
   <div class="renew-modal">
     <div class="renew-modal-head">
@@ -356,7 +360,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <button class="nbtn" onclick="sp('calendar',this)"><span>🗓️</span>来店分析</button>
   </div>
 
-  <!-- ダッシュボード -->
   <div id="page-dashboard" class="page active">
     <div class="section-ttl">今月のKPI</div>
     <div class="metrics">
@@ -397,7 +400,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <div class="card"><div class="section-ttl">年代別</div><div style="position:relative;height:180px"><canvas id="ca"></canvas></div></div>
     </div>
 
-    <!-- 人件費（時間外手当） -->
     <div class="section-ttl">💰 今月の人件費（16-22時外の時間外手当）</div>
     <div id="payroll-loading" style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">Googleカレンダーから読み取り中...</div>
     <div id="payroll-content" style="display:none">
@@ -436,7 +438,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <div id="payroll-error" style="display:none;padding:14px;background:var(--pink-bg2);border-radius:12px;color:var(--pink2);font-size:12px;font-weight:700"></div>
   </div>
 
-  <!-- 売上 -->
   <div id="page-sales" class="page">
     <div id="sales-loading" class="loading">スプレッドシートからデータを取得中...</div>
     <div id="sales-content" style="display:none">
@@ -467,7 +468,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
         </div>
       </div>
 
-      <!-- 営業利益セクション -->
       <div class="section-ttl" style="margin-top:18px">💼 今月の営業指標</div>
       <div class="sales-kpi">
         <div class="metric metric-pink">
@@ -502,10 +502,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <div id="sales-error" style="display:none;padding:20px;color:var(--ink3);font-size:13px;text-align:center;font-weight:500">データの取得に失敗しました。GASのデプロイ設定を確認してください。</div>
   </div>
 
-  <!-- 体験予約 -->
   <div id="page-taiken" class="page">
-
-    <!-- カレンダー予約（全セッション） -->
     <div class="card">
       <div class="section-ttl">📅 Googleカレンダー予約一覧</div>
       <div style="font-size:11px;color:var(--ink2);margin-bottom:12px;line-height:1.6;font-weight:500">Googleカレンダーに登録された今後2週間の予約を表示します。カレンダーを更新すると反映されます。</div>
@@ -530,7 +527,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
-  <!-- 会員一覧（詳細ページ内包） -->
   <div id="page-members" class="page">
     <div class="card">
       <div class="section-ttl">ボディバランス スコア設定</div>
@@ -571,10 +567,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
-  <!-- 来店分析（経営ダッシュボード） -->
   <div id="page-calendar" class="page">
-
-    <!-- 月カレンダー（全員の来店ドット重ね） -->
     <div class="card">
       <div class="section-ttl">月間来店カレンダー（全員）</div>
       <div class="msel">
@@ -588,7 +581,6 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <div class="cal-grid" style="margin-top:4px" id="cbody"></div>
     </div>
 
-    <!-- 経営KPI -->
     <div class="section-ttl">来店傾向 KPI</div>
     <div class="metrics">
       <div class="metric metric-pink">
@@ -617,34 +609,29 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
 
-    <!-- 曜日ヒートマップ -->
     <div class="card">
       <div class="section-ttl">曜日別 来店ヒートマップ</div>
       <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">色が濃いほど来店が多い曜日です</div>
       <div id="heatmap-weekday"></div>
     </div>
 
-    <!-- 時間帯ヒートマップ -->
     <div class="card">
       <div class="section-ttl">時間帯別 来店ヒートマップ</div>
       <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">どの時間が埋まりやすいかがわかります</div>
       <div id="heatmap-hour"></div>
     </div>
 
-    <!-- 曜日×時間帯マトリックス -->
     <div class="card">
       <div class="section-ttl">曜日 × 時間帯 マトリックス</div>
       <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">縦=曜日 / 横=時間帯（記録に時刻が入っていない場合は非表示）</div>
       <div id="matrix-grid" style="overflow-x:auto"></div>
     </div>
 
-    <!-- 空き枠TOP3（経営ヒント） -->
     <div class="card">
       <div class="section-ttl">空き枠TOP3（体験予約の誘導候補）</div>
       <div style="font-size:10px;color:var(--ink3);margin-bottom:10px;font-weight:500">稼働率が低い枠に体験予約を誘導すると効率的です</div>
       <div id="empty-slots"></div>
     </div>
-
   </div>
 
 </div>
@@ -652,12 +639,10 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 
-// スコアセレクトに0-25を埋める
 document.querySelectorAll('#sc-strength,#sc-core,#sc-agility,#sc-flex').forEach(sel=>{
   for(let i=0;i<=25;i++){const o=document.createElement('option');o.value=i;o.textContent=i;sel.appendChild(o);}
 });
 
-// ===== トースト =====
 function showToast(msg, type){
   const el = document.getElementById('toast');
   if(!el) return;
@@ -667,7 +652,6 @@ function showToast(msg, type){
   el._tid = setTimeout(()=>{ el.className = 'toast'; }, 1800);
 }
 
-// ===== 継続契約モーダル =====
 let rmState = { memberId: null, memberName: '', course: null, coursePrice: 0 };
 
 function rmOpen(memberId, memberName){
@@ -797,6 +781,7 @@ function rmSubmit(){
       if(result && result.ok){
         rmClose();
         showToast('✓ ' + rmState.memberName + ' さんの契約を登録しました','success');
+        gasCache=null;
         setTimeout(()=>loadGasMembers(true), 500);
       } else {
         showToast('エラー: ' + (result.error||'不明'),'error');
@@ -811,7 +796,6 @@ function rmSubmit(){
     });
 }
 
-// ===== 日本語日付 =====
 function formatJpDate(dateStr){
   if(!dateStr) return '';
   const s = String(dateStr).trim();
@@ -834,6 +818,8 @@ let gasMembers=[];
 let cY=new Date().getFullYear(),cM2=new Date().getMonth();
 let C={};
 let expandedMemberId = null;
+let sessionCountsData=null;
+let gasCache=null;
 
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
 function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
@@ -841,12 +827,73 @@ function daysSince(dateStr){if(!dateStr)return null;return Math.floor((new Date(
 function getLastVisit(memberId){const mts=T.filter(t=>t.memberId===memberId).sort((a,b)=>b.date.localeCompare(a.date));return mts.length?mts[0].date:null;}
 function getMemberUrl(id){return 'https://onebalanceyume-beep.github.io/private-gym-trainer/one_tre_member.html?id='+id;}
 
-let gasCache=null;
+// ===== 種目マスター（過去記録から自動抽出＋手動追加） =====
+function getExerciseList(){
+  // 過去記録から使用頻度順に抽出
+  const freq={};
+  T.forEach(t=>{
+    if(!t.sets)return;
+    t.sets.forEach(s=>{
+      if(s.exercise && s.exercise.trim()){
+        const ex=s.exercise.trim();
+        freq[ex]=(freq[ex]||0)+1;
+      }
+    });
+  });
+  const fromHistory=Object.keys(freq).sort((a,b)=>freq[b]-freq[a]);
+  // localStorageに保存した手動追加分
+  const manual=JSON.parse(localStorage.getItem('onetreExerciseList')||'[]');
+  // 統合してユニーク化（履歴優先で）
+  const combined=[...new Set([...fromHistory,...manual])];
+  return combined;
+}
+
+function addExerciseToList(name){
+  if(!name||!name.trim())return;
+  const trimmed=name.trim();
+  const manual=JSON.parse(localStorage.getItem('onetreExerciseList')||'[]');
+  if(!manual.includes(trimmed)){
+    manual.push(trimmed);
+    localStorage.setItem('onetreExerciseList',JSON.stringify(manual));
+  }
+}
+
+function promptNewExercise(memberId,setRowId){
+  const name=prompt('新しい種目名を入力してください\n（例：インクラインベンチプレス）');
+  if(!name||!name.trim())return;
+  const trimmed=name.trim();
+  addExerciseToList(trimmed);
+  // 該当のselectに値をセット
+  const sel=document.getElementById(setRowId);
+  if(sel){
+    // optionを再生成
+    refreshExerciseSelect(sel,trimmed);
+  }
+  showToast('✓ 「'+trimmed+'」を追加しました','success');
+}
+
+function refreshExerciseSelect(sel,selectedValue){
+  const list=getExerciseList();
+  const currentValue=selectedValue||sel.value||'';
+  sel.innerHTML='<option value="">— 種目を選択 —</option>';
+  list.forEach(ex=>{
+    const o=document.createElement('option');
+    o.value=ex;
+    o.textContent=ex;
+    if(ex===currentValue)o.selected=true;
+    sel.appendChild(o);
+  });
+  // 「+ 新規追加」項目
+  const addOpt=document.createElement('option');
+  addOpt.value='__add__';
+  addOpt.textContent='＋ 新しい種目を追加';
+  sel.appendChild(addOpt);
+}
 
 async function fetchGasData(forceRefresh){
   if(gasCache && !forceRefresh)return gasCache;
   try{
-    const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
+    const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'});
     if(!res.ok)throw new Error('HTTP '+res.status);
     gasCache=await res.json();
     return gasCache;
@@ -877,22 +924,36 @@ async function loadGasMembers(forceRefresh){
     });
     T=Object.values(grouped);
   }
-  // 各会員のコース予約数をGASから取得（別エンドポイント）
   loadSessionCounts();
+  loadAllCounseling();
   pSel();rMem();rDash();
 }
 
-// コース消化数（カレンダー予約数）を取得
 async function loadSessionCounts(){
   try{
-    const res=await fetch(GAS_URL+'?action=getSessionCount&t='+Date.now(),{method:'GET',mode:'cors'});
+    const res=await fetch(GAS_URL+'?action=getSessionCounts&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'});
     const data=await res.json();
     if(data&&data.ok){
-      window.sessionCountData=data.counts||{};
-      // 会員一覧を再描画して予約数反映
+      sessionCountsData=data.counts||{};
       rMem();
     }
   }catch(err){console.log('sessionCount error:',err);}
+}
+
+// 全員分のカウンセリングを取得
+async function loadAllCounseling(){
+  if(!gasCache)gasCache={};
+  if(!gasCache.counseling)gasCache.counseling={};
+  for(const m of gasMembers){
+    try{
+      const res=await fetch(GAS_URL+'?action=getCounseling&memberId='+m.id+'&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'});
+      const data=await res.json();
+      if(data && data.ok && data.data){
+        gasCache.counseling[m.id]=data.data;
+      }
+    }catch(e){console.log('counseling fetch error for '+m.id, e);}
+  }
+  if(expandedMemberId)rMem();
 }
 
 let salesCache=null;
@@ -1084,17 +1145,14 @@ function sp(name,btn){
   if(name==='calendar'){pSel();rCal();renderCalendarAnalysis();}
 }
 
-// ===== 営業利益計算 =====
 let payrollCache=null;
 async function loadProfit(){
-  // 人件費をキャッシュから取得 or 新規取得
   if(!payrollCache){
     try{
       const res=await fetch(GAS_URL+'?action=getPayroll&t='+Date.now(),{method:'GET',mode:'cors'});
       payrollCache=await res.json();
     }catch(e){payrollCache={ok:false};}
   }
-  // 今月売上取得（既にrenderSalesで計算済み）
   const monthSales=parseInt(document.getElementById('s-month').textContent.replace(/[¥,]/g,''))||0;
   const payroll=(payrollCache&&payrollCache.ok)?(payrollCache.totalAmount||0):0;
   const profit=monthSales-payroll;
@@ -1108,7 +1166,6 @@ async function loadProfit(){
   }
 }
 
-// ===== カレンダー予約一覧 =====
 let calendarReservationsData=null;
 async function loadCalendarReservations(){
   const listEl=document.getElementById('calendar-reservations-list');
@@ -1137,7 +1194,6 @@ function renderCalendarReservations(){
     listEl.innerHTML='<div style="padding:10px;color:var(--ink3)">予約がありません</div>';
     return;
   }
-  // 日付ごとにグループ化
   const byDate={};
   list.forEach(r=>{
     if(!byDate[r.startDate])byDate[r.startDate]=[];
@@ -1165,24 +1221,11 @@ function renderCalendarReservations(){
   listEl.innerHTML=html;
 }
 
-// ===== コース消化数を全会員分取得 =====
-let sessionCountsData=null;
-async function loadSessionCounts(){
-  try{
-    const res=await fetch(GAS_URL+'?action=getSessionCounts&t='+Date.now(),{method:'GET',mode:'cors'});
-    const data=await res.json();
-    if(data.ok){
-      sessionCountsData=data.counts||{};
-    }
-  }catch(err){console.log('sessionCounts error:',err);}
-}
-
 function getSessionInfo(memberId){
   if(!sessionCountsData||!sessionCountsData[memberId])return null;
   return sessionCountsData[memberId];
 }
 
-// ===== 人件費（時間外手当）ロード =====
 async function loadPayroll(){
   const loadingEl=document.getElementById('payroll-loading');
   const contentEl=document.getElementById('payroll-content');
@@ -1202,10 +1245,8 @@ async function loadPayroll(){
     }
     loadingEl.style.display='none';
     contentEl.style.display='block';
-    // 合計
     document.getElementById('pay-total').textContent='¥'+(data.totalAmount||0).toLocaleString();
     document.getElementById('pay-total-count').textContent=(data.totalCount||0)+'件のセッション';
-    // トレーナー別
     const byT=data.byTrainer||{};
     const inada=byT['稲田']||{count:0,amount:0};
     const nagao=byT['長尾']||{count:0,amount:0};
@@ -1213,14 +1254,12 @@ async function loadPayroll(){
     document.getElementById('pay-inada-count').textContent=(inada.count||0)+'件';
     document.getElementById('pay-nagao').textContent='¥'+(nagao.amount||0).toLocaleString();
     document.getElementById('pay-nagao-count').textContent=(nagao.count||0)+'件';
-    // その他（稲田・長尾以外）
     let otherCount=0,otherAmount=0;
     Object.entries(byT).forEach(([name,info])=>{
       if(name!=='稲田'&&name!=='長尾'){otherCount+=info.count||0;otherAmount+=info.amount||0;}
     });
     document.getElementById('pay-other').textContent='¥'+otherAmount.toLocaleString();
     document.getElementById('pay-other-count').textContent=otherCount+'件';
-    // セッション一覧
     const sessEl=document.getElementById('pay-sessions');
     if(!data.allSessions||!data.allSessions.length){
       sessEl.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">対象セッションはありません</p>';
@@ -1291,13 +1330,11 @@ function rMem(){
     }else{visitClass='mtag-visit-warn';}
     const avClass=m.gender==='m'?'avatar-m':'avatar-f';
     const avChar=m.name.charAt(0);
-    // 担当トレーナー（raw.担当トレーナー優先、なければ「未設定」）
     const trainer=(m.raw && (m.raw['担当トレーナー']||m.raw['担当']))||'';
     const ageRaw=m.raw?String(m.raw['年代']||m.raw['年齢']||'').trim():'';
 
     const wrapDiv=document.createElement('div');
 
-    // 会員行
     const row=document.createElement('div');
     row.className='member-row'+(expandedMemberId===m.id?' expanded':'');
     row.onclick=()=>toggleMemberDetail(m.id);
@@ -1314,7 +1351,6 @@ function rMem(){
     `;
     wrapDiv.appendChild(row);
 
-    // 詳細（展開時）
     if(expandedMemberId===m.id){
       const detail=renderMemberDetail(m);
       wrapDiv.appendChild(detail);
@@ -1371,7 +1407,6 @@ function renderMemberDetail(m){
     </div>
   `;
 
-  // ① コース消化（スプレッドシート契約コース + カレンダー予約数）
   const sessionInfo=getSessionInfo(m.id);
   const actualCount=mts.length;
   if(sessionInfo&&sessionInfo.contractCount){
@@ -1399,31 +1434,8 @@ function renderMemberDetail(m){
       </div>
     `;
   }
-  // カウンセリング側の契約回数（旧方式）は、スプレッドシートに契約コースが無い場合のフォールバック
-  else {
-    const courseSessions=counseling && counseling.courseSessions ? parseInt(counseling.courseSessions) : null;
-    if(courseSessions){
-      const remain=courseSessions-actualCount;
-      let remClass='course-remaining';
-      if(remain<=1)remClass+=' danger';
-      else if(remain<=3)remClass+=' warn';
-      html+=`
-        <div class="section-order"><span class="order-label">01</span>コース消化状況</div>
-        <div class="course-status">
-          <div class="course-ico">🎟️</div>
-          <div class="course-body">
-            <div class="course-title">${courseSessions}回コース</div>
-            <div class="course-fraction">
-              <span class="num">${actualCount}</span><span class="slash">/</span><span class="total">${courseSessions} 回</span>
-            </div>
-          </div>
-          <div class="${remClass}">残 ${remain<0?0:remain} 回</div>
-        </div>
-      `;
-    }
-  }
 
-  // ② トレーニング記録入力
+  // ② トレーニング記録入力（2段レイアウト）
   const today=new Date().toISOString().slice(0,10);
   html+=`
     <div class="section-order"><span class="order-label">02</span>トレーニング記録を入力</div>
@@ -1434,17 +1446,10 @@ function renderMemberDetail(m){
       <div class="msel">
         <input id="idate-${m.id}" type="date" value="${today}" style="font-size:12px;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-family:inherit;font-weight:500">
       </div>
-      <div class="row-labels">
-        <span class="row-label">種目</span>
-        <span class="row-label row-label-weight">重量 kg</span>
-        <span class="row-label">回数</span>
-        <span class="row-label">セット</span>
-        <span></span>
-      </div>
       <div id="sw-${m.id}"></div>
       <div class="hint-weight">
         <span>💡</span>
-        <span>重量は自由入力（スマホで数字キーボード・0.5kg刻みOK）</span>
+        <span>種目はプルダウンから選択。新規は「+ 種目追加」後にプルダウンの最下部から追加できます</span>
       </div>
       <div class="btn-row">
         <button class="btn-ghost" onclick="event.stopPropagation();addS('${m.id}')">+ 種目追加</button>
@@ -1453,7 +1458,6 @@ function renderMemberDetail(m){
     </div>
   `;
 
-  // ③ 直近の記録
   html+=`
     <div class="section-order"><span class="order-label">03</span>直近の記録</div>
     <div class="form-section">
@@ -1478,7 +1482,6 @@ function renderMemberDetail(m){
   }
   html+='</div>';
 
-  // ④ 成長グラフ
   html+=`
     <div class="section-order"><span class="order-label">04</span>成長グラフ</div>
     <div class="form-section">
@@ -1490,7 +1493,6 @@ function renderMemberDetail(m){
       date:t.date,
       vol:t.sets.reduce((a,s)=>a+(s.weight*s.reps*(s.sets||1)),0)
     }));
-    // 成長評価（最新 vs 前回）
     const latestVol=volumes[volumes.length-1].vol;
     const prevVol=volumes[volumes.length-2].vol;
     const diffVol=latestVol-prevVol;
@@ -1500,7 +1502,6 @@ function renderMemberDetail(m){
     else if(diffVol===0){growthBadge='→ 維持';growthColor='var(--ink3)';}
     else{growthBadge='▼ 低下 '+diffPct+'%';growthColor='var(--orange2)';}
 
-    // ボリュームPB
     let volPB=0,volPBDate='';
     volumes.forEach(v=>{if(v.vol>volPB){volPB=v.vol;volPBDate=v.date;}});
 
@@ -1525,7 +1526,6 @@ function renderMemberDetail(m){
   }
   html+='</div>';
 
-  // ⑤ 来店カレンダー
   html+=`
     <div class="section-order"><span class="order-label">05</span>来店カレンダー</div>
     <div class="form-section">
@@ -1533,18 +1533,58 @@ function renderMemberDetail(m){
   if(mts.length===0){
     html+='<p style="font-size:12px;color:var(--ink3);font-weight:500">来店記録がありません</p>';
   }else{
-    // 直近3ヶ月分のカレンダー
-    const today=new Date();
-    const visitDates=new Set(mts.map(t=>t.date));
     html+=`<div id="mem-cal-${m.id}" style="display:grid;grid-template-columns:1fr;gap:12px"></div>`;
   }
   html+='</div>';
 
-  // ⑥ カウンセリング
-  html+='<div class="section-order"><span class="order-label">06</span>カウンセリング内容</div>';
-  if(!counseling){
-    html+='<div class="form-section"><p style="font-size:12px;color:var(--ink3);font-weight:500">カウンセリング未登録</p></div>';
-  }else{
+  // ⑥ カウンセリング（入力フォーム＋閲覧）
+  html+='<div class="section-order"><span class="order-label">06</span>カウンセリング</div>';
+
+  // 入力フォーム
+  html+=`
+    <div class="form-section" style="margin-bottom:12px">
+      <div class="form-head">
+        <div class="form-head-ttl">📝 カウンセリング入力・編集</div>
+        <button class="btn-ghost" id="cs-toggle-${m.id}" onclick="event.stopPropagation();toggleCounselForm('${m.id}')">入力フォームを開く ▼</button>
+      </div>
+      <div id="counsel-form-${m.id}" style="display:none;margin-top:12px">
+        <div style="display:grid;grid-template-columns:1fr;gap:8px">
+          <div class="fg"><label>🎯 入会の目的</label><input type="text" id="cs-purpose-${m.id}" value="${(counseling&&counseling['目的'])||''}" placeholder="例：ダイエット、健康維持"></div>
+          <div class="fg"><label>🎯 具体的な目標</label><input type="text" id="cs-goal-${m.id}" value="${(counseling&&counseling['目標'])||''}" placeholder="例：体重-5kg、ベンチ80kg"></div>
+          <div class="fg"><label>📅 達成期限</label><input type="text" id="cs-deadline-${m.id}" value="${(counseling&&counseling['達成期限'])||''}" placeholder="例：2026年12月まで"></div>
+          <div class="fg"><label>🏋️ 過去のジム経験</label><input type="text" id="cs-gymexp-${m.id}" value="${(counseling&&counseling['過去のジム経験'])||''}" placeholder="例：3年、初めて"></div>
+          <div class="fg"><label>🏃 現在の運動習慣</label><input type="text" id="cs-habit-${m.id}" value="${(counseling&&counseling['運動習慣'])||''}"></div>
+          <div class="fg"><label>🏃 過去の運動経験</label><input type="text" id="cs-exp-${m.id}" value="${(counseling&&counseling['過去の運動経験'])||''}"></div>
+          <div class="fg"><label>⚕️ ケガ・手術歴</label><input type="text" id="cs-injury-${m.id}" value="${(counseling&&counseling['ケガ手術歴'])||''}"></div>
+          <div class="fg"><label>💊 通院・服薬</label><input type="text" id="cs-med-${m.id}" value="${(counseling&&counseling['通院服薬'])||''}"></div>
+          <div class="fg"><label>😣 痛みのある箇所</label><input type="text" id="cs-pain-${m.id}" value="${(counseling&&counseling['痛みのある箇所'])||''}"></div>
+          <div class="fg"><label>👁 気になる箇所</label><input type="text" id="cs-concern-${m.id}" value="${(counseling&&counseling['気になる箇所'])||''}"></div>
+          <div class="fg"><label>🌙 睡眠時間</label><input type="text" id="cs-sleep-${m.id}" value="${(counseling&&counseling['睡眠時間'])||''}" placeholder="例：6時間"></div>
+          <div class="fg"><label>🌙 就寝時刻</label><input type="text" id="cs-bedtime-${m.id}" value="${(counseling&&counseling['就寝時刻'])||''}" placeholder="例：23:00"></div>
+          <div class="fg"><label>💼 仕事形態</label><input type="text" id="cs-work-${m.id}" value="${(counseling&&counseling['仕事形態'])||''}" placeholder="例：デスクワーク"></div>
+          <div class="fg"><label>😰 ストレスレベル</label><input type="text" id="cs-stress-${m.id}" value="${(counseling&&counseling['ストレスレベル'])||''}" placeholder="例：高/中/低"></div>
+          <div class="fg"><label>💬 事前に伝えたいこと</label><textarea id="cs-message-${m.id}">${(counseling&&counseling['伝えたいこと'])||''}</textarea></div>
+          <div class="fg"><label>🚫 NGなこと</label><textarea id="cs-ng-${m.id}">${(counseling&&counseling['NGなこと'])||''}</textarea></div>
+        </div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1.5px dashed var(--line)">
+          <div style="font-size:11px;font-weight:800;color:var(--pink2);margin-bottom:10px">🍽 ダイエット項目（任意）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="fg"><label>身長 (cm)</label><input type="number" id="cs-dheight-${m.id}" value="${(counseling&&counseling['ダイエット_身長'])||''}"></div>
+            <div class="fg"><label>目標減量 (kg)</label><input type="number" id="cs-dgoal-${m.id}" value="${(counseling&&counseling['ダイエット_目標減量'])||''}"></div>
+            <div class="fg"><label>食事回数/日</label><input type="text" id="cs-dmeal-${m.id}" value="${(counseling&&counseling['ダイエット_食事回数'])||''}" placeholder="例：3回"></div>
+            <div class="fg"><label>朝食頻度</label><input type="text" id="cs-dbreak-${m.id}" value="${(counseling&&counseling['ダイエット_朝食頻度'])||''}" placeholder="例：毎日"></div>
+            <div class="fg"><label>外食頻度</label><input type="text" id="cs-deatout-${m.id}" value="${(counseling&&counseling['ダイエット_外食頻度'])||''}" placeholder="例：週2"></div>
+            <div class="fg"><label>お酒</label><input type="text" id="cs-dalcohol-${m.id}" value="${(counseling&&counseling['ダイエット_お酒頻度'])||''}" placeholder="例：週1"></div>
+          </div>
+          <div class="fg" style="margin-top:8px"><label>💪 モチベーション</label><textarea id="cs-dmotiv-${m.id}">${(counseling&&counseling['ダイエット_モチベーション'])||''}</textarea></div>
+        </div>
+        <button class="btn-primary" style="margin-top:14px;width:100%" onclick="event.stopPropagation();saveCounseling('${m.id}')">💾 カウンセリングを保存</button>
+      </div>
+    </div>
+  `;
+
+  // 閲覧表示
+  if(counseling){
     const c=counseling;
     const renderItem=(label,val)=>{
       const v=val||'';
@@ -1594,7 +1634,6 @@ function renderMemberDetail(m){
         </div>
       </div>
     `;
-    // ダイエット項目
     const hasDiet=c['ダイエット_身長']||c['ダイエット_目標減量']||c['ダイエット_モチベーション'];
     if(hasDiet){
       html+=`
@@ -1615,15 +1654,15 @@ function renderMemberDetail(m){
         </div>
       `;
     }
+  }else{
+    html+='<div class="form-section"><p style="font-size:12px;color:var(--ink3);font-weight:500">カウンセリング未登録（上の「入力フォームを開く」から登録できます）</p></div>';
   }
 
   detail.innerHTML=html;
 
-  // 種目行を初期状態で1つ入れる
   setTimeout(()=>{
     addS(m.id);
 
-    // 成長グラフ描画
     if(mts.length>=2){
       const volumes=mts.slice().reverse().map(t=>({
         date:t.date,
@@ -1659,7 +1698,6 @@ function renderMemberDetail(m){
       }
     }
 
-    // 来店カレンダー描画（直近3ヶ月）
     const memCalEl=document.getElementById('mem-cal-'+m.id);
     if(memCalEl && mts.length>0){
       const visitDates=new Set(mts.map(t=>t.date));
@@ -1709,51 +1747,47 @@ function cpUrl(url,btn){
   });
 }
 
-// ===== 担当トレーナー管理 =====
 function getTrainerList(){
-  // デフォルトは稲田・長尾
   const defaultList=['稲田','長尾'];
-  // 会員データから既存の担当トレーナー名を収集（新規追加分も含めるため）
   const fromMembers=new Set();
   gasMembers.forEach(m=>{
     const t=(m.raw && (m.raw['担当トレーナー']||m.raw['担当']))||'';
     if(t)fromMembers.add(t);
   });
-  // LocalStorageに保存した追加分も取得
   const extra=JSON.parse(localStorage.getItem('onetreTrainerExtra')||'[]');
   extra.forEach(t=>fromMembers.add(t));
-  // 統合してユニーク化
   const all=[...new Set([...defaultList,...fromMembers])];
   return all.filter(t=>t&&t.trim());
 }
 
 function saveTrainer(memberId,trainerName){
   const statusEl=document.getElementById('trainer-status-'+memberId);
-  if(statusEl)statusEl.textContent='保存中...';
+  if(statusEl){statusEl.textContent='保存中...';statusEl.style.color='var(--ink3)';}
   const params=new URLSearchParams({
     action:'updateTrainer',
     memberId:memberId,
-    trainerName:trainerName||''
+    trainerName:trainerName||'',
+    t:Date.now()
   });
-  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors',cache:'no-store'})
     .then(r=>r.json())
     .then(result=>{
       if(result&&result.ok){
-        if(statusEl){statusEl.textContent='✓ 保存しました';statusEl.style.color='var(--green2)';}
-        showToast('✓ 担当トレーナーを更新しました','success');
-        // ローカルデータも更新
         const member=gasMembers.find(m=>m.id===memberId);
         if(member&&member.raw){
           member.raw['担当トレーナー']=trainerName;
         }
-        setTimeout(()=>loadGasMembers(true),800);
+        if(statusEl){statusEl.textContent='✓ 保存しました（'+(trainerName||'未設定')+'）';statusEl.style.color='var(--green2)';}
+        showToast('✓ 担当トレーナーを更新しました','success');
+        gasCache=null;
+        setTimeout(()=>loadGasMembers(true),300);
       }else{
-        if(statusEl){statusEl.textContent='保存失敗：GAS側にupdateTrainer処理がない可能性があります';statusEl.style.color='var(--pink2)';}
+        if(statusEl){statusEl.textContent='保存失敗：'+(result.error||'GAS側エラー');statusEl.style.color='var(--pink2)';}
         showToast('保存失敗：'+(result.error||'GAS未対応'),'error');
       }
     })
     .catch(err=>{
-      if(statusEl){statusEl.textContent='通信エラー';statusEl.style.color='var(--pink2)';}
+      if(statusEl){statusEl.textContent='通信エラー：'+err.message;statusEl.style.color='var(--pink2)';}
       showToast('通信エラー','error');
     });
 }
@@ -1762,15 +1796,92 @@ function addNewTrainer(memberId){
   const name=prompt('新しいトレーナーの名前を入力してください（例: 山田）');
   if(!name||!name.trim())return;
   const trimmed=name.trim();
-  // LocalStorageに追加
   const extra=JSON.parse(localStorage.getItem('onetreTrainerExtra')||'[]');
   if(!extra.includes(trimmed)){
     extra.push(trimmed);
     localStorage.setItem('onetreTrainerExtra',JSON.stringify(extra));
   }
   showToast('✓ ' + trimmed + ' さんを追加しました','success');
-  // 現在展開中の会員詳細を再描画
   rMem();
+}
+
+// ===== カウンセリング =====
+function toggleCounselForm(memberId){
+  const form=document.getElementById('counsel-form-'+memberId);
+  const btn=document.getElementById('cs-toggle-'+memberId);
+  if(!form||!btn)return;
+  if(form.style.display==='none'){
+    form.style.display='block';
+    btn.textContent='入力フォームを閉じる ▲';
+  }else{
+    form.style.display='none';
+    btn.textContent='入力フォームを開く ▼';
+  }
+}
+
+function saveCounseling(memberId){
+  const g=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
+  const data={
+    recordDate:new Date().toISOString().slice(0,10),
+    purpose:g('cs-purpose-'+memberId),
+    goal:g('cs-goal-'+memberId),
+    deadline:g('cs-deadline-'+memberId),
+    gymExp:g('cs-gymexp-'+memberId),
+    exerciseHabit:g('cs-habit-'+memberId),
+    exerciseExp:g('cs-exp-'+memberId),
+    injuryHistory:g('cs-injury-'+memberId),
+    medication:g('cs-med-'+memberId),
+    painArea:g('cs-pain-'+memberId),
+    concernArea:g('cs-concern-'+memberId),
+    sleepHours:g('cs-sleep-'+memberId),
+    bedtime:g('cs-bedtime-'+memberId),
+    workStyle:g('cs-work-'+memberId),
+    stressLevel:g('cs-stress-'+memberId),
+    message:g('cs-message-'+memberId),
+    ngItems:g('cs-ng-'+memberId),
+    dHeight:g('cs-dheight-'+memberId),
+    dGoalWeight:g('cs-dgoal-'+memberId),
+    dMealCount:g('cs-dmeal-'+memberId),
+    dBreakfast:g('cs-dbreak-'+memberId),
+    dEatOut:g('cs-deatout-'+memberId),
+    dAlcohol:g('cs-dalcohol-'+memberId),
+    dMotivation:g('cs-dmotiv-'+memberId)
+  };
+  const params=new URLSearchParams({
+    action:'saveCounseling',
+    memberId:memberId,
+    data:JSON.stringify(data),
+    t:Date.now()
+  });
+  showToast('保存中...','success');
+  fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors',cache:'no-store'})
+    .then(r=>r.json())
+    .then(result=>{
+      if(result&&result.ok){
+        showToast('✓ カウンセリングを保存しました','success');
+        if(!gasCache)gasCache={};
+        if(!gasCache.counseling)gasCache.counseling={};
+        gasCache.counseling[memberId]={
+          '目的':data.purpose,'目標':data.goal,'達成期限':data.deadline,
+          '過去のジム経験':data.gymExp,'運動習慣':data.exerciseHabit,'過去の運動経験':data.exerciseExp,
+          'ケガ手術歴':data.injuryHistory,'通院服薬':data.medication,
+          '痛みのある箇所':data.painArea,'気になる箇所':data.concernArea,
+          '睡眠時間':data.sleepHours,'就寝時刻':data.bedtime,
+          '仕事形態':data.workStyle,'ストレスレベル':data.stressLevel,
+          '伝えたいこと':data.message,'NGなこと':data.ngItems,
+          'ダイエット_身長':data.dHeight,'ダイエット_目標減量':data.dGoalWeight,
+          'ダイエット_食事回数':data.dMealCount,'ダイエット_朝食頻度':data.dBreakfast,
+          'ダイエット_外食頻度':data.dEatOut,'ダイエット_お酒頻度':data.dAlcohol,
+          'ダイエット_モチベーション':data.dMotivation
+        };
+        setTimeout(()=>rMem(),300);
+      }else{
+        showToast('保存失敗：'+(result.error||'GAS側エラー'),'error');
+      }
+    })
+    .catch(err=>{
+      showToast('通信エラー：'+err.message,'error');
+    });
 }
 
 function pSel(){
@@ -1783,18 +1894,56 @@ function pSel(){
   });
 }
 
+// ===== トレーニング記録 案B：2段レイアウト + 種目プルダウン =====
+let setRowCounter=0;
 function addS(memberId){
   const c=document.getElementById('sw-'+memberId);
   if(!c)return;
-  const r=document.createElement('div');r.className='set-row';
+  setRowCounter++;
+  const rowId='sel-'+memberId+'-'+setRowCounter;
+  const r=document.createElement('div');
+  r.className='set-card';
   r.innerHTML=`
-    <input placeholder="種目名" style="font-size:12px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font-family:inherit;font-weight:500">
-    <input type="number" step="0.5" placeholder="40" inputmode="decimal" class="wt-input">
-    <input type="number" placeholder="10" inputmode="numeric" style="font-size:12px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font-family:inherit;font-weight:500;text-align:center">
-    <input type="number" placeholder="3" min="1" inputmode="numeric" style="font-size:12px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font-family:inherit;font-weight:500;text-align:center">
-    <button class="del-btn" onclick="event.stopPropagation();this.parentElement.remove()">×</button>
+    <button class="set-card-del" onclick="event.stopPropagation();this.parentElement.remove()">×</button>
+    <div class="set-card-row1">
+      <select id="${rowId}" class="set-card-exercise" onchange="onExerciseChange(this,'${memberId}')"></select>
+    </div>
+    <div class="set-card-row2">
+      <div class="set-input-box">
+        <div class="set-input-label kg">重量</div>
+        <input type="number" step="0.5" placeholder="40" inputmode="decimal" class="set-input-field kg" data-field="weight">
+        <div class="set-input-unit kg">kg</div>
+      </div>
+      <div class="set-input-box">
+        <div class="set-input-label">回数</div>
+        <input type="number" placeholder="10" inputmode="numeric" class="set-input-field" data-field="reps">
+        <div class="set-input-unit">回</div>
+      </div>
+      <div class="set-input-box">
+        <div class="set-input-label">セット</div>
+        <input type="number" placeholder="3" min="1" inputmode="numeric" class="set-input-field" data-field="sets">
+        <div class="set-input-unit">set</div>
+      </div>
+    </div>
   `;
   c.appendChild(r);
+  // セレクトを初期化
+  const sel=document.getElementById(rowId);
+  refreshExerciseSelect(sel,'');
+}
+
+function onExerciseChange(sel,memberId){
+  if(sel.value==='__add__'){
+    const name=prompt('新しい種目名を入力してください\n（例：インクラインベンチプレス）');
+    if(name&&name.trim()){
+      const trimmed=name.trim();
+      addExerciseToList(trimmed);
+      refreshExerciseSelect(sel,trimmed);
+      showToast('✓ 「'+trimmed+'」を種目リストに追加しました','success');
+    }else{
+      sel.value='';
+    }
+  }
 }
 
 function saveTr(memberId){
@@ -1804,16 +1953,27 @@ function saveTr(memberId){
   const dt=dateEl.value;
   if(!memberId||!dt){alert('日付を選んでください');return;}
   const setsArr=[];
-  swEl.querySelectorAll('.set-row').forEach(r=>{
-    const ins=r.querySelectorAll('input');
-    const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;
-    if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});
+  swEl.querySelectorAll('.set-card').forEach(card=>{
+    const sel=card.querySelector('.set-card-exercise');
+    const w=card.querySelector('[data-field="weight"]');
+    const rep=card.querySelector('[data-field="reps"]');
+    const st=card.querySelector('[data-field="sets"]');
+    const e=sel?sel.value.trim():'';
+    if(e==='__add__'||e==='')return;
+    const wv=parseFloat(w.value);
+    const rv=parseInt(rep.value);
+    const sv=parseInt(st.value)||1;
+    if(e&&wv&&rv){
+      setsArr.push({exercise:e,weight:wv,reps:rv,sets:sv});
+      addExerciseToList(e);
+    }
   });
   if(!setsArr.length){alert('種目を入力してください');return;}
   const params=new URLSearchParams({action:'saveTraining',memberId:memberId,date:dt,sets:JSON.stringify(setsArr)});
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
   .then(()=>{
     showToast('✓ 保存しました','success');
+    gasCache=null;
     setTimeout(()=>loadGasMembers(true), 500);
   })
   .catch(()=>showToast('保存に失敗しました','error'));
@@ -1825,6 +1985,7 @@ function deleteRec(memberId,date){
   fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
   .then(()=>{
     showToast('✓ 削除しました','success');
+    gasCache=null;
     setTimeout(()=>loadGasMembers(true), 500);
   })
   .catch(()=>showToast('削除に失敗しました','error'));
@@ -1901,13 +2062,13 @@ function saveEditRec(btn){
     const wt=parseFloat(inputs[1].value)||0;
     const rp=parseInt(inputs[2].value)||0;
     const st=parseInt(inputs[3].value)||1;
-    if(ex) setsArr.push({exercise:ex,weight:wt,reps:rp,sets:st});
+    if(ex){setsArr.push({exercise:ex,weight:wt,reps:rp,sets:st});addExerciseToList(ex);}
   });
   if(!setsArr.length){alert('種目を入力してください');return;}
   if(oldMid===newMid){
     const params=new URLSearchParams({action:'updateTraining',memberId:newMid,oldDate:oldDate,date:newDate,sets:JSON.stringify(setsArr)});
     fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'})
-    .then(()=>{modal.remove();showToast('✓ 修正しました','success');setTimeout(()=>loadGasMembers(true), 500);})
+    .then(()=>{modal.remove();showToast('✓ 修正しました','success');gasCache=null;setTimeout(()=>loadGasMembers(true), 500);})
     .catch(()=>showToast('修正に失敗しました','error'));
   }else{
     const delParams=new URLSearchParams({action:'deleteTraining',memberId:oldMid,date:oldDate});
@@ -1916,7 +2077,7 @@ function saveEditRec(btn){
       const addParams=new URLSearchParams({action:'saveTraining',memberId:newMid,date:newDate,sets:JSON.stringify(setsArr)});
       return fetch(GAS_URL+'?'+addParams.toString(),{method:'GET',mode:'cors'});
     })
-    .then(()=>{modal.remove();showToast('✓ 修正しました','success');setTimeout(()=>loadGasMembers(true), 500);})
+    .then(()=>{modal.remove();showToast('✓ 修正しました','success');gasCache=null;setTimeout(()=>loadGasMembers(true), 500);})
     .catch(()=>showToast('修正に失敗しました','error'));
   }
 }
@@ -1935,6 +2096,7 @@ function copyRecToday(memberId, date){
   fetch(GAS_URL + '?' + params.toString(), { method:'GET', mode:'cors' })
     .then(() => {
       showToast('✓ ' + formatJpDate(today) + 'に複製しました','success');
+      gasCache=null;
       setTimeout(() => loadGasMembers(true), 500);
     })
     .catch(() => showToast('複製に失敗しました','error'));
@@ -1988,33 +2150,22 @@ function rCal(){
 function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
 function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
 
-function calcPRs(mts){const pr={};mts.forEach(t=>t.sets.forEach(s=>{if(!pr[s.exercise]||s.weight>pr[s.exercise].weight)pr[s.exercise]={weight:s.weight,date:t.date};}));return pr;}
-function calcVolumes(mts){return mts.map(t=>({date:t.date,vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));}
-function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const k=mon.toISOString().slice(0,10);wk[k]=(wk[k]||0)+1;});return Object.entries(wk).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8);}
-
-// ===== 来店分析（経営ダッシュボード） =====
 function renderCalendarAnalysis(){
-  // 今月のデータを対象
   const now=new Date();
   const curY=now.getFullYear(),curM=now.getMonth();
   const monthPrefix=`${curY}-${String(curM+1).padStart(2,'0')}-`;
   const monthVisits=T.filter(t=>t.date&&t.date.startsWith(monthPrefix));
-
-  // 延べセッション数（日付ごとの会員ユニーク数ではなく、レコード数）
   const totalVisits=monthVisits.length;
   document.getElementById('kpi-total-visits').innerHTML=totalVisits+'<span class="metric-unit">件</span>';
 
-  // 曜日別カウント
   const weekdayNames=['日','月','火','水','木','金','土'];
   const weekdayCount=[0,0,0,0,0,0,0];
-  // 全期間の統計（傾向分析なので過去分も含める）
   T.forEach(t=>{
     if(!t.date)return;
     const d=new Date(t.date);
     if(!isNaN(d))weekdayCount[d.getDay()]++;
   });
 
-  // 人気曜日
   const maxWd=Math.max(...weekdayCount);
   const popularWdIdx=weekdayCount.indexOf(maxWd);
   if(maxWd>0){
@@ -2022,7 +2173,6 @@ function renderCalendarAnalysis(){
     document.getElementById('kpi-popular-day-sub').textContent=maxWd+'件の来店';
   }
 
-  // 時間帯別カウント（データに時刻が入っていれば）
   const hourCount={};
   let hasHourData=false;
   T.forEach(t=>{
@@ -2044,21 +2194,18 @@ function renderCalendarAnalysis(){
     document.getElementById('kpi-popular-hour-sub').textContent='時刻データが記録されていません';
   }
 
-  // 稼働率計算（営業時間：月〜金 16-22時=6h、土 16-20時=4h、日祝 0h）
   const daysInMonth=new Date(curY,curM+1,0).getDate();
   let totalBusinessHours=0;
   for(let d=1;d<=daysInMonth;d++){
     const dt=new Date(curY,curM,d);
     const dw=dt.getDay();
-    if(dw===0)continue; // 日曜休み
-    else if(dw===6)totalBusinessHours+=4; // 土曜
-    else totalBusinessHours+=6; // 平日
+    if(dw===0)continue;
+    else if(dw===6)totalBusinessHours+=4;
+    else totalBusinessHours+=6;
   }
-  // 1セッション=1時間として計算
   const utilPct=totalBusinessHours>0?Math.round(totalVisits/totalBusinessHours*100):0;
   document.getElementById('kpi-utilization').innerHTML=utilPct+'<span class="metric-unit">%</span>';
 
-  // 曜日ヒートマップ
   const wdHeat=document.getElementById('heatmap-weekday');
   let wdHtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">';
   const maxWdForScale=Math.max(...weekdayCount,1);
@@ -2077,7 +2224,6 @@ function renderCalendarAnalysis(){
   wdHtml+='</div>';
   wdHeat.innerHTML=wdHtml;
 
-  // 時間帯ヒートマップ
   const hourHeat=document.getElementById('heatmap-hour');
   if(hasHourData&&Object.keys(hourCount).length>0){
     const hours=[];
@@ -2101,7 +2247,6 @@ function renderCalendarAnalysis(){
     hourHeat.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">時刻データが記録されていないため表示できません</p>';
   }
 
-  // 曜日×時間帯マトリックス
   const matrixEl=document.getElementById('matrix-grid');
   if(hasHourData){
     const matrix={};
@@ -2121,7 +2266,7 @@ function renderCalendarAnalysis(){
     let mHtml='<table style="border-collapse:separate;border-spacing:3px;width:100%;min-width:600px"><tr><th style="font-size:9px;color:var(--ink3);padding:4px">曜日＼時間</th>';
     hoursM.forEach(h=>{mHtml+=`<th style="font-size:9px;color:var(--ink3);padding:4px;font-weight:700">${h}</th>`;});
     mHtml+='</tr>';
-    for(let wd=1;wd<=6;wd++){ // 日曜除く
+    for(let wd=1;wd<=6;wd++){
       mHtml+=`<tr><td style="font-size:10px;color:var(--ink2);padding:4px;font-weight:700">${weekdayNames[wd]}</td>`;
       hoursM.forEach(h=>{
         const c=matrix[wd+'_'+h]||0;
@@ -2137,12 +2282,11 @@ function renderCalendarAnalysis(){
     matrixEl.innerHTML='<p style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">時刻データが記録されていないため表示できません</p>';
   }
 
-  // 空き枠TOP3
   const emptyEl=document.getElementById('empty-slots');
   if(hasHourData){
     const matrix2={};
     for(let wd=1;wd<=6;wd++){
-      for(let h=(wd===6?16:16);h<=(wd===6?19:21);h++){ // 営業時間内
+      for(let h=(wd===6?16:16);h<=(wd===6?19:21);h++){
         matrix2[wd+'_'+h]=0;
       }
     }
@@ -2156,7 +2300,6 @@ function renderCalendarAnalysis(){
       const key=wd+'_'+h;
       if(matrix2[key]!==undefined)matrix2[key]++;
     });
-    // 少ない順にソート
     const sorted=Object.entries(matrix2).sort((a,b)=>a[1]-b[1]).slice(0,3);
     let eHtml='';
     sorted.forEach(([key,c],i)=>{
@@ -2179,13 +2322,10 @@ function renderCalendarAnalysis(){
   }
 }
 
-// 初期化
 rCal();
 loadGasMembers();
 loadPayroll();
-loadSessionCounts();
 
-// バージョンチェック
 (async function checkVersion(){
   const GAS_URL_VER=GAS_URL;
   const VERSION_KEY='onetreTrainerVer_v5';
