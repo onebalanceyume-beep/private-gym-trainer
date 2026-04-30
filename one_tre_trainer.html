@@ -911,7 +911,7 @@ async function loadGasMembers(forceRefresh){
     const genderRaw=String(row.gender||'').trim();
     const gender=genderRaw==='男性'?'m':'f';
     if(name&&id&&!gasMembers.find(m=>m.id===id)){
-      gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true,raw:row});
+      gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true,raw:(row.raw||row)});
     }
   });
   T=[];
