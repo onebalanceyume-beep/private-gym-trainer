@@ -843,9 +843,12 @@ function getExerciseList(){
   const fromHistory=Object.keys(freq).sort((a,b)=>freq[b]-freq[a]);
   // localStorageに保存した手動追加分
   const manual=JSON.parse(localStorage.getItem('onetreExerciseList')||'[]');
+  // 削除リスト（プルダウンから非表示にする種目）
+  const deleted=JSON.parse(localStorage.getItem('onetreExerciseDeleted')||'[]');
   // 統合してユニーク化（履歴優先で）
   const combined=[...new Set([...fromHistory,...manual])];
-  return combined;
+  // 削除リストにあるものを除外
+  return combined.filter(ex=>!deleted.includes(ex));
 }
 
 function addExerciseToList(name){
@@ -888,6 +891,11 @@ function refreshExerciseSelect(sel,selectedValue){
   addOpt.value='__add__';
   addOpt.textContent='＋ 新しい種目を追加';
   sel.appendChild(addOpt);
+  // 「🗑 種目リスト編集」項目
+  const editOpt=document.createElement('option');
+  editOpt.value='__edit__';
+  editOpt.textContent='🗑 種目リストを編集（削除）';
+  sel.appendChild(editOpt);
 }
 
 async function fetchGasData(forceRefresh){
@@ -1937,13 +1945,78 @@ function onExerciseChange(sel,memberId){
     const name=prompt('新しい種目名を入力してください\n（例：インクラインベンチプレス）');
     if(name&&name.trim()){
       const trimmed=name.trim();
+      // 削除リストにあったら復活
+      const deleted=JSON.parse(localStorage.getItem('onetreExerciseDeleted')||'[]');
+      const newDeleted=deleted.filter(e=>e!==trimmed);
+      localStorage.setItem('onetreExerciseDeleted',JSON.stringify(newDeleted));
       addExerciseToList(trimmed);
       refreshExerciseSelect(sel,trimmed);
       showToast('✓ 「'+trimmed+'」を種目リストに追加しました','success');
     }else{
       sel.value='';
     }
+  }else if(sel.value==='__edit__'){
+    sel.value='';
+    showExerciseEditor(sel);
   }
+}
+ 
+function showExerciseEditor(callerSel){
+  const list=getExerciseList();
+  if(list.length===0){
+    showToast('種目リストが空です','error');
+    return;
+  }
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px';
+  const box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:20px;padding:20px;width:100%;max-width:480px;margin:auto;font-family:inherit';
+  let itemsHtml='';
+  list.forEach(ex=>{
+    itemsHtml+=`<div class="ex-edit-row" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg);border-radius:10px;margin-bottom:6px">
+      <span style="flex:1;font-size:13px;color:var(--ink);font-weight:500">${ex}</span>
+      <button onclick="deleteExerciseFromList('${ex.replace(/'/g,"\\'")}',this)" style="background:#fff;border:1.5px solid var(--pink);color:var(--pink2);width:30px;height:30px;border-radius:8px;font-size:16px;cursor:pointer;font-family:inherit;font-weight:700">×</button>
+    </div>`;
+  });
+  box.innerHTML=`
+    <div style="font-size:14px;font-weight:800;margin-bottom:8px;color:var(--ink)">🗑 種目リストを編集</div>
+    <div style="font-size:11px;color:var(--ink3);margin-bottom:14px;line-height:1.6;font-weight:500">
+      ×ボタンでプルダウンから削除します。<br>
+      過去のトレーニング記録は残ります。
+    </div>
+    <div id="ex-edit-list" style="max-height:400px;overflow-y:auto;margin-bottom:14px">${itemsHtml}</div>
+    <button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--pink2),var(--lavender));color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">閉じる</button>
+  `;
+  modal.appendChild(box);
+  document.body.appendChild(modal);
+}
+ 
+function deleteExerciseFromList(name,btn){
+  if(!confirm('「'+name+'」をプルダウンから削除しますか？\n\n（過去のトレーニング記録は残ります）'))return;
+  const deleted=JSON.parse(localStorage.getItem('onetreExerciseDeleted')||'[]');
+  if(!deleted.includes(name)){
+    deleted.push(name);
+    localStorage.setItem('onetreExerciseDeleted',JSON.stringify(deleted));
+  }
+  // 手動追加リストからも削除
+  const manual=JSON.parse(localStorage.getItem('onetreExerciseList')||'[]');
+  const newManual=manual.filter(e=>e!==name);
+  localStorage.setItem('onetreExerciseList',JSON.stringify(newManual));
+  // 行をフェードアウト
+  const row=btn.closest('.ex-edit-row');
+  row.style.transition='opacity .2s';
+  row.style.opacity='0';
+  setTimeout(()=>row.remove(),200);
+  showToast('✓ 「'+name+'」を削除しました','success');
+  // 開いてる全てのプルダウンを更新
+  refreshAllExerciseSelects();
+}
+ 
+function refreshAllExerciseSelects(){
+  document.querySelectorAll('.set-card-exercise').forEach(sel=>{
+    const currentValue=sel.value;
+    refreshExerciseSelect(sel,currentValue);
+  });
 }
 
 function saveTr(memberId){
