@@ -250,7 +250,7 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
       <div class="card">
         <div class="card-title">希望日時</div>
         <div class="fg">
-          <label>希望日</label>
+          <label>希望日 ※日曜・祝日は定休日のため選択できません</label>
           <input type="date" id="date" onchange="loadSlots()">
         </div>
         <div class="choice-label">希望時間帯</div>
@@ -336,6 +336,14 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
 </div>
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+
+// 祝日データ取得（APIキー不要・自動更新）
+let holidays={};
+fetch('https://holidays-jp.github.io/api/v1/date.json')
+  .then(r=>r.json())
+  .then(d=>{holidays=d;})
+  .catch(()=>{});
+
 let selectedMode='';
 const selected={age:'',undou:''};
 const checked={kikkake:[]};
@@ -389,13 +397,31 @@ async function loadSlots(){
   if(!date)return;
   const sel=new Date(date+'T00:00:00');
   const tod=new Date();tod.setHours(0,0,0,0);
-  if(sel<=tod)return;
   const grid=document.getElementById('time-grid');
   const loading=document.getElementById('loading');
   const errMsg=document.getElementById('error-msg');
   grid.innerHTML='';
   selectedStart=null;selectedEnd=null;
   document.getElementById('selected-info').style.display='none';
+
+  if(sel<=tod)return;
+
+  // 日曜日チェック（定休日）
+  if(sel.getDay()===0){
+    errMsg.textContent='日曜日は定休日のため予約できません。別の日をお選びください。';
+    errMsg.style.display='block';
+    document.getElementById('date').value='';
+    return;
+  }
+
+  // 祝日チェック（定休日）
+  if(holidays[date]){
+    errMsg.textContent='祝日（'+holidays[date]+'）は定休日のため予約できません。別の日をお選びください。';
+    errMsg.style.display='block';
+    document.getElementById('date').value='';
+    return;
+  }
+
   loading.style.display='block';
   errMsg.style.display='none';
   try{
