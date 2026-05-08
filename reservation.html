@@ -38,9 +38,12 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
 .trainer-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
 .trainer-note{font-size:10px;color:#aaa;margin-top:8px}
 .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.time-btn{padding:10px 6px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.time-btn{padding:10px 6px;border:1.5px solid var(--accent);border-radius:10px;background:#fff;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s;position:relative}
 .time-btn:hover{background:#faf9f5}
 .time-btn.selected{background:var(--btn-gradient);color:#fff;border-color:transparent}
+.time-btn.full{background:#f0ede8;color:#bbb;border-color:#ddd;cursor:not-allowed;font-weight:400}
+.time-btn.full:hover{background:#f0ede8}
+.time-btn.full::after{content:'満員';position:absolute;top:2px;right:4px;font-size:8px;color:#c94a4a;font-weight:700;letter-spacing:0.05em;font-family:'M PLUS Rounded 1c',sans-serif}
 .selected-info{display:none;background:#fff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--accent2);text-align:center;font-weight:500;border:1px solid var(--card-border)}
 .btn{width:100%;padding:14px;background:var(--btn-gradient);border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.05em;margin-top:4px}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
@@ -153,24 +156,42 @@ async function loadSlots(){
     loading.style.display='none';
     if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';return;}
     if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';return;}
+    
+    // 全枠を表示（満員枠も含めて）
     data.slots.forEach(slot=>{
       const btn=document.createElement('button');
       btn.className='time-btn';
       btn.type='button';
       btn.textContent=slot.label;
-      btn.onclick=()=>{
-        document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedStart=slot.start;selectedEnd=slot.end;
-        const endDate=new Date(slot.end);
-        const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
-        const info=document.getElementById('selected-info');
-        info.style.display='block';
-        info.textContent='予約時間：'+slot.label+' 〜 '+endLabel+'（50分）';
-        document.getElementById('submit-btn').disabled=false;
-      };
+      
+      if(slot.status==='full'){
+        // 満員枠：グレーアウト＋クリック不可
+        btn.classList.add('full');
+        btn.disabled=true;
+        btn.title='この時間帯は満員です';
+      }else{
+        // 予約可能枠
+        btn.onclick=()=>{
+          document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedStart=slot.start;selectedEnd=slot.end;
+          const endDate=new Date(slot.end);
+          const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
+          const info=document.getElementById('selected-info');
+          info.style.display='block';
+          info.textContent='予約時間：'+slot.label+' 〜 '+endLabel+'（50分）';
+          document.getElementById('submit-btn').disabled=false;
+        };
+      }
       grid.appendChild(btn);
     });
+    
+    // 全部満員ならメッセージ表示
+    const availableCount=data.slots.filter(s=>s.status!=='full').length;
+    if(availableCount===0){
+      errMsg.textContent='この日は満員です。別の日をお選びください。';
+      errMsg.style.display='block';
+    }
   }catch(err){
     loading.style.display='none';
     errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
