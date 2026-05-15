@@ -430,23 +430,30 @@ async function loadSlots(){
     loading.style.display='none';
     if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';return;}
     if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';return;}
-    data.slots.forEach(slot=>{
-      const btn=document.createElement('button');
-      btn.className='time-btn';
-      btn.type='button';
-      btn.textContent=slot.label;
-      btn.onclick=()=>{
-        document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedStart=slot.start;selectedEnd=slot.end;
-        const endDate=new Date(slot.end);
-        const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
-        const info=document.getElementById('selected-info');
-        info.style.display='block';
-        info.textContent='予約時間：'+slot.label+' 〜 '+endLabel;
-      };
-      grid.appendChild(btn);
-    });
+data.slots.forEach(slot=>{
+  const btn=document.createElement('button');
+  btn.className='time-btn';
+  btn.type='button';
+
+  if(slot.full){
+    btn.textContent=slot.label+'\n満';
+    btn.style.cssText='background:#ddd;color:#aaa;border-color:#ccc;cursor:not-allowed;font-size:11px;white-space:pre-line;opacity:0.7;';
+    btn.disabled=true;
+  }else{
+    btn.textContent=slot.label;
+    btn.onclick=()=>{
+      document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedStart=slot.start;selectedEnd=slot.end;
+      const endDate=new Date(slot.end);
+      const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
+      const info=document.getElementById('selected-info');
+      info.style.display='block';
+      info.textContent='予約時間：'+slot.label+' 〜 '+endLabel;
+    };
+  }
+  grid.appendChild(btn);
+});
   }catch(err){
     loading.style.display='none';
     errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
