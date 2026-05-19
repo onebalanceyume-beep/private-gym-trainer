@@ -1090,17 +1090,24 @@ async function renderSales(){
   });
 }
 
-async function rSales(){
+ async function rSales(){
   document.getElementById('sales-loading').style.display='block';
   document.getElementById('sales-content').style.display='none';
   document.getElementById('sales-error').style.display='none';
-  // ★ 常にフレッシュ取得
   const rawData=await fetchGasData();
   if(!rawData){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
   const data=Array.isArray(rawData)?(rawData):(rawData.all||[]);
   if(!data||!data.length){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
   salesCache=data;
   salesViewYear=new Date().getFullYear();
+
+  // 体験データ取得
+  try{
+    const now=new Date();
+    const res=await fetch(GAS_URL+'?action=getTaikenStats&year='+now.getFullYear()+'&month='+(now.getMonth()+1)+'&t='+Date.now(),{method:'GET',mode:'cors',cache:'no-store'});
+    taikenStatsCache=await res.json();
+  }catch(e){taikenStatsCache=null;}
+
   document.getElementById('sales-loading').style.display='none';
   document.getElementById('sales-content').style.display='block';
   renderSales();
