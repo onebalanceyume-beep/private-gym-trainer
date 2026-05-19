@@ -467,7 +467,28 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
         </div>
       </div>
 
-      <!-- ★追加: 年間営業指標 -->
+      <!-- 体験KPI -->
+<div class="section-ttl" style="margin-top:18px">🏃 体験 まとめ</div>
+<div class="sales-kpi">
+  <div class="metric metric-blue">
+    <div class="metric-ico">👤</div>
+    <div class="metric-label">今月の体験人数</div>
+    <div class="metric-value" id="taiken-month-count">0<span class="metric-unit">名</span></div>
+    <div class="metric-sub" id="taiken-month-sales">¥0</div>
+  </div>
+  <div class="metric metric-green">
+    <div class="metric-ico">📅</div>
+    <div class="metric-label">年間体験人数</div>
+    <div class="metric-value" id="taiken-year-count">0<span class="metric-unit">名</span></div>
+    <div class="metric-sub" id="taiken-year-sales">¥0</div>
+  </div>
+  <div class="metric metric-orange">
+    <div class="metric-ico">🎯</div>
+    <div class="metric-label">体験→契約転換率</div>
+    <div class="metric-value metric-value-lg" id="taiken-conversion">-%</div>
+    <div class="metric-sub" id="taiken-conversion-sub">-名中-名契約</div>
+  </div>
+</div><!-- ★追加: 年間営業指標 -->
       <div class="section-ttl" style="margin-top:18px">📅 年間営業指標</div>
       <div class="sales-kpi">
         <div class="metric metric-pink">
@@ -931,6 +952,7 @@ async function loadAllCounseling(){
 }
 
 let salesCache=null;
+  let taikenStatsCache=null;
 let salesViewYear=new Date().getFullYear();
 let yearlyPayrollCache=null; // ★ 年間人件費キャッシュ
 
@@ -995,6 +1017,16 @@ async function renderSales(){
   }
 
   document.getElementById('s-month').textContent=isCurrentYear?fmtYen(mT):'-';
+  // 体験データ表示
+  if(taikenStatsCache&&taikenStatsCache.ok){
+    const ts=taikenStatsCache;
+    document.getElementById('taiken-month-count').innerHTML=ts.monthCount+'<span class="metric-unit">名</span>';
+    document.getElementById('taiken-month-sales').textContent='体験売上 '+fmtYen(ts.monthSales);
+    document.getElementById('taiken-year-count').innerHTML=ts.yearCount+'<span class="metric-unit">名</span>';
+    document.getElementById('taiken-year-sales').textContent='体験売上 '+fmtYen(ts.yearSales);
+    document.getElementById('taiken-conversion').textContent=ts.conversionRate+'%';
+    document.getElementById('taiken-conversion-sub').textContent=ts.totalTaiken+'名中'+ts.converted+'名契約';
+  }
   document.getElementById('s-month-count').textContent=isCurrentYear?mC+'件':'-';
   document.getElementById('s-year').textContent=fmtYen(cur.yT);
   document.getElementById('s-year-count').textContent=cur.yC+'件';
