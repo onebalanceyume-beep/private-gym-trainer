@@ -331,7 +331,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <button class="nbtn" onclick="sp('sales',this)"><span>💰</span>売上</button>
     <button class="nbtn" onclick="sp('taiken',this)"><span>🎯</span>予約一覧</button>
     <button class="nbtn" onclick="sp('members',this)"><span>👥</span>会員</button>
-    <button class="nbtn" onclick="sp('calendar',this)"><span>🗓️</span>来店分析</button>
+    <button class="nbtn" onclick="sp('calendar',this)"><span>🗓️</span>来店分析</button><button class="nbtn" onclick="sp('forecast',this)"><span>📅</span>見込み</button>
   </div>
 
   <div id="page-dashboard" class="page active">
@@ -649,7 +649,23 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 </div>
+<div id="page-forecast" class="page">
+  <div class="section-ttl">📅 更新見込み・売上予測</div>
+  <div id="forecast-loading" style="font-size:12px;color:var(--ink3);padding:10px">データ読み込み中...</div>
+  <div id="forecast-content" style="display:none">
 
+    <!-- KPIサマリー -->
+    <div class="metrics" id="forecast-kpi"></div>
+
+    <!-- 月別見込みカレンダー -->
+    <div class="section-ttl" style="margin-top:8px">月別 更新見込み</div>
+    <div id="forecast-monthly" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:20px"></div>
+
+    <!-- 会員別一覧 -->
+    <div class="section-ttl">会員別 更新スケジュール</div>
+    <div id="forecast-list"></div>
+  </div>
+</div>
 <script>
 // =============================================
 // ★ キャッシュバスター: Safari PWA対応
@@ -1204,6 +1220,7 @@ function sp(name,btn){
   if(name==='taiken'){loadTaikenList();loadCalendarReservations();}
   if(name==='members')rMem();
   if(name==='calendar'){pSel();rCal();renderCalendarAnalysis();}
+  if(name==='forecast'){renderForecast();}
 }
 
 let payrollCache=null;
@@ -1994,6 +2011,165 @@ function rCal(){
   }else{
     summaryEl.innerHTML=`<strong style="color:var(--ink);font-weight:800">${cY}年${cM2+1}月</strong> のパーソナルトレーニング実施状況<br>実施日数：${totalDays}日 / 延べセッション数：${totalSessions}回`;
   }
+}
+  // ============================================================
+// 見込みページ
+// ============================================================
+function renderForecast() {
+  document.getElementById('forecast-loading').style.display = 'block';
+  document.getElementById('forecast-content').style.display = 'none';
+
+  const COURSE_PRICES = { 8: 49800, 16: 94800, 32: 178000 };
+  const CONTINUE_DISC = 0.10;
+  const WEEKS_PER_SESSION = 1;
+
+  const members = getAllMembers();
+  if (!members.length || !sessionCountsData) {
+    document.getElementById('forecast-loading').textContent = 'データがありません。会員タブを先に開いてください。';
+    return;
+  }
+
+  const today = new Date();
+  const results = [];
+
+  members.forEach(m => {
+    const info = getSessionInfo(m.id);
+    if (!info || !info.contractCount) return;
+
+    const contractCount = info.contractCount;
+    const usedCount = info.usedCount || 0;
+    const remaining = Math.max(0, contractCount - usedCount);
+    const isRenewalNow = remaining === 0;
+
+    // 残り回数÷週1 = 更新まで何週
+    const weeksUntilRenewal = isRenewalNow ? 0 : remaining * WEEKS_PER_SESSION;
+    const renewalDate = new Date(today);
+    renewalDate.setDate(renewalDate.getDate() + weeksUntilRenewal * 7);
+
+    const renewalYear = renewalDate.getFullYear();
+    const renewalMonth = renewalDate.getMonth() + 1;
+
+    // 更新金額（継続10%OFF）
+    const basePrice = COURSE_PRICES[contractCount] || 0;
+    const renewPrice = Math.round(basePrice * (1 - CONTINUE_DISC));
+
+    results.push({
+      id: m.id,
+      name: m.name,
+      gender: m.gender,
+      contractCount,
+      usedCount,
+      remaining,
+      isRenewalNow,
+      weeksUntilRenewal,
+      renewalDate,
+      renewalYear,
+      renewalMonth,
+      basePrice,
+      renewPrice,
+    });
+  });
+
+  // 月別集計（今月〜12ヶ月先）
+  const monthlyMap = {};
+  for (let i = 0; i <= 12; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth() + i, 1);
+    const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    monthlyMap[key] = { year: d.getFullYear(), month: d.getMonth() + 1, count: 0, total: 0, members: [] };
+  }
+
+  results.forEach(r => {
+    const key = r.renewalYear + '-' + String(r.renewalMonth).padStart(2, '0');
+    if (monthlyMap[key]) {
+      monthlyMap[key].count++;
+      monthlyMap[key].total += r.renewPrice;
+      monthlyMap[key].members.push(r.name);
+    }
+  });
+
+  // KPIカード
+  const totalForecast12 = Object.values(monthlyMap).reduce((a, m) => a + m.total, 0);
+  const renewalNowCount = results.filter(r => r.isRenewalNow).length;
+  const within1month = results.filter(r => r.weeksUntilRenewal <= 4).length;
+  const avgMonthly = Math.round(totalForecast12 / 12);
+
+  document.getElementById('forecast-kpi').innerHTML = `
+    <div class="metric metric-pink">
+      <div class="metric-ico">🔔</div>
+      <div class="metric-label">今すぐ更新</div>
+      <div class="metric-value">${renewalNowCount}<span class="metric-unit">名</span></div>
+      <div class="metric-sub">残り0回の会員</div>
+    </div>
+    <div class="metric metric-orange">
+      <div class="metric-ico">⏰</div>
+      <div class="metric-label">1ヶ月以内に更新</div>
+      <div class="metric-value">${within1month}<span class="metric-unit">名</span></div>
+      <div class="metric-sub">要フォロー対象</div>
+    </div>
+    <div class="metric metric-blue">
+      <div class="metric-ico">📊</div>
+      <div class="metric-label">12ヶ月見込み売上</div>
+      <div class="metric-value metric-value-lg">¥${totalForecast12.toLocaleString()}</div>
+      <div class="metric-sub">継続10%OFF適用</div>
+    </div>
+    <div class="metric metric-green">
+      <div class="metric-ico">📈</div>
+      <div class="metric-label">月平均見込み</div>
+      <div class="metric-value metric-value-lg">¥${avgMonthly.toLocaleString()}</div>
+      <div class="metric-sub">12ヶ月平均</div>
+    </div>
+  `;
+
+  // 月別カード
+  const monthlyEl = document.getElementById('forecast-monthly');
+  monthlyEl.innerHTML = Object.values(monthlyMap).map(mo => {
+    const isThisMonth = mo.year === today.getFullYear() && mo.month === today.getMonth() + 1;
+    const bg = isThisMonth ? 'linear-gradient(135deg,var(--pink-bg2),var(--pink-bg))' : 'var(--bg)';
+    const border = isThisMonth ? '2px solid var(--pink)' : '1.5px solid var(--line)';
+    return `
+      <div style="background:${bg};border:${border};border-radius:14px;padding:14px;position:relative">
+        ${isThisMonth ? '<div style="position:absolute;top:8px;right:10px;font-size:9px;background:var(--pink2);color:#fff;padding:2px 8px;border-radius:8px;font-weight:800">今月</div>' : ''}
+        <div style="font-size:11px;color:var(--ink3);font-weight:700;margin-bottom:6px">${mo.year}年${mo.month}月</div>
+        <div style="font-size:22px;font-weight:800;color:var(--ink)">${mo.count}<span style="font-size:12px;color:var(--ink3);margin-left:4px">名</span></div>
+        <div style="font-size:13px;color:var(--pink2);font-weight:800;margin-top:4px">¥${mo.total.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--ink3);margin-top:4px;font-weight:500">${mo.members.join('、') || 'なし'}</div>
+      </div>
+    `;
+  }).join('');
+
+  // 会員別リスト
+  const sorted = [...results].sort((a, b) => a.weeksUntilRenewal - b.weeksUntilRenewal);
+  const listEl = document.getElementById('forecast-list');
+  listEl.innerHTML = sorted.map(r => {
+    const urgency = r.isRenewalNow ? 'danger' : r.weeksUntilRenewal <= 4 ? 'warn' : 'ok';
+    const urgencyColors = { danger: 'var(--pink2)', warn: 'var(--orange2)', ok: 'var(--green2)' };
+    const urgencyBg = { danger: 'var(--pink-bg)', warn: 'var(--orange-bg)', ok: 'var(--green-bg)' };
+    const urgencyLabel = r.isRenewalNow ? '今すぐ！' : r.weeksUntilRenewal <= 4 ? `${r.weeksUntilRenewal}週後` : `${r.weeksUntilRenewal}週後`;
+    const renewDateStr = r.renewalYear + '年' + r.renewalMonth + '月';
+    const avClass = r.gender === 'm' ? 'avatar-m' : 'avatar-f';
+
+    return `
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border-radius:14px;margin-bottom:8px;border:1.5px solid var(--line)">
+        <div class="member-avatar ${avClass}" style="width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0">${r.name.charAt(0)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">${r.name} さん</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--lavender-bg);color:#7a5aa8;font-weight:700">${r.contractCount}回コース</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--blue-bg);color:var(--blue2);font-weight:700">残${r.remaining}回</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:${urgencyBg[urgency]};color:${urgencyColors[urgency]};font-weight:700">更新${urgencyLabel}</span>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:12px;color:var(--ink3);font-weight:500;margin-bottom:2px">${renewDateStr}更新見込み</div>
+          <div style="font-size:16px;color:var(--pink2);font-weight:800">¥${r.renewPrice.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--ink3);font-weight:500">継続10%OFF</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('forecast-loading').style.display = 'none';
+  document.getElementById('forecast-content').style.display = 'block';
 }
 function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
 function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
