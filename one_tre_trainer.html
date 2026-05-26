@@ -984,7 +984,7 @@ function calcYearData(data,year){
     // ★ null/undefinedの場合は0を使う。0円は有効な金額として扱う
     const rawVal = row['実際の金額'];
     const actual = (rawVal !== null && rawVal !== undefined && rawVal !== '') ? parseFloat(rawVal) : parseFloat(row['定価']||0);
-    if(!ts || isNaN(actual)) return; // ← isNaNのみでチェック（!actualを削除）
+    if(!ts || isNaN(actual) || actual === 0) return; // ← isNaNのみでチェック（!actualを削除）
     const d=new Date(ts);if(d.getFullYear()!==year)return;
     const mo=d.getMonth()+1;
     yT+=actual;yC++;mD[mo]=(mD[mo]||0)+actual;
@@ -1027,7 +1027,7 @@ async function renderSales(){
       const ts=row['タイムスタンプ'];
       const rawVal=row['実際の金額'];
       const actual=(rawVal!==null&&rawVal!==undefined&&rawVal!=='') ? parseFloat(rawVal) : parseFloat(row['定価']||0);
-      if(!ts||isNaN(actual))return;
+      if(!ts||isNaN(actual)||actual===0)return;
       const d=new Date(ts);if(d.getFullYear()===ty&&d.getMonth()+1===tm){mT+=actual;mC++;}
     });
   }
