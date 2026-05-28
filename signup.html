@@ -91,18 +91,8 @@
   body.gender-women .course-card .c-discount-price{color:#e8608a;font-weight:500;}
   body.gender-men .course-card .c-discount-price{color:#3a3a3a;font-weight:500;}
   .entry-fee{text-align:center;font-size:13px;color:#555;margin:14px 0 4px;}
-  .entry-fee .strike{text-decoration:line-through;color:#aaa;margin:0 4px;}
-  .entry-fee .free{color:#b8860b;font-weight:500;}
+  .entry-fee .amount{font-weight:500;color:#222;}
   .entry-sub{text-align:center;font-size:11px;color:#aaa;letter-spacing:0.1em;margin-bottom:22px;}
-  .auto-discount{background:linear-gradient(135deg,#fde8f0 0%,#fbeaf0 100%);border-radius:12px;padding:16px;margin-bottom:22px;text-align:center;transition:all .3s;display:none;}
-  .auto-discount.men{background:linear-gradient(135deg,#3a3a3a 0%,#4a4a4a 100%);}
-  .auto-discount.show{display:block;}
-  .auto-discount .ad-lbl{font-size:10px;letter-spacing:0.25em;color:#993556;margin-bottom:4px;}
-  .auto-discount.men .ad-lbl{color:#c8b080;}
-  .auto-discount .ad-main{font-size:14px;font-weight:500;color:#4b1528;}
-  .auto-discount.men .ad-main{color:#fff;}
-  .auto-discount .ad-sub{font-size:11px;color:#993556;margin-top:4px;}
-  .auto-discount.men .ad-sub{color:#c8b080;}
   .pair-toggle{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:14px 16px;margin-bottom:22px;cursor:pointer;transition:all .3s;}
   body.gender-women .pair-toggle.active{border:2px solid #e8608a;padding:13px 15px;background:#fef4f7;}
   body.gender-men .pair-toggle.active{border:2px solid #3a3a3a;padding:13px 15px;}
@@ -169,12 +159,6 @@
   .footer .brand{font-family:serif;font-size:13px;letter-spacing:0.2em;color:#222;margin-bottom:4px;}
   .footer .addr{font-size:11px;color:#888;line-height:1.6;}
   .footer a{color:#06C755;text-decoration:none;font-weight:500;}
-  .menu-list{font-size:13px;line-height:1.9;color:#555;padding-left:18px;margin:10px 0 0;}
-  .coupon-section{text-align:center;margin:18px 0;}
-  .coupon-toggle{font-size:11px;color:#999;background:none;border:none;cursor:pointer;padding:6px 12px;letter-spacing:0.1em;text-decoration:underline;font-family:inherit;}
-  .coupon-input-wrap{display:none;margin-top:10px;}
-  .coupon-input-wrap.show{display:block;}
-  .coupon-input-wrap input{width:100%;padding:10px 14px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;}
 
   .staff-modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9998;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;backdrop-filter:blur(4px);}
   .staff-modal-bg.show{display:flex;}
@@ -256,7 +240,8 @@
 
     <div class="sm-preview" id="sm-preview" style="display:none">
       <div class="sm-prev-row"><span id="sm-prev-course">16回コース定価</span><span id="sm-prev-orig">¥94,800</span></div>
-      <div class="sm-prev-row" id="sm-prev-auto-row"><span id="sm-prev-auto-lbl">モニター 20%OFF</span><span id="sm-prev-auto-amt">-¥18,960</span></div>
+      <div class="sm-prev-row"><span>入会金</span><span id="sm-prev-entry">¥11,000</span></div>
+      <div class="sm-prev-row"><span>小計</span><span id="sm-prev-subtotal">¥105,800</span></div>
       <div class="sm-prev-row disc"><span id="sm-prev-disc-lbl">特別割引</span><span id="sm-prev-disc-amt">-¥0</span></div>
       <div class="sm-prev-total">
         <span class="l">お客様価格</span>
@@ -362,13 +347,6 @@
         <div class="sub">1回50分／男女共通</div>
       </div>
 
-      <!-- ★ AUTO APPLIEDバナーは非表示化（データは保持） ★ -->
-      <div class="auto-discount" id="auto-discount" style="display:none !important;">
-        <div class="ad-lbl">AUTO APPLIED</div>
-        <div class="ad-main" id="discount-label">モニター価格 20%OFF 自動適用</div>
-        <div class="ad-sub" id="discount-sub">初めての方限定特典</div>
-      </div>
-
       <div class="pair-toggle" id="pair-toggle">
         <div class="pt-row">
           <div class="pt-icon">👫</div>
@@ -405,13 +383,14 @@
         </div>
       </div>
 
-      <div class="entry-fee">入会金 <span class="strike">¥11,000</span> <span class="free">今なら0円</span></div>
+      <div class="entry-fee">入会金 <span class="amount">¥11,000</span></div>
       <div class="entry-sub">— 無理な勧誘は、一切ありません。—</div>
 
       <div class="price-summary" id="price-summary" style="display:none;">
-        <div class="ps-row"><span>定価</span><span id="ps-original">¥0</span></div>
-        <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">割引</span><span id="ps-discount-amount">-¥0</span></div>
+        <div class="ps-row"><span>コース代金</span><span id="ps-original">¥0</span></div>
+        <div class="ps-row"><span>入会金</span><span id="ps-entry">¥11,000</span></div>
         <div class="ps-row" id="ps-pair-row" style="display:none;"><span id="ps-pair-lbl">ペア割</span><span id="ps-pair-amount">-¥0</span></div>
+        <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">特別割引</span><span id="ps-discount-amount">-¥0</span></div>
         <div class="ps-total">
           <span class="l">お支払い金額</span>
           <span class="r" id="ps-total">¥0</span>
@@ -482,6 +461,9 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 
+// ★★★ 入会金（定数） ★★★
+const ENTRY_FEE = 11000;
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
 }
@@ -493,10 +475,7 @@ let state = {
   gender: 'female',
   course: null,
   coursePrice: 0,
-  memberType: 'new',
-  discountRate: 0.20,
   age: '',
-  emailCheckedFor: '',
   pair: false
 };
 
@@ -506,9 +485,6 @@ const heroEyebrow = $('hero-eyebrow');
 const heroCatch = $('hero-catch');
 const heroAccent = $('hero-accent');
 const submitBtn = $('submit-btn');
-const autoDisc = $('auto-discount');
-const discountLabel = $('discount-label');
-const discountSub = $('discount-sub');
 const priceSummary = $('price-summary');
 
 document.querySelectorAll('.gender-card').forEach(el => {
@@ -528,7 +504,6 @@ function updateGenderUI(){
   const isW = state.gender === 'female';
   hero.classList.remove('women','men');
   hero.classList.add(isW ? 'women' : 'men');
-  autoDisc.classList.toggle('men', !isW);
   submitBtn.classList.toggle('men', !isW);
   document.body.classList.remove('gender-women','gender-men');
   document.body.classList.add(isW ? 'gender-women' : 'gender-men');
@@ -575,69 +550,69 @@ $('pair-toggle').addEventListener('click', () => {
   updatePrice();
 });
 
-// ========== 金額計算（割引合算版）==========
+// ========== 金額計算（定価のみ・入会金11000円発生版）==========
 function updatePrice(){
   if(!state.course) { priceSummary.style.display='none'; return; }
   const orig = state.coursePrice;
-  const rate = state.discountRate;
-  const afterRateDiscount = Math.round(orig * (1 - rate));
-  const rateDiscountAmt = orig - afterRateDiscount;
-
   const sessions = parseInt(state.course) || 0;
-  const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
+  const pairPerSession = 1200;
   const pairDiscountAmt = state.pair ? (pairPerSession * sessions) : 0;
 
+  // 小計（コース代金 + 入会金 - ペア割）
+  const subtotal = orig + ENTRY_FEE - pairDiscountAmt;
+
+  // スタッフ割引（小計に対して適用）
   const sd = window.staffDiscount || {applied:false};
   let staffDiscAmt = 0;
   if(sd.applied && sd.value > 0){
-    const base = afterRateDiscount;
     if(sd.type === 'percent'){
-      staffDiscAmt = Math.round(base * (sd.value / 100));
+      staffDiscAmt = Math.round(subtotal * (sd.value / 100));
     } else if(sd.type === 'yen'){
-      staffDiscAmt = Math.min(sd.value, base);
+      staffDiscAmt = Math.min(sd.value, subtotal);
     }
   }
 
-  const total = Math.max(0, afterRateDiscount - pairDiscountAmt - staffDiscAmt);
-  // ★合算割引額（自動20%＋ペア割＋特別割引を1行にまとめる）
-  const totalDiscount = rateDiscountAmt + pairDiscountAmt + staffDiscAmt;
+  const total = Math.max(0, subtotal - staffDiscAmt);
 
   $('ps-original').textContent = '¥' + orig.toLocaleString();
+  $('ps-entry').textContent = '¥' + ENTRY_FEE.toLocaleString();
   $('ps-total').textContent = '¥' + total.toLocaleString();
 
-  // ★★★ 割引は全部まとめて1行表示 ★★★
-  if(totalDiscount > 0){
+  // ペア割表示
+  if(pairDiscountAmt > 0){
+    $('ps-pair-row').style.display = 'flex';
+    $('ps-pair-amount').textContent = '-¥' + pairDiscountAmt.toLocaleString();
+  } else {
+    $('ps-pair-row').style.display = 'none';
+  }
+
+  // 特別割引表示
+  if(staffDiscAmt > 0){
     $('ps-discount-row').style.display = 'flex';
-    $('ps-discount-lbl').textContent = '割引';
-    $('ps-discount-amount').textContent = '-¥' + totalDiscount.toLocaleString();
+    let label = '特別割引';
+    if(sd.type === 'percent') label = '特別割引 ' + sd.value + '%OFF';
+    else label = '特別割引';
+    $('ps-discount-lbl').textContent = label;
+    $('ps-discount-amount').textContent = '-¥' + staffDiscAmt.toLocaleString();
   } else {
     $('ps-discount-row').style.display = 'none';
   }
 
-  // ペア割・特別割引の個別行は非表示
-  $('ps-pair-row').style.display = 'none';
-  let staffRow = $('ps-staff-row');
-  if(staffRow) staffRow.style.display = 'none';
-
   priceSummary.style.display = 'block';
 
+  // コースカードの価格表示更新（ペア割・スタッフ割引適用時のみ割引表示）
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
     const sess = parseInt(card.dataset.course);
-    const afterRate = Math.round(origin * (1 - rate));
     const pairAmt = state.pair ? (pairPerSession * sess) : 0;
-    let cardStaffAmt = 0;
-    if(sd.applied && sd.value > 0){
-      if(sd.type === 'percent') cardStaffAmt = Math.round(afterRate * (sd.value / 100));
-      else if(sd.type === 'yen') cardStaffAmt = Math.min(sd.value, afterRate);
-    }
-    const final = Math.max(0, afterRate - pairAmt - cardStaffAmt);
+    // カード表示はコース代金 - ペア割のみ（スタッフ割引はカードに反映しない）
+    const cardPrice = origin - pairAmt;
     const origSpan = card.querySelector('.c-origin');
     const dispSpan = card.querySelector('.c-display');
-    if(rate > 0 || state.pair || cardStaffAmt > 0){
+    if(state.pair){
       origSpan.style.display = 'inline';
       origSpan.textContent = '¥' + origin.toLocaleString();
-      dispSpan.textContent = '¥' + final.toLocaleString();
+      dispSpan.textContent = '¥' + cardPrice.toLocaleString();
       dispSpan.classList.add('c-discount-price');
     } else {
       origSpan.style.display = 'none';
@@ -646,46 +621,7 @@ function updatePrice(){
     }
   });
 
-  const pairDetailText = state.memberType === 'new'
-    ? '1回あたり ¥1,200引き'
-    : '1回あたり ¥1,500引き';
-  $('pair-detail-text').textContent = pairDetailText;
-}
-
-let emailCheckTimer = null;
-$('f-email').addEventListener('input', e => {
-  clearTimeout(emailCheckTimer);
-  const email = e.target.value.trim();
-  if(!email || email === state.emailCheckedFor) return;
-  emailCheckTimer = setTimeout(() => checkMemberType(email), 700);
-});
-$('f-email').addEventListener('blur', e => {
-  const email = e.target.value.trim();
-  if(email && email !== state.emailCheckedFor) checkMemberType(email);
-});
-
-async function checkMemberType(email){
-  if(!email || !email.includes('@')) return;
-  state.emailCheckedFor = email;
-  try{
-    const res = await fetch(GAS_URL + '?action=checkMember&email=' + encodeURIComponent(email));
-    const data = await res.json();
-    if(data.isExisting){
-      state.memberType = 'continue';
-      state.discountRate = 0.10;
-      discountLabel.textContent = '継続割引 10%OFF 自動適用';
-      discountSub.textContent = 'いつもありがとうございます';
-    } else {
-      state.memberType = 'new';
-      state.discountRate = 0.20;
-      discountLabel.textContent = 'モニター価格 20%OFF 自動適用';
-      discountSub.textContent = '初めての方限定特典';
-    }
-    // ★バナー表示はしない（内部データのみ更新）
-    updatePrice();
-  } catch(err) {
-    console.log('check failed', err);
-  }
+  $('pair-detail-text').textContent = '1回あたり ¥1,200引き';
 }
 
 const fields = ['f-name','f-kana','f-email','f-phone','f-address'];
@@ -717,10 +653,11 @@ submitBtn.addEventListener('click', async () => {
     goal: $('f-goal').value.trim(),
     course: state.course,
     coursePrice: state.coursePrice,
-    memberType: state.memberType,
-    discountRate: state.discountRate,
+    entryFee: ENTRY_FEE,
+    memberType: 'new',
+    discountRate: 0,
     pair: state.pair ? '1' : '0',
-    pairDiscount: state.pair ? ((state.memberType === 'new' ? 1200 : 1500) * parseInt(state.course)) : 0,
+    pairDiscount: state.pair ? (1200 * parseInt(state.course)) : 0,
     regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(','),
     staffDiscountType: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.type : '',
     staffDiscountValue: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.value : 0,
@@ -738,27 +675,29 @@ submitBtn.addEventListener('click', async () => {
     $('loading').classList.remove('show');
     if(data.ok){
       const sessions = parseInt(state.course) || 0;
-      const pairPerSession = state.memberType === 'new' ? 1200 : 1500;
-      const pairAmt = state.pair ? (pairPerSession * sessions) : 0;
-      const afterAutoDisc = Math.round(state.coursePrice * (1 - state.discountRate));
-      const autoDiscAmt = state.coursePrice - afterAutoDisc;
+      const pairAmt = state.pair ? (1200 * sessions) : 0;
+      const subtotal = state.coursePrice + ENTRY_FEE - pairAmt;
       const sd = window.staffDiscount || {applied:false};
       let staffAmt = 0;
       if(sd.applied && sd.value > 0){
-        if(sd.type === 'percent') staffAmt = Math.round(afterAutoDisc * (sd.value / 100));
-        else if(sd.type === 'yen') staffAmt = Math.min(sd.value, afterAutoDisc);
+        if(sd.type === 'percent') staffAmt = Math.round(subtotal * (sd.value / 100));
+        else if(sd.type === 'yen') staffAmt = Math.min(sd.value, subtotal);
       }
-      const finalPrice = Math.max(0, afterAutoDisc - pairAmt - staffAmt);
-      const totalDiscountShow = autoDiscAmt + pairAmt + staffAmt;
+      const finalPrice = Math.max(0, subtotal - staffAmt);
 
       $('pb-amount').textContent = '¥' + finalPrice.toLocaleString();
-      $('pb-course').textContent = state.course + '回コース' + (state.pair ? '（ペア）' : '');
-      // ★完了画面も合算で表示
-      if(totalDiscountShow > 0){
-        $('pb-discount').textContent = '割引 -¥' + totalDiscountShow.toLocaleString() + '（定価 ¥' + state.coursePrice.toLocaleString() + '）';
-      } else {
-        $('pb-discount').textContent = '';
+      $('pb-course').textContent = state.course + '回コース' + (state.pair ? '（ペア）' : '') + ' + 入会金';
+      // 割引情報表示
+      let discText = '';
+      if(pairAmt > 0) discText += 'ペア割 -¥' + pairAmt.toLocaleString();
+      if(staffAmt > 0){
+        if(discText) discText += ' / ';
+        discText += '特別割引 -¥' + staffAmt.toLocaleString();
       }
+      if(discText) discText += '（コース ¥' + state.coursePrice.toLocaleString() + ' + 入会金 ¥' + ENTRY_FEE.toLocaleString() + '）';
+      else discText = 'コース ¥' + state.coursePrice.toLocaleString() + ' + 入会金 ¥' + ENTRY_FEE.toLocaleString();
+      $('pb-discount').textContent = discText;
+
       if(state.gender === 'male'){
         $('payment-box').classList.add('men');
       }
@@ -782,16 +721,14 @@ submitBtn.addEventListener('click', async () => {
 });
 
 updateGenderUI();
-// ★初期のバナー自動表示は削除（ヨシさん指示：非表示）
 
+// ========== ロゴ長押し → スタッフ割引パネル ==========
 (function(){
   const logoImg = document.querySelector('.logo-head img');
   if(!logoImg) return;
   let pressTimer = null;
-  let startTime = 0;
   const LONG_PRESS_MS = 1000;
 
-  // ★右端エリア判定：タッチ/クリック位置がロゴ画像の右1/3以内か
   function isRightEdge(ev){
     const rect = logoImg.getBoundingClientRect();
     let clientX = 0;
@@ -802,16 +739,12 @@ updateGenderUI();
     } else {
       return false;
     }
-    // ロゴの左端からの相対位置
     const relX = clientX - rect.left;
-    // 右側2/3以降（右端33%エリア）のみ有効
     return relX >= rect.width * 0.66;
   }
 
   function startPress(ev){
-    // ★右端じゃなかったら何もしない
     if(!isRightEdge(ev)) return;
-    startTime = Date.now();
     logoImg.classList.add('pressing');
     pressTimer = setTimeout(()=>{
       logoImg.classList.remove('pressing');
@@ -884,32 +817,24 @@ function updateStaffPreview(){
   }
   const orig = parseInt(selectedCourse.dataset.price) || 0;
   const sessions = parseInt(selectedCourse.dataset.course) || 0;
-
-  const memberType = state.memberType || 'new';
-  let autoRate = 0;
-  let autoLbl = '割引なし';
-  if(memberType === 'new'){ autoRate = 0.20; autoLbl = 'モニター 20%OFF'; }
-  else if(memberType === 'continue'){ autoRate = 0.10; autoLbl = '継続 10%OFF'; }
-  const autoAmt = Math.round(orig * autoRate);
-  const afterAuto = orig - autoAmt;
+  const subtotal = orig + ENTRY_FEE; // コース + 入会金
 
   let staffAmt = 0;
   let discLbl = '';
   if(type === 'percent'){
     if(val > 100){ document.getElementById('staff-value').value = 100; return; }
-    staffAmt = Math.round(afterAuto * (val / 100));
+    staffAmt = Math.round(subtotal * (val / 100));
     discLbl = '特別 ' + val + '%OFF';
   } else {
-    staffAmt = Math.min(val, afterAuto);
+    staffAmt = Math.min(val, subtotal);
     discLbl = '特別 ¥' + val.toLocaleString() + '引き';
   }
-  const finalPrice = Math.max(0, afterAuto - staffAmt);
+  const finalPrice = Math.max(0, subtotal - staffAmt);
 
   document.getElementById('sm-prev-course').textContent = sessions + '回コース定価';
   document.getElementById('sm-prev-orig').textContent = '¥' + orig.toLocaleString();
-  document.getElementById('sm-prev-auto-lbl').textContent = autoLbl;
-  document.getElementById('sm-prev-auto-amt').textContent = autoAmt > 0 ? '-¥' + autoAmt.toLocaleString() : '¥0';
-  document.getElementById('sm-prev-auto-row').style.display = autoAmt > 0 ? 'flex' : 'none';
+  document.getElementById('sm-prev-entry').textContent = '¥' + ENTRY_FEE.toLocaleString();
+  document.getElementById('sm-prev-subtotal').textContent = '¥' + subtotal.toLocaleString();
   document.getElementById('sm-prev-disc-lbl').textContent = discLbl;
   document.getElementById('sm-prev-disc-amt').textContent = '-¥' + staffAmt.toLocaleString();
   document.getElementById('sm-prev-total').textContent = '¥' + finalPrice.toLocaleString();
