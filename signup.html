@@ -172,6 +172,12 @@
   .sm-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
   .sm-type{padding:10px;background:#3a3a3a;border:1px solid #555;border-radius:8px;text-align:center;font-size:12px;cursor:pointer;color:#ccc;transition:all .2s;}
   .sm-type.sel{background:#c8b080;color:#1a1a1a;border-color:#c8b080;font-weight:500;}
+  .sm-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .sm-quick{position:relative;padding:13px 10px;background:#3a3a3a;border:1px solid #555;border-radius:8px;text-align:center;font-size:13px;cursor:pointer;color:#ccc;transition:all .25s;overflow:hidden;font-weight:500;}
+  .sm-quick::before{content:'';position:absolute;top:0;left:0;height:100%;width:0;background:linear-gradient(90deg,#c8b080,#e0c890);transition:width .35s cubic-bezier(.4,0,.2,1);z-index:0;}
+  .sm-quick.sel::before{width:100%;}
+  .sm-quick span{position:relative;z-index:1;transition:color .25s;}
+  .sm-quick.sel span{color:#1a1a1a;font-weight:700;}
   .sm-value-wrap{display:flex;align-items:center;gap:8px;padding:12px;background:#3a3a3a;border-radius:8px;border:1px solid #555;}
   .sm-value-wrap input{flex:1;background:transparent;border:none;color:#fff;font-size:26px;font-family:'Times New Roman',serif;outline:none;text-align:right;min-width:60px;font-weight:500;}
   .sm-value-unit{font-size:16px;color:#c8b080;font-weight:500;}
@@ -218,17 +224,29 @@
     </div>
 
     <div class="sm-sec">
-      <div class="sm-sec-lbl">割引タイプ</div>
-      <div class="sm-type-grid">
-        <div class="sm-type" data-type="yen" onclick="selectStaffType('yen')">定額（円）</div>
-        <div class="sm-type sel" data-type="percent" onclick="selectStaffType('percent')">割引率（%）</div>
+      <div class="sm-sec-lbl">コース割引</div>
+      <div class="sm-quick-grid">
+        <div class="sm-quick" data-course-disc="10" onclick="toggleCourseDisc(this,10)"><span>10%OFF</span></div>
+        <div class="sm-quick" data-course-disc="20" onclick="toggleCourseDisc(this,20)"><span>20%OFF</span></div>
       </div>
     </div>
 
     <div class="sm-sec">
-      <div class="sm-sec-lbl">値を入力</div>
+      <div class="sm-sec-lbl">入会金</div>
+      <div class="sm-quick-grid">
+        <div class="sm-quick" data-entry-disc="free" onclick="toggleEntryDisc(this,'free')"><span>無料（0円）</span></div>
+        <div class="sm-quick" data-entry-disc="half" onclick="toggleEntryDisc(this,'half')"><span>半額（¥5,500）</span></div>
+      </div>
+    </div>
+
+    <div class="sm-sec">
+      <div class="sm-sec-lbl">追加割引（手打ち）</div>
+      <div class="sm-type-grid" style="margin-bottom:6px;">
+        <div class="sm-type" data-type="yen" onclick="selectStaffType('yen')">定額（円）</div>
+        <div class="sm-type sel" data-type="percent" onclick="selectStaffType('percent')">割引率（%）</div>
+      </div>
       <div class="sm-value-wrap">
-        <input type="number" id="staff-value" min="0" step="1" placeholder="15" oninput="updateStaffPreview()">
+        <input type="number" id="staff-value" min="0" step="1" placeholder="任意・空欄OK" oninput="updateStaffPreview()">
         <div class="sm-value-unit" id="staff-unit">%OFF</div>
       </div>
     </div>
@@ -240,9 +258,11 @@
 
     <div class="sm-preview" id="sm-preview" style="display:none">
       <div class="sm-prev-row"><span id="sm-prev-course">16回コース定価</span><span id="sm-prev-orig">¥94,800</span></div>
+      <div class="sm-prev-row disc" id="sm-prev-coursedisc-row" style="display:none"><span id="sm-prev-coursedisc-lbl">コース割引</span><span id="sm-prev-coursedisc-amt">-¥0</span></div>
       <div class="sm-prev-row"><span>入会金</span><span id="sm-prev-entry">¥11,000</span></div>
+      <div class="sm-prev-row disc" id="sm-prev-entrydisc-row" style="display:none"><span id="sm-prev-entrydisc-lbl">入会金割引</span><span id="sm-prev-entrydisc-amt">-¥0</span></div>
       <div class="sm-prev-row"><span>小計</span><span id="sm-prev-subtotal">¥105,800</span></div>
-      <div class="sm-prev-row disc"><span id="sm-prev-disc-lbl">特別割引</span><span id="sm-prev-disc-amt">-¥0</span></div>
+      <div class="sm-prev-row disc" id="sm-prev-disc-row" style="display:none"><span id="sm-prev-disc-lbl">追加割引</span><span id="sm-prev-disc-amt">-¥0</span></div>
       <div class="sm-prev-total">
         <span class="l">お客様価格</span>
         <span class="r" id="sm-prev-total">¥0</span>
@@ -388,9 +408,11 @@
 
       <div class="price-summary" id="price-summary" style="display:none;">
         <div class="ps-row"><span>コース代金</span><span id="ps-original">¥0</span></div>
-        <div class="ps-row"><span>入会金</span><span id="ps-entry">¥11,000</span></div>
+        <div class="ps-row" id="ps-coursedisc-row" style="display:none;"><span id="ps-coursedisc-lbl">コース割引</span><span id="ps-coursedisc-amount">-¥0</span></div>
+        <div class="ps-row"><span id="ps-entry-lbl">入会金</span><span id="ps-entry">¥11,000</span></div>
+        <div class="ps-row" id="ps-entrydisc-row" style="display:none;"><span id="ps-entrydisc-lbl">入会金割引</span><span id="ps-entrydisc-amount">-¥0</span></div>
         <div class="ps-row" id="ps-pair-row" style="display:none;"><span id="ps-pair-lbl">ペア割</span><span id="ps-pair-amount">-¥0</span></div>
-        <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">特別割引</span><span id="ps-discount-amount">-¥0</span></div>
+        <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">追加割引</span><span id="ps-discount-amount">-¥0</span></div>
         <div class="ps-total">
           <span class="l">お支払い金額</span>
           <span class="r" id="ps-total">¥0</span>
@@ -550,7 +572,7 @@ $('pair-toggle').addEventListener('click', () => {
   updatePrice();
 });
 
-// ========== 金額計算（定価のみ・入会金11000円発生版）==========
+// ========== 金額計算（コース割引・入会金割引・追加割引の3系統版）==========
 function updatePrice(){
   if(!state.course) { priceSummary.style.display='none'; return; }
   const orig = state.coursePrice;
@@ -558,25 +580,48 @@ function updatePrice(){
   const pairPerSession = 1200;
   const pairDiscountAmt = state.pair ? (pairPerSession * sessions) : 0;
 
-  // 小計（コース代金 + 入会金 - ペア割）
-  const subtotal = orig + ENTRY_FEE - pairDiscountAmt;
+  const sd = window.staffDiscount || {};
 
-  // スタッフ割引（小計に対して適用）
-  const sd = window.staffDiscount || {applied:false};
-  let staffDiscAmt = 0;
+  // ① コース割引（%）
+  let courseDiscAmt = 0;
+  if(sd.courseDisc){
+    courseDiscAmt = Math.round(orig * (sd.courseDisc / 100));
+  }
+  const courseAfter = orig - courseDiscAmt - pairDiscountAmt;
+
+  // ② 入会金割引
+  let entryFee = ENTRY_FEE;
+  let entryDiscAmt = 0;
+  if(sd.entryDisc === 'free'){ entryDiscAmt = ENTRY_FEE; entryFee = 0; }
+  else if(sd.entryDisc === 'half'){ entryDiscAmt = Math.round(ENTRY_FEE / 2); entryFee = ENTRY_FEE - entryDiscAmt; }
+
+  // 小計（コース割引後 + 入会金割引後）
+  const subtotal = Math.max(0, courseAfter + entryFee);
+
+  // ③ 追加割引（手打ち・小計に対して）
+  let addDiscAmt = 0;
   if(sd.applied && sd.value > 0){
     if(sd.type === 'percent'){
-      staffDiscAmt = Math.round(subtotal * (sd.value / 100));
+      addDiscAmt = Math.round(subtotal * (sd.value / 100));
     } else if(sd.type === 'yen'){
-      staffDiscAmt = Math.min(sd.value, subtotal);
+      addDiscAmt = Math.min(sd.value, subtotal);
     }
   }
 
-  const total = Math.max(0, subtotal - staffDiscAmt);
+  const total = Math.max(0, subtotal - addDiscAmt);
 
   $('ps-original').textContent = '¥' + orig.toLocaleString();
   $('ps-entry').textContent = '¥' + ENTRY_FEE.toLocaleString();
   $('ps-total').textContent = '¥' + total.toLocaleString();
+
+  // コース割引表示
+  if(courseDiscAmt > 0){
+    $('ps-coursedisc-row').style.display = 'flex';
+    $('ps-coursedisc-lbl').textContent = 'コース割引 ' + sd.courseDisc + '%OFF';
+    $('ps-coursedisc-amount').textContent = '-¥' + courseDiscAmt.toLocaleString();
+  } else {
+    $('ps-coursedisc-row').style.display = 'none';
+  }
 
   // ペア割表示
   if(pairDiscountAmt > 0){
@@ -586,30 +631,39 @@ function updatePrice(){
     $('ps-pair-row').style.display = 'none';
   }
 
-  // 特別割引表示
-  if(staffDiscAmt > 0){
+  // 入会金割引表示
+  if(entryDiscAmt > 0){
+    $('ps-entrydisc-row').style.display = 'flex';
+    $('ps-entrydisc-lbl').textContent = sd.entryDisc === 'free' ? '入会金割引（無料）' : '入会金割引（半額）';
+    $('ps-entrydisc-amount').textContent = '-¥' + entryDiscAmt.toLocaleString();
+  } else {
+    $('ps-entrydisc-row').style.display = 'none';
+  }
+
+  // 追加割引表示
+  if(addDiscAmt > 0){
     $('ps-discount-row').style.display = 'flex';
-    let label = '特別割引';
-    if(sd.type === 'percent') label = '特別割引 ' + sd.value + '%OFF';
-    else label = '特別割引';
+    let label = '追加割引';
+    if(sd.type === 'percent') label = '追加割引 ' + sd.value + '%OFF';
     $('ps-discount-lbl').textContent = label;
-    $('ps-discount-amount').textContent = '-¥' + staffDiscAmt.toLocaleString();
+    $('ps-discount-amount').textContent = '-¥' + addDiscAmt.toLocaleString();
   } else {
     $('ps-discount-row').style.display = 'none';
   }
 
   priceSummary.style.display = 'block';
 
-  // コースカードの価格表示更新（ペア割・スタッフ割引適用時のみ割引表示）
+  // コースカードの価格表示更新（コース割引・ペア割を反映）
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
     const sess = parseInt(card.dataset.course);
     const pairAmt = state.pair ? (pairPerSession * sess) : 0;
-    // カード表示はコース代金 - ペア割のみ（スタッフ割引はカードに反映しない）
-    const cardPrice = origin - pairAmt;
+    let cdAmt = 0;
+    if(sd.courseDisc) cdAmt = Math.round(origin * (sd.courseDisc / 100));
+    const cardPrice = Math.max(0, origin - cdAmt - pairAmt);
     const origSpan = card.querySelector('.c-origin');
     const dispSpan = card.querySelector('.c-display');
-    if(state.pair){
+    if(state.pair || cdAmt > 0){
       origSpan.style.display = 'inline';
       origSpan.textContent = '¥' + origin.toLocaleString();
       dispSpan.textContent = '¥' + cardPrice.toLocaleString();
@@ -641,6 +695,21 @@ submitBtn.addEventListener('click', async () => {
   submitBtn.disabled = true;
   submitBtn.style.display = 'none';
   $('loading').classList.add('show');
+  const sd = window.staffDiscount || {};
+  const sessions0 = parseInt(state.course) || 0;
+  const pairAmt0 = state.pair ? (1200 * sessions0) : 0;
+  let courseDiscAmt0 = sd.courseDisc ? Math.round(state.coursePrice * (sd.courseDisc / 100)) : 0;
+  let entryDiscAmt0 = 0, entryFee0 = ENTRY_FEE;
+  if(sd.entryDisc === 'free'){ entryDiscAmt0 = ENTRY_FEE; entryFee0 = 0; }
+  else if(sd.entryDisc === 'half'){ entryDiscAmt0 = Math.round(ENTRY_FEE/2); entryFee0 = ENTRY_FEE - entryDiscAmt0; }
+  const subtotal0 = Math.max(0, state.coursePrice - courseDiscAmt0 - pairAmt0 + entryFee0);
+  let addDiscAmt0 = 0;
+  if(sd.applied && sd.value > 0){
+    if(sd.type === 'percent') addDiscAmt0 = Math.round(subtotal0 * (sd.value / 100));
+    else if(sd.type === 'yen') addDiscAmt0 = Math.min(sd.value, subtotal0);
+  }
+  const finalPrice0 = Math.max(0, subtotal0 - addDiscAmt0);
+
   const payload = {
     action: 'signup',
     gender: state.gender === 'female' ? '女性' : '男性',
@@ -657,11 +726,16 @@ submitBtn.addEventListener('click', async () => {
     memberType: 'new',
     discountRate: 0,
     pair: state.pair ? '1' : '0',
-    pairDiscount: state.pair ? (1200 * parseInt(state.course)) : 0,
+    pairDiscount: pairAmt0,
+    courseDiscountPct: sd.courseDisc || 0,
+    courseDiscountAmt: courseDiscAmt0,
+    entryDiscountType: sd.entryDisc || '',
+    entryDiscountAmt: entryDiscAmt0,
+    finalPrice: finalPrice0,
     regulations: Array.from(document.querySelectorAll('.reg:checked')).map(e => e.dataset.val).join(','),
-    staffDiscountType: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.type : '',
-    staffDiscountValue: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.value : 0,
-    staffDiscountMemo: (window.staffDiscount && window.staffDiscount.applied) ? window.staffDiscount.memo : ''
+    staffDiscountType: (sd.applied) ? sd.type : '',
+    staffDiscountValue: (sd.applied) ? sd.value : 0,
+    staffDiscountMemo: (sd.applied) ? sd.memo : ''
   };
   try {
     const formData = new URLSearchParams();
@@ -674,28 +748,16 @@ submitBtn.addEventListener('click', async () => {
     const data = await res.json();
     $('loading').classList.remove('show');
     if(data.ok){
-      const sessions = parseInt(state.course) || 0;
-      const pairAmt = state.pair ? (1200 * sessions) : 0;
-      const subtotal = state.coursePrice + ENTRY_FEE - pairAmt;
-      const sd = window.staffDiscount || {applied:false};
-      let staffAmt = 0;
-      if(sd.applied && sd.value > 0){
-        if(sd.type === 'percent') staffAmt = Math.round(subtotal * (sd.value / 100));
-        else if(sd.type === 'yen') staffAmt = Math.min(sd.value, subtotal);
-      }
-      const finalPrice = Math.max(0, subtotal - staffAmt);
-
-      $('pb-amount').textContent = '¥' + finalPrice.toLocaleString();
+      $('pb-amount').textContent = '¥' + finalPrice0.toLocaleString();
       $('pb-course').textContent = state.course + '回コース' + (state.pair ? '（ペア）' : '') + ' + 入会金';
       // 割引情報表示
-      let discText = '';
-      if(pairAmt > 0) discText += 'ペア割 -¥' + pairAmt.toLocaleString();
-      if(staffAmt > 0){
-        if(discText) discText += ' / ';
-        discText += '特別割引 -¥' + staffAmt.toLocaleString();
-      }
-      if(discText) discText += '（コース ¥' + state.coursePrice.toLocaleString() + ' + 入会金 ¥' + ENTRY_FEE.toLocaleString() + '）';
-      else discText = 'コース ¥' + state.coursePrice.toLocaleString() + ' + 入会金 ¥' + ENTRY_FEE.toLocaleString();
+      let parts = [];
+      if(courseDiscAmt0 > 0) parts.push('コース' + sd.courseDisc + '%OFF -¥' + courseDiscAmt0.toLocaleString());
+      if(pairAmt0 > 0) parts.push('ペア割 -¥' + pairAmt0.toLocaleString());
+      if(entryDiscAmt0 > 0) parts.push('入会金' + (sd.entryDisc === 'free' ? '無料' : '半額') + ' -¥' + entryDiscAmt0.toLocaleString());
+      if(addDiscAmt0 > 0) parts.push('追加割引 -¥' + addDiscAmt0.toLocaleString());
+      let discText = parts.length ? parts.join(' / ') : '';
+      discText += (discText ? '　' : '') + '（コース ¥' + state.coursePrice.toLocaleString() + ' + 入会金 ¥' + ENTRY_FEE.toLocaleString() + '）';
       $('pb-discount').textContent = discText;
 
       if(state.gender === 'male'){
@@ -722,58 +784,84 @@ submitBtn.addEventListener('click', async () => {
 
 updateGenderUI();
 
-// ========== ロゴ長押し → スタッフ割引パネル ==========
+// ========== 画面右端 長押し → スタッフ割引パネル ==========
+// ロゴとは別の透明エリアを画面右端に設置（画像保存モード回避）
 (function(){
-  const logoImg = document.querySelector('.logo-head img');
-  if(!logoImg) return;
+  // 透明な長押しトリガーエリアを生成（画面右端・縦長）
+  const trigger = document.createElement('div');
+  trigger.id = 'staff-trigger-zone';
+  trigger.style.cssText = 'position:fixed;top:0;right:0;width:28px;height:140px;z-index:9990;background:transparent;';
+  document.body.appendChild(trigger);
+
   let pressTimer = null;
   const LONG_PRESS_MS = 1000;
 
-  function isRightEdge(ev){
-    const rect = logoImg.getBoundingClientRect();
-    let clientX = 0;
-    if(ev.touches && ev.touches.length > 0){
-      clientX = ev.touches[0].clientX;
-    } else if(typeof ev.clientX === 'number'){
-      clientX = ev.clientX;
-    } else {
-      return false;
-    }
-    const relX = clientX - rect.left;
-    return relX >= rect.width * 0.66;
-  }
-
   function startPress(ev){
-    if(!isRightEdge(ev)) return;
-    logoImg.classList.add('pressing');
     pressTimer = setTimeout(()=>{
-      logoImg.classList.remove('pressing');
       openStaffModal();
       if(navigator.vibrate) navigator.vibrate(50);
     }, LONG_PRESS_MS);
   }
   function cancelPress(){
-    logoImg.classList.remove('pressing');
     if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; }
   }
-  logoImg.addEventListener('touchstart', startPress, {passive:true});
-  logoImg.addEventListener('touchend', cancelPress);
-  logoImg.addEventListener('touchcancel', cancelPress);
-  logoImg.addEventListener('touchmove', cancelPress);
-  logoImg.addEventListener('mousedown', startPress);
-  logoImg.addEventListener('mouseup', cancelPress);
-  logoImg.addEventListener('mouseleave', cancelPress);
-  logoImg.addEventListener('contextmenu', e=>e.preventDefault());
+  trigger.addEventListener('touchstart', startPress, {passive:true});
+  trigger.addEventListener('touchend', cancelPress);
+  trigger.addEventListener('touchcancel', cancelPress);
+  trigger.addEventListener('touchmove', cancelPress);
+  trigger.addEventListener('mousedown', startPress);
+  trigger.addEventListener('mouseup', cancelPress);
+  trigger.addEventListener('mouseleave', cancelPress);
+  trigger.addEventListener('contextmenu', e=>e.preventDefault());
 })();
 
 window.staffDiscount = {
-  type: '',
-  value: 0,
+  courseDisc: 0,    // コース割引% (0/10/20)
+  entryDisc: '',    // 入会金割引 ''/'free'/'half'
+  type: '',         // 追加割引タイプ
+  value: 0,         // 追加割引値
   memo: '',
   applied: false
 };
 
+// コース割引トグル（10/20どちらか1つ）
+function toggleCourseDisc(el, pct){
+  const cur = window.staffDiscount.courseDisc;
+  if(cur === pct){
+    window.staffDiscount.courseDisc = 0;
+    el.classList.remove('sel');
+  } else {
+    window.staffDiscount.courseDisc = pct;
+    document.querySelectorAll('[data-course-disc]').forEach(b => b.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+  updateStaffPreview();
+}
+
+// 入会金割引トグル（free/halfどちらか1つ）
+function toggleEntryDisc(el, kind){
+  const cur = window.staffDiscount.entryDisc;
+  if(cur === kind){
+    window.staffDiscount.entryDisc = '';
+    el.classList.remove('sel');
+  } else {
+    window.staffDiscount.entryDisc = kind;
+    document.querySelectorAll('[data-entry-disc]').forEach(b => b.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+  updateStaffPreview();
+}
+
 function openStaffModal(){
+  // コース割引ボタンの状態復元
+  document.querySelectorAll('[data-course-disc]').forEach(b => {
+    b.classList.toggle('sel', parseInt(b.dataset.courseDisc) === window.staffDiscount.courseDisc);
+  });
+  // 入会金割引ボタンの状態復元
+  document.querySelectorAll('[data-entry-disc]').forEach(b => {
+    b.classList.toggle('sel', b.dataset.entryDisc === window.staffDiscount.entryDisc);
+  });
+  // 追加割引タイプ
   document.querySelectorAll('.sm-type').forEach(el => {
     el.classList.toggle('sel', el.dataset.type === (window.staffDiscount.type || 'percent'));
   });
@@ -803,12 +891,6 @@ function updateStaffPreview(){
   const applyBtn = document.getElementById('sm-btn-apply');
   const prev = document.getElementById('sm-preview');
 
-  if(val <= 0){
-    prev.style.display = 'none';
-    applyBtn.disabled = true;
-    return;
-  }
-
   const selectedCourse = document.querySelector('.course-card.selected');
   if(!selectedCourse){
     prev.style.display = 'none';
@@ -817,30 +899,69 @@ function updateStaffPreview(){
   }
   const orig = parseInt(selectedCourse.dataset.price) || 0;
   const sessions = parseInt(selectedCourse.dataset.course) || 0;
-  const subtotal = orig + ENTRY_FEE; // コース + 入会金
 
-  let staffAmt = 0;
-  let discLbl = '';
-  if(type === 'percent'){
-    if(val > 100){ document.getElementById('staff-value').value = 100; return; }
-    staffAmt = Math.round(subtotal * (val / 100));
-    discLbl = '特別 ' + val + '%OFF';
-  } else {
-    staffAmt = Math.min(val, subtotal);
-    discLbl = '特別 ¥' + val.toLocaleString() + '引き';
+  const cd = window.staffDiscount.courseDisc || 0;
+  const ed = window.staffDiscount.entryDisc || '';
+
+  // コース割引
+  const courseDiscAmt = cd ? Math.round(orig * (cd / 100)) : 0;
+  const courseAfter = orig - courseDiscAmt;
+
+  // 入会金割引
+  let entryFee = ENTRY_FEE, entryDiscAmt = 0;
+  if(ed === 'free'){ entryDiscAmt = ENTRY_FEE; entryFee = 0; }
+  else if(ed === 'half'){ entryDiscAmt = Math.round(ENTRY_FEE/2); entryFee = ENTRY_FEE - entryDiscAmt; }
+
+  const subtotal = Math.max(0, courseAfter + entryFee);
+
+  // 追加割引
+  let addAmt = 0;
+  if(val > 0){
+    if(type === 'percent'){
+      if(val > 100){ document.getElementById('staff-value').value = 100; return; }
+      addAmt = Math.round(subtotal * (val / 100));
+    } else {
+      addAmt = Math.min(val, subtotal);
+    }
   }
-  const finalPrice = Math.max(0, subtotal - staffAmt);
+  const finalPrice = Math.max(0, subtotal - addAmt);
 
+  // プレビュー描画
   document.getElementById('sm-prev-course').textContent = sessions + '回コース定価';
   document.getElementById('sm-prev-orig').textContent = '¥' + orig.toLocaleString();
+
+  if(courseDiscAmt > 0){
+    document.getElementById('sm-prev-coursedisc-row').style.display = 'flex';
+    document.getElementById('sm-prev-coursedisc-lbl').textContent = 'コース ' + cd + '%OFF';
+    document.getElementById('sm-prev-coursedisc-amt').textContent = '-¥' + courseDiscAmt.toLocaleString();
+  } else {
+    document.getElementById('sm-prev-coursedisc-row').style.display = 'none';
+  }
+
   document.getElementById('sm-prev-entry').textContent = '¥' + ENTRY_FEE.toLocaleString();
+  if(entryDiscAmt > 0){
+    document.getElementById('sm-prev-entrydisc-row').style.display = 'flex';
+    document.getElementById('sm-prev-entrydisc-lbl').textContent = ed === 'free' ? '入会金 無料' : '入会金 半額';
+    document.getElementById('sm-prev-entrydisc-amt').textContent = '-¥' + entryDiscAmt.toLocaleString();
+  } else {
+    document.getElementById('sm-prev-entrydisc-row').style.display = 'none';
+  }
+
   document.getElementById('sm-prev-subtotal').textContent = '¥' + subtotal.toLocaleString();
-  document.getElementById('sm-prev-disc-lbl').textContent = discLbl;
-  document.getElementById('sm-prev-disc-amt').textContent = '-¥' + staffAmt.toLocaleString();
+
+  if(addAmt > 0){
+    document.getElementById('sm-prev-disc-row').style.display = 'flex';
+    document.getElementById('sm-prev-disc-lbl').textContent = type === 'percent' ? ('追加 ' + val + '%OFF') : ('追加 ¥' + val.toLocaleString() + '引き');
+    document.getElementById('sm-prev-disc-amt').textContent = '-¥' + addAmt.toLocaleString();
+  } else {
+    document.getElementById('sm-prev-disc-row').style.display = 'none';
+  }
+
   document.getElementById('sm-prev-total').textContent = '¥' + finalPrice.toLocaleString();
 
   prev.style.display = 'block';
-  applyBtn.disabled = false;
+  // 何か1つでも割引があれば適用ボタン有効
+  applyBtn.disabled = !(cd > 0 || ed || val > 0);
 }
 
 function applyStaffDiscount(){
@@ -848,11 +969,17 @@ function applyStaffDiscount(){
   const type = selType ? selType.dataset.type : 'percent';
   const val = parseFloat(document.getElementById('staff-value').value) || 0;
   const memo = document.getElementById('staff-memo').value.trim();
-  if(val <= 0) return;
+
+  const cd = window.staffDiscount.courseDisc || 0;
+  const ed = window.staffDiscount.entryDisc || '';
+  // 何も選択されてなければ何もしない
+  if(cd === 0 && !ed && val <= 0) return;
 
   window.staffDiscount = {
-    type: type,
-    value: val,
+    courseDisc: cd,
+    entryDisc: ed,
+    type: val > 0 ? type : '',
+    value: val > 0 ? val : 0,
     memo: memo,
     applied: true
   };
@@ -862,9 +989,11 @@ function applyStaffDiscount(){
 }
 
 function clearStaffDiscount(){
-  window.staffDiscount = { type:'', value:0, memo:'', applied:false };
+  window.staffDiscount = { courseDisc:0, entryDisc:'', type:'', value:0, memo:'', applied:false };
   document.getElementById('staff-value').value = '';
   document.getElementById('staff-memo').value = '';
+  document.querySelectorAll('[data-course-disc]').forEach(b => b.classList.remove('sel'));
+  document.querySelectorAll('[data-entry-disc]').forEach(b => b.classList.remove('sel'));
   closeStaffModal();
   updateStaffAppliedBadge();
   if(typeof updatePrice === 'function') updatePrice();
@@ -873,16 +1002,19 @@ function clearStaffDiscount(){
 function updateStaffAppliedBadge(){
   const badge = document.getElementById('staff-applied-badge');
   if(!badge) return;
-  if(!window.staffDiscount.applied){
+  const sd = window.staffDiscount;
+  if(!sd.applied){
     badge.classList.remove('show');
     return;
   }
-  const t = window.staffDiscount.type;
-  const v = window.staffDiscount.value;
-  const m = window.staffDiscount.memo;
-  let label = t === 'percent' ? ('特別 ' + v + '%OFF') : ('特別 ¥' + v.toLocaleString() + '引き');
-  if(m) label += '（' + m + '）';
-  document.getElementById('sab-main-text').textContent = label;
+  let parts = [];
+  if(sd.courseDisc) parts.push('コース' + sd.courseDisc + '%OFF');
+  if(sd.entryDisc === 'free') parts.push('入会金無料');
+  else if(sd.entryDisc === 'half') parts.push('入会金半額');
+  if(sd.value > 0) parts.push(sd.type === 'percent' ? ('追加' + sd.value + '%OFF') : ('追加¥' + sd.value.toLocaleString() + '引き'));
+  let label = parts.join(' + ');
+  if(sd.memo) label += '（' + sd.memo + '）';
+  document.getElementById('sab-main-text').textContent = label || '—';
   badge.classList.add('show');
 
   const priceSum = document.querySelector('.price-summary');
