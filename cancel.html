@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONE TRE — 予約キャンセル</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fafaf8;--card-bg:#f5f3ef;--card-border:#e8e4dc;--accent:#8a7f6f;--accent2:#5a5046;--text:#2a2826;--text-sub:#8a7f6f;--one-red:#DB444C;--one-blue:#5BB9CD;}
+body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
+.hd{padding:20px 20px 14px;border-bottom:1px solid var(--card-border);background:#fff}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--text);letter-spacing:.32em}
+.logo-sub{font-size:7px;color:#bbb;letter-spacing:.22em;margin-top:3px}
+.body{padding:20px}
+.title{font-size:18px;color:var(--text);font-weight:700;margin-bottom:24px;font-family:'Noto Serif JP',serif}
+.card{background:var(--card-bg);border-radius:16px;padding:24px 20px;margin-bottom:16px}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--card-border);font-size:14px}
+.detail-row:last-child{border-bottom:none}
+.detail-label{color:var(--text-sub);font-size:11px;font-weight:600}
+.detail-value{color:var(--text);font-weight:700;text-align:right}
+.warn{background:linear-gradient(135deg,#FFF5F7 0%,#FFF9E6 100%);border:2px solid #FFB6C1;border-radius:14px;padding:16px;margin-bottom:20px;font-size:12px;color:var(--text);line-height:1.7;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:500}
+.btn-cancel{width:100%;padding:16px;background:linear-gradient(135deg,#DB444C,#b8323a);border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'M PLUS Rounded 1c',sans-serif;letter-spacing:.05em;margin-bottom:12px}
+.btn-cancel:disabled{opacity:0.5;cursor:not-allowed}
+.btn-back{display:block;width:100%;padding:14px;background:#fff;border:1.5px solid var(--card-border);border-radius:14px;color:var(--accent2);font-size:13px;font-weight:700;text-align:center;text-decoration:none;font-family:'M PLUS Rounded 1c',sans-serif}
+.loading{text-align:center;padding:16px;font-size:13px;color:#aaa;display:none}
+.result{display:none;text-align:center;padding:30px 10px}
+.result-icon{font-size:64px;margin-bottom:14px}
+.result-msg{font-size:20px;font-weight:800;margin-bottom:10px;font-family:'M PLUS Rounded 1c',sans-serif}
+.result-sub{font-size:13px;color:var(--text-sub);line-height:1.7;margin-bottom:20px;font-family:'M PLUS Rounded 1c',sans-serif}
+.line-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:linear-gradient(135deg,#06C755,#00B14F);color:#fff;border-radius:14px;text-decoration:none;font-size:14px;font-weight:800;font-family:'M PLUS Rounded 1c',sans-serif}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hd">
+    <div class="logo">ONE TRE</div>
+    <div class="logo-sub">PERSONAL TRAINING GYM</div>
+  </div>
+  <div class="body">
+    <div id="confirm-area">
+      <div class="title">ご予約のキャンセル</div>
+      <div class="card">
+        <div class="detail-row"><span class="detail-label">お名前</span><span class="detail-value" id="d-name">-</span></div>
+        <div class="detail-row"><span class="detail-label">日時</span><span class="detail-value" id="d-label">-</span></div>
+      </div>
+      <div class="warn">⚠️ 「キャンセルする」を押すと、この予約は取り消されます。よろしければ下のボタンを押してください。</div>
+      <button class="btn-cancel" id="cancel-btn" onclick="doCancel()">この予約をキャンセルする</button>
+      <a href="javascript:history.back()" class="btn-back">戻る</a>
+      <div class="loading" id="loading">キャンセル処理中...</div>
+    </div>
+    <div class="result" id="result-area">
+      <div class="result-icon" id="r-icon">✅</div>
+      <div class="result-msg" id="r-msg"></div>
+      <div class="result-sub" id="r-sub"></div>
+      <a href="https://lin.ee/nMHT6uF" class="line-btn" target="_blank" rel="noopener">💬 公式LINEを開く</a>
+    </div>
+  </div>
+</div>
+<script>
+const GAS_URL='ここに新しいGASのデプロイURLを貼る';
+const p=new URLSearchParams(location.search);
+const pStart=p.get('start')||'';
+const pEnd=p.get('end')||'';
+const pName=p.get('name')||'';
+const pLabel=p.get('label')||'';
+document.getElementById('d-name').textContent=pName?pName+' 様':'-';
+document.getElementById('d-label').textContent=pLabel||'-';
+if(!pStart||!pName){
+  document.getElementById('cancel-btn').disabled=true;
+  document.getElementById('cancel-btn').textContent='予約情報が読み取れません';
+}
+async function doCancel(){
+  const btn=document.getElementById('cancel-btn');
+  btn.disabled=true;
+  document.getElementById('loading').style.display='block';
+  try{
+    const params=new URLSearchParams({action:'cancel',start:pStart,end:pEnd,name:pName});
+    const res=await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    document.getElementById('loading').style.display='none';
+    document.getElementById('confirm-area').style.display='none';
+    document.getElementById('result-area').style.display='block';
+    if(data.success){
+      document.getElementById('r-icon').textContent='✅';
+      document.getElementById('r-msg').textContent='キャンセル完了';
+      document.getElementById('r-sub').textContent='予約をキャンセルしました。またのご利用をお待ちしております。';
+    }else{
+      document.getElementById('r-icon').textContent='⚠️';
+      document.getElementById('r-msg').textContent='キャンセルできませんでした';
+      document.getElementById('r-sub').textContent=data.message||'お手数ですが公式LINEよりご連絡ください。';
+    }
+  }catch(err){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('confirm-area').style.display='none';
+    document.getElementById('result-area').style.display='block';
+    document.getElementById('r-icon').textContent='⚠️';
+    document.getElementById('r-msg').textContent='通信エラー';
+    document.getElementById('r-sub').textContent='お手数ですが公式LINEよりご連絡ください。';
+  }
+}
+</script>
+</body>
+</html>
