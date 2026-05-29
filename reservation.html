@@ -8,23 +8,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#fafaf8;
-  --card-bg:#f5f3ef;
-  --card-border:#e8e4dc;
-  --accent:#8a7f6f;
-  --accent2:#5a5046;
-  --text:#2a2826;
-  --text-sub:#8a7f6f;
-  --white:#ffffff;
-  --btn-gradient:linear-gradient(135deg,#5a5046,#2a2826);
-  --one-red:#DB444C;
-  --one-blue:#5BB9CD;
-  --pastel-pink:#FFD6E0;
-  --pastel-blue:#C7E9F1;
-  --pastel-yellow:#FFF3B8;
-  --pastel-green:#D4F1D4;
-  --pastel-purple:#E5D4F1;
-  --pastel-peach:#FFE0CC;
+  --bg:#fafaf8;--card-bg:#f5f3ef;--card-border:#e8e4dc;--accent:#8a7f6f;--accent2:#5a5046;
+  --text:#2a2826;--text-sub:#8a7f6f;--white:#ffffff;--btn-gradient:linear-gradient(135deg,#5a5046,#2a2826);
+  --one-red:#DB444C;--one-blue:#5BB9CD;--pastel-pink:#FFD6E0;--pastel-blue:#C7E9F1;
+  --pastel-yellow:#FFF3B8;--pastel-green:#D4F1D4;--pastel-purple:#E5D4F1;--pastel-peach:#FFE0CC;
 }
 body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
@@ -37,6 +24,7 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
 .card-title{font-size:11px;color:var(--accent);letter-spacing:.1em;margin-bottom:16px;font-weight:700}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .fg label{font-size:10px;color:var(--text-sub);font-weight:500}
+.fg .hint{font-size:9px;color:#b0a89c;font-weight:400}
 .fg input{font-size:14px;padding:10px 14px;border:1px solid var(--card-border);border-radius:10px;background:#fff;color:var(--text);font-family:inherit;width:100%;outline:none;-webkit-appearance:none;appearance:none;box-sizing:border-box;max-width:100%}
 .fg input[type=date]{min-height:44px;display:block;width:100%;max-width:100%}
 .trainer-label{font-size:10px;color:var(--text-sub);font-weight:500;margin-bottom:10px}
@@ -61,143 +49,24 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
 .line-btn-icon{font-size:14px}
 .loading{text-align:center;padding:16px;font-size:12px;color:#aaa;display:none}
 .error-msg{font-size:12px;color:#c94a4a;text-align:center;padding:12px;display:none}
-
-/* ===== 予約完了画面（パステルカラフル版） ===== */
 .success{display:none;text-align:center;padding:40px 20px 32px;position:relative;overflow:hidden}
-.success::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;
-  background-image:
-    radial-gradient(circle at 10% 15%, var(--pastel-pink) 0, var(--pastel-pink) 6px, transparent 7px),
-    radial-gradient(circle at 85% 10%, var(--pastel-blue) 0, var(--pastel-blue) 8px, transparent 9px),
-    radial-gradient(circle at 15% 85%, var(--pastel-yellow) 0, var(--pastel-yellow) 7px, transparent 8px),
-    radial-gradient(circle at 90% 80%, var(--pastel-green) 0, var(--pastel-green) 6px, transparent 7px),
-    radial-gradient(circle at 50% 5%, var(--pastel-purple) 0, var(--pastel-purple) 5px, transparent 6px),
-    radial-gradient(circle at 5% 50%, var(--pastel-peach) 0, var(--pastel-peach) 5px, transparent 6px),
-    radial-gradient(circle at 95% 45%, var(--pastel-pink) 0, var(--pastel-pink) 4px, transparent 5px);
-  opacity:0.5;
-  pointer-events:none;
-  z-index:0;
-}
+.success::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(circle at 10% 15%,var(--pastel-pink) 0,var(--pastel-pink) 6px,transparent 7px),radial-gradient(circle at 85% 10%,var(--pastel-blue) 0,var(--pastel-blue) 8px,transparent 9px),radial-gradient(circle at 15% 85%,var(--pastel-yellow) 0,var(--pastel-yellow) 7px,transparent 8px),radial-gradient(circle at 90% 80%,var(--pastel-green) 0,var(--pastel-green) 6px,transparent 7px),radial-gradient(circle at 50% 5%,var(--pastel-purple) 0,var(--pastel-purple) 5px,transparent 6px),radial-gradient(circle at 5% 50%,var(--pastel-peach) 0,var(--pastel-peach) 5px,transparent 6px);opacity:0.5;pointer-events:none;z-index:0}
 .success > *{position:relative;z-index:1}
-.success-icon{
-  font-size:80px;
-  margin-bottom:16px;
-  animation:popIn 0.6s ease-out, bounce 2s ease-in-out 0.6s infinite;
-  display:inline-block;
-}
-@keyframes popIn{
-  0%{transform:scale(0) rotate(-180deg);opacity:0}
-  60%{transform:scale(1.2) rotate(10deg);opacity:1}
-  100%{transform:scale(1) rotate(0);opacity:1}
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
-}
-.success-msg{
-  font-family:'M PLUS Rounded 1c',sans-serif;
-  font-size:46px;
-  font-weight:900;
-  background:linear-gradient(90deg, #FF8FA3 0%, #FFB347 25%, #FFE066 50%, #7FD8BE 75%, #6EC6E6 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-  letter-spacing:0.05em;
-  margin-bottom:16px;
-  line-height:1.2;
-  animation:gradientShift 3s ease infinite;
-  background-size:200% auto;
-}
-@keyframes gradientShift{
-  0%,100%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-}
-.success-sub{
-  font-size:16px;
-  color:var(--text);
-  font-weight:700;
-  line-height:1.7;
-  margin-bottom:28px;
-  font-family:'M PLUS Rounded 1c',sans-serif;
-}
-.success-sub-emoji{
-  font-size:22px;
-  display:inline-block;
-  margin:0 4px;
-}
-.cancel-notice{
-  background:linear-gradient(135deg, #FFF5F7 0%, #FFF9E6 100%);
-  border:2px solid #FFB6C1;
-  border-radius:18px;
-  padding:20px 18px;
-  margin-bottom:20px;
-  text-align:left;
-  box-shadow:0 4px 12px rgba(255,182,193,0.2);
-}
-.cancel-notice-title{
-  font-size:13px;
-  color:#E67389;
-  font-weight:800;
-  letter-spacing:0.05em;
-  margin-bottom:10px;
-  font-family:'M PLUS Rounded 1c',sans-serif;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.cancel-notice-text{
-  font-size:13px;
-  color:var(--text);
-  line-height:1.8;
-  font-family:'M PLUS Rounded 1c',sans-serif;
-  font-weight:500;
-}
-.cancel-deadline{
-  display:inline-block;
-  background:#FFE0E6;
-  color:#D94560;
-  font-weight:800;
-  padding:2px 8px;
-  border-radius:6px;
-  margin:0 2px;
-}
-.line-cancel-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  width:100%;
-  padding:16px 20px;
-  background:linear-gradient(135deg, #06C755 0%, #00B14F 100%);
-  color:#fff;
-  border-radius:16px;
-  text-decoration:none;
-  font-size:15px;
-  font-weight:800;
-  letter-spacing:.05em;
-  transition:transform 0.2s, box-shadow 0.2s;
-  font-family:'M PLUS Rounded 1c',sans-serif;
-  margin-bottom:20px;
-  box-shadow:0 4px 14px rgba(6,199,85,0.35);
-}
-.line-cancel-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 18px rgba(6,199,85,0.45);
-}
-.back-btn{
-  display:inline-block;
-  margin-top:8px;
-  padding:12px 28px;
-  background:linear-gradient(135deg, #E5D4F1 0%, #C7E9F1 100%);
-  color:#5a5046;
-  border-radius:22px;
-  font-size:13px;
-  font-weight:700;
-  text-decoration:none;
-  font-family:'M PLUS Rounded 1c',sans-serif;
-}
+.success-icon{font-size:80px;margin-bottom:16px;animation:popIn 0.6s ease-out,bounce 2s ease-in-out 0.6s infinite;display:inline-block}
+@keyframes popIn{0%{transform:scale(0) rotate(-180deg);opacity:0}60%{transform:scale(1.2) rotate(10deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.success-msg{font-family:'M PLUS Rounded 1c',sans-serif;font-size:46px;font-weight:900;background:linear-gradient(90deg,#FF8FA3 0%,#FFB347 25%,#FFE066 50%,#7FD8BE 75%,#6EC6E6 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.05em;margin-bottom:16px;line-height:1.2;animation:gradientShift 3s ease infinite;background-size:200% auto}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.success-sub{font-size:16px;color:var(--text);font-weight:700;line-height:1.7;margin-bottom:28px;font-family:'M PLUS Rounded 1c',sans-serif}
+.success-sub-emoji{font-size:22px;display:inline-block;margin:0 4px}
+.mail-notice{background:#fff;border:1.5px solid var(--one-blue);border-radius:14px;padding:14px 16px;margin-bottom:20px;font-size:12px;color:var(--accent2);line-height:1.7;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:500}
+.cancel-notice{background:linear-gradient(135deg,#FFF5F7 0%,#FFF9E6 100%);border:2px solid #FFB6C1;border-radius:18px;padding:20px 18px;margin-bottom:20px;text-align:left;box-shadow:0 4px 12px rgba(255,182,193,0.2)}
+.cancel-notice-title{font-size:13px;color:#E67389;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;font-family:'M PLUS Rounded 1c',sans-serif;display:flex;align-items:center;gap:6px}
+.cancel-notice-text{font-size:13px;color:var(--text);line-height:1.8;font-family:'M PLUS Rounded 1c',sans-serif;font-weight:500}
+.cancel-deadline{display:inline-block;background:#FFE0E6;color:#D94560;font-weight:800;padding:2px 8px;border-radius:6px;margin:0 2px}
+.line-cancel-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px 20px;background:linear-gradient(135deg,#06C755 0%,#00B14F 100%);color:#fff;border-radius:16px;text-decoration:none;font-size:15px;font-weight:800;letter-spacing:.05em;transition:transform 0.2s,box-shadow 0.2s;font-family:'M PLUS Rounded 1c',sans-serif;margin-bottom:20px;box-shadow:0 4px 14px rgba(6,199,85,0.35)}
+.line-cancel-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(6,199,85,0.45)}
+.back-btn{display:inline-block;margin-top:8px;padding:12px 28px;background:linear-gradient(135deg,#E5D4F1 0%,#C7E9F1 100%);color:#5a5046;border-radius:22px;font-size:13px;font-weight:700;text-decoration:none;font-family:'M PLUS Rounded 1c',sans-serif}
 </style>
 </head>
 <body>
@@ -214,6 +83,10 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
         <div class="fg">
           <label>お名前</label>
           <input type="text" id="name" placeholder="長澤まさみ">
+        </div>
+        <div class="fg">
+          <label>メールアドレス <span class="hint">（入力すると予約完了メールが届きます）</span></label>
+          <input type="email" id="email" placeholder="example@email.com" inputmode="email" autocomplete="email">
         </div>
         <div class="fg" style="margin-bottom:16px">
           <label>希望日</label>
@@ -241,8 +114,6 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
         </a>
       </div>
     </div>
-
-    <!-- ===== 予約完了画面 ===== -->
     <div class="success" id="success-area">
       <div class="success-icon">🎉</div>
       <div class="success-msg">予約完了！</div>
@@ -250,12 +121,16 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
         <span class="success-sub-emoji">✨</span>お気をつけて<br>
         お越しください<span class="success-sub-emoji">✨</span>
       </div>
+      <div class="mail-notice" id="mail-notice" style="display:none">
+        📩 ご入力のメールアドレス宛に<br><b>予約完了メール</b>をお送りしました。<br>
+        <span style="font-size:11px;color:#aaa">※ 届かない場合は迷惑メールフォルダもご確認ください</span>
+      </div>
       <div class="cancel-notice">
         <div class="cancel-notice-title">🌸 キャンセルのご連絡について</div>
         <div class="cancel-notice-text">
           キャンセルの場合は、<br>
           <span class="cancel-deadline">セッション前日 20:00まで</span>に<br>
-          下記の公式LINEまでご連絡ください。
+          完了メール内のリンク、または下記の公式LINEからお願いします。
         </div>
       </div>
       <a href="https://lin.ee/nMHT6uF" class="line-cancel-btn" target="_blank" rel="noopener">
@@ -266,64 +141,44 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
   </div>
 </div>
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+const GAS_URL='ここに新しいGASのデプロイURLを貼る';
 let selectedStart=null,selectedEnd=null;
 let selectedTrainer='';
-
 const today=new Date();
 const tomorrow=new Date(today);
 tomorrow.setDate(tomorrow.getDate()+1);
 document.getElementById('date').setAttribute('min',tomorrow.toISOString().slice(0,10));
 document.getElementById('date').value=tomorrow.toISOString().slice(0,10);
-
 function selectTrainer(name,btn){
-  if(selectedTrainer===name){
-    selectedTrainer='';
-    btn.classList.remove('selected');
-  }else{
-    selectedTrainer=name;
-    document.querySelectorAll('.trainer-btn').forEach(b=>b.classList.remove('selected'));
-    btn.classList.add('selected');
-  }
+  if(selectedTrainer===name){selectedTrainer='';btn.classList.remove('selected');}
+  else{selectedTrainer=name;document.querySelectorAll('.trainer-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
 }
-
 async function loadSlots(){
   const date=document.getElementById('date').value;
   if(!date)return;
   const sel=new Date(date+'T00:00:00');
   const tod=new Date();tod.setHours(0,0,0,0);
   if(sel<=tod)return;
-
   const slotCard=document.getElementById('slot-card');
   const grid=document.getElementById('time-grid');
   const loading=document.getElementById('loading');
   const errMsg=document.getElementById('error-msg');
-  slotCard.style.display='block';
-  grid.innerHTML='';
+  slotCard.style.display='block';grid.innerHTML='';
   selectedStart=null;selectedEnd=null;
   document.getElementById('selected-info').style.display='none';
   document.getElementById('submit-btn').disabled=true;
-  loading.style.display='block';
-  errMsg.style.display='none';
-
+  loading.style.display='block';errMsg.style.display='none';
   try{
     const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
     loading.style.display='none';
     if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';return;}
     if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';return;}
-    
     data.slots.forEach(slot=>{
       const btn=document.createElement('button');
-      btn.className='time-btn';
-      btn.type='button';
-      btn.textContent=slot.label;
-      
-      if(slot.status==='full'){
-        btn.classList.add('full');
-        btn.disabled=true;
-        btn.title='この時間帯は満員です';
-      }else{
+      btn.className='time-btn';btn.type='button';btn.textContent=slot.label;
+      if(slot.status==='full'){btn.classList.add('full');btn.disabled=true;btn.title='この時間帯は満員です';}
+      else{
         btn.onclick=()=>{
           document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
           btn.classList.add('selected');
@@ -338,30 +193,27 @@ async function loadSlots(){
       }
       grid.appendChild(btn);
     });
-    
     const availableCount=data.slots.filter(s=>s.status!=='full').length;
-    if(availableCount===0){
-      errMsg.textContent='この日は満員です。別の日をお選びください。';
-      errMsg.style.display='block';
-    }
+    if(availableCount===0){errMsg.textContent='この日は満員です。別の日をお選びください。';errMsg.style.display='block';}
   }catch(err){
     loading.style.display='none';
     errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
     errMsg.style.display='block';
   }
 }
-
 async function submitForm(){
   const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
   const date=document.getElementById('date').value;
   if(!name||!date||!selectedStart){alert('お名前と希望日・時間を入力してください');return;}
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='送信中...';
   try{
-    const params=new URLSearchParams({action:'submitReservation',name,email:'',phone:'',start:selectedStart,end:selectedEnd,trainer:selectedTrainer});
+    const params=new URLSearchParams({action:'reserve',name,email,start:selectedStart,end:selectedEnd,trainer:selectedTrainer});
     const res=await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
     const data=await res.json();
     if(data.success){
+      if(email){document.getElementById('mail-notice').style.display='block';}
       document.getElementById('form-area').style.display='none';
       document.getElementById('success-area').style.display='block';
       window.scrollTo({top:0,behavior:'smooth'});
