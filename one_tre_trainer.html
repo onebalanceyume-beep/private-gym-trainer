@@ -376,7 +376,12 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <div class="card"><div class="section-ttl">年代別</div><div style="position:relative;height:180px"><canvas id="ca"></canvas></div></div>
     </div>
 
-    <div class="section-ttl">💰 今月の人件費（16-22時外の時間外手当）</div>
+    <div class="section-ttl">💰 人件費（16-22時外の時間外手当）</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px">
+      <button onclick="payrollPrevMonth()" style="background:var(--blue2);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;cursor:pointer">◀ 前月</button>
+      <div id="payroll-month-label" style="font-size:15px;font-weight:800;color:var(--ink2);min-width:120px;text-align:center">―</div>
+      <button id="payroll-next-btn" onclick="payrollNextMonth()" style="background:var(--blue2);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;cursor:pointer">翌月 ▶</button>
+    </div>
     <div id="payroll-loading" style="font-size:11px;color:var(--ink3);font-weight:500;padding:10px">Googleカレンダーから読み取り中...</div>
     <div id="payroll-content" style="display:none">
       <div class="metrics" style="margin-bottom:14px">
@@ -1329,14 +1334,22 @@ function getSessionInfo(memberId){
   return sessionCountsData[memberId];
 }
 
+let payrollViewYear=new Date().getFullYear();
+let payrollViewMonth=new Date().getMonth()+1;
+function payrollPrevMonth(){payrollViewMonth--;if(payrollViewMonth<1){payrollViewMonth=12;payrollViewYear--;}loadPayroll();}
+function payrollNextMonth(){const n=new Date();if(payrollViewYear>=n.getFullYear()&&payrollViewMonth>=n.getMonth()+1)return;payrollViewMonth++;if(payrollViewMonth>12){payrollViewMonth=1;payrollViewYear++;}loadPayroll();}
 async function loadPayroll(){
   const loadingEl=document.getElementById('payroll-loading');
   const contentEl=document.getElementById('payroll-content');
   const errorEl=document.getElementById('payroll-error');
   if(!loadingEl||!contentEl||!errorEl)return;
+  const labelEl=document.getElementById('payroll-month-label');
+  if(labelEl)labelEl.textContent=payrollViewYear+'年'+payrollViewMonth+'月';
+  const nextBtn=document.getElementById('payroll-next-btn');
+  if(nextBtn){const n=new Date();const isCur=(payrollViewYear>=n.getFullYear()&&payrollViewMonth>=n.getMonth()+1);nextBtn.style.opacity=isCur?'0.3':'1';nextBtn.style.pointerEvents=isCur?'none':'auto';}
   loadingEl.style.display='block';contentEl.style.display='none';errorEl.style.display='none';
   try{
-    const res=await fetch(GAS_URL+'?action=getPayroll&t='+Date.now(),{method:'GET',mode:'cors'});
+    const res=await fetch(GAS_URL+'?action=getPayroll&year='+payrollViewYear+'&month='+payrollViewMonth+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
     if(!data.ok){loadingEl.style.display='none';errorEl.textContent='読み取りエラー: '+(data.error||'不明');errorEl.style.display='block';return;}
     loadingEl.style.display='none';contentEl.style.display='block';
