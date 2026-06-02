@@ -239,6 +239,11 @@
         <div class="sm-type" data-type="yen" onclick="selectStaffType('yen')">定額（円）</div>
         <div class="sm-type sel" data-type="percent" onclick="selectStaffType('percent')">割引率（%）</div>
       </div>
+      <div class="sm-sec" id="sm-slider-sec">
+        <div class="sm-sec-lbl">スライドして割引を選ぶ</div>
+        <div style="text-align:center;margin-bottom:6px;"><span id="sm-slider-val" style="font-family:'Times New Roman',serif;font-size:34px;color:#993556;font-weight:500;line-height:1;">0</span><span id="sm-slider-unit" style="font-size:16px;color:#D4537E;font-weight:500;margin-left:3px;">%OFF</span></div>
+        <input type="range" id="staff-slider" min="0" max="100" value="0" step="1" oninput="onStaffSlider(this.value)" style="width:100%;accent-color:#D4537E;">
+      </div>
       <div class="sm-value-wrap">
         <input type="number" id="staff-value" min="0" step="1" placeholder="任意・空欄OK" oninput="updateStaffPreview()">
         <div class="sm-value-unit" id="staff-unit">%OFF</div>
@@ -974,6 +979,29 @@ function clearStaffDiscount(){
   updateStaffAppliedBadge();
   if(typeof updatePrice === 'function') updatePrice();
 }
+
+function onStaffSlider(v){
+  var sel=document.querySelector(".sm-type.sel");
+  var type=sel?sel.dataset.type:"percent";
+  var svEl=document.getElementById("staff-value"); if(svEl) svEl.value=v;
+  var vEl=document.getElementById("sm-slider-val"); if(vEl) vEl.textContent=v;
+  var uEl=document.getElementById("sm-slider-unit"); if(uEl) uEl.textContent=(type==="yen")?"円引き":"%OFF";
+  if(typeof updateStaffPreview==="function") updateStaffPreview();
+}
+document.querySelectorAll(".sm-type").forEach(function(el){
+  el.addEventListener("click",function(){
+    var type=el.dataset.type;
+    var sl=document.getElementById("staff-slider"); if(!sl) return;
+    var uEl=document.getElementById("sm-slider-unit");
+    if(type==="yen"){ sl.max=200000; sl.step=1000; if(uEl)uEl.textContent="円引き"; }
+    else { sl.max=100; sl.step=1; if(uEl)uEl.textContent="%OFF"; }
+    var svv=document.getElementById("staff-value");
+    var cur=svv?(parseFloat(svv.value)||0):0;
+    if(cur>sl.max)cur=sl.max;
+    sl.value=cur;
+    var vEl=document.getElementById("sm-slider-val"); if(vEl)vEl.textContent=cur;
+  });
+});
 
 function updateStaffAppliedBadge(){
   const badge = document.getElementById('staff-applied-badge');
