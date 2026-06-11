@@ -139,12 +139,13 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
       <a href="https://lin.ee/nMHT6uF" class="line-cancel-btn" target="_blank" rel="noopener">
         <span style="font-size:20px;">💬</span>公式LINEを開く
       </a>
-      <a href="javascript:history.back()" class="back-btn">マイページに戻る</a>
+      <a href="javascript:void(0)" id="mypage-btn" class="back-btn" style="display:none">マイページを開く</a>
     </div>
   </div>
 </div>
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbysR-n8bv5VWrJscMpXOOX3W8tr8VQgUwsQppF1Q2sAmgQgXvkkSDydMbqVMnTlTYFQKw/exec';
+  const MEMBER_GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 let selectedStart=null,selectedEnd=null;
 let selectedTrainer='';
 const today=new Date();
@@ -220,6 +221,7 @@ async function submitForm(){
       document.getElementById('form-area').style.display='none';
       document.getElementById('success-area').style.display='block';
       window.scrollTo({top:0,behavior:'smooth'});
+      if(email){loadMyPageLink(email);}
     }else{
       alert(data.message||'予約に失敗しました。再度お試しください。');
       btn.disabled=false;btn.textContent='予約する';
@@ -228,6 +230,18 @@ async function submitForm(){
     alert('送信に失敗しました。再度お試しください。');
     btn.disabled=false;btn.textContent='予約する';
   }
+}
+  async function loadMyPageLink(email){
+  try{
+    const res=await fetch(MEMBER_GAS_URL+'?action=checkMember&email='+encodeURIComponent(email)+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    const btn=document.getElementById('mypage-btn');
+    if(!btn)return;
+    if(data&&data.isExisting&&data.memberId){
+      btn.href='https://onebalanceyume-beep.github.io/private-gym-trainer/member_'+data.memberId+'.html';
+      btn.style.display='inline-block';
+    }
+  }catch(err){}
 }
 </script>
 </body>
