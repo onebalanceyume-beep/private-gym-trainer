@@ -1061,7 +1061,7 @@ function showMonthSalesMembers(){
     if(!ts||isNaN(actual)||actual===0)return;
     const d=new Date(ts);
     if(d.getFullYear()===ty&&d.getMonth()+1===tm){
-      const nm=(typeof NAME_KEY!=='undefined'?row[NAME_KEY]:'')||row['お名前']||'-';
+      let nm=(typeof NAME_KEY!=='undefined'&&row[NAME_KEY])?row[NAME_KEY]:(row['お名前']||'');       if(!nm){for(const k in row){if((k.indexOf('名前')>=0||k.indexOf('氏名')>=0)&&row[k]){nm=row[k];break;}}}       if(!nm)nm='-';
       const cs=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
       members.push({name:nm,amount:actual,course:cs,date:d.toISOString().slice(0,10)});
     }
