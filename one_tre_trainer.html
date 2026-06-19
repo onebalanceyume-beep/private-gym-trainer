@@ -1049,7 +1049,37 @@ async function loadYearlyPayroll(year){
     return {ok:false, totalAmount:0, totalCount:0};
   }
 }
-
+function showMonthSalesMembers(){
+  if(!salesCache)return;
+  const now=new Date(),ty=salesViewYear,tm=now.getMonth()+1;
+  if(ty!==now.getFullYear())return;
+  const members=[];
+  salesCache.forEach(row=>{
+    const ts=row['タイムスタンプ'];
+    const rawVal=row['実際の金額'];
+    const actual=(rawVal!==null&&rawVal!==undefined&&rawVal!=='')?parseFloat(rawVal):parseFloat(row['定価']||0);
+    if(!ts||isNaN(actual)||actual===0)return;
+    const d=new Date(ts);
+    if(d.getFullYear()===ty&&d.getMonth()+1===tm){
+      const nm=(typeof NAME_KEY!=='undefined'?row[NAME_KEY]:'')||row['お名前']||'-';
+      const cs=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
+      members.push({name:nm,amount:actual,course:cs,date:d.toISOString().slice(0,10)});
+    }
+  });
+  if(!members.length)return;
+  let modal=document.getElementById('month-sales-modal');
+  if(!modal){
+    modal=document.createElement('div');
+    modal.id='month-sales-modal';
+    modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-end;justify-content:center';
+    modal.onclick=function(e){if(e.target===modal)modal.style.display='none';};
+    document.body.appendChild(modal);
+  }
+  const total=members.reduce((a,m)=>a+m.amount,0);
+  const rows=members.map(m=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line)"><div><div style="font-size:14px;font-weight:800;color:var(--ink)">'+m.name+'</div><div style="font-size:11px;color:var(--ink3);margin-top:2px;font-weight:500">'+m.date+' / '+m.course+'</div></div><div style="font-size:14px;font-weight:800;color:var(--ink)">¥'+m.amount.toLocaleString()+'</div></div>').join('');
+  modal.innerHTML='<div style="background:#fff;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:20px;max-height:75vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:16px;font-weight:800;color:var(--ink)">今月の売上 '+members.length+'件</div><button onclick="document.getElementById(\'month-sales-modal\').style.display=\'none\'" style="background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;color:var(--ink2);cursor:pointer;font-weight:700">×</button></div><div style="font-size:12px;color:var(--ink3);margin-bottom:12px;font-weight:600">合計 ¥'+total.toLocaleString()+'</div>'+rows+'</div>';
+  modal.style.display='flex';
+}
 async function renderSales(){
   if(!salesCache)return;
   const data=salesCache;
@@ -1084,7 +1114,7 @@ async function renderSales(){
     document.getElementById('taiken-conversion').textContent=ts.conversionRate+'%';
     document.getElementById('taiken-conversion-sub').textContent=ts.totalTaiken+'名中'+ts.converted+'名契約';
   }
-  document.getElementById('s-month-count').textContent=isCurrentYear?mC+'件':'-';
+  document.getElementById('s-month-count').textContent=isCurrentYear?mC+'件':'-';   (function(){const el=document.getElementById('s-month-count');if(isCurrentYear&&mC>0){el.style.cursor='pointer';el.style.textDecoration='underline';el.style.textDecorationStyle='dotted';el.style.textUnderlineOffset='3px';el.onclick=showMonthSalesMembers;}else{el.onclick=null;el.style.cursor='';el.style.textDecoration='';}})();
   document.getElementById('s-year').textContent=fmtYen(cur.yT);
   document.getElementById('s-year-count').textContent=cur.yC+'件';
 
