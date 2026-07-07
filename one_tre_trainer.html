@@ -1013,8 +1013,8 @@ let salesCache=null;
 let salesViewYear=new Date().getFullYear();
 let yearlyPayrollCache=null; // ★ 年間人件費キャッシュ
 
-function cPrevYear(){salesViewYear--;renderSales();}
-function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;renderSales();}
+function cPrevYear(){salesViewYear--;await renderSales();}
+function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;await renderSales();}
 
 // ★ 修正: 0円を正しくカウント
 function calcYearData(data,year){
@@ -1197,7 +1197,7 @@ async function renderSales(){
 
   document.getElementById('sales-loading').style.display='none';
   document.getElementById('sales-content').style.display='block';
-  renderSales();
+  await renderSales();
 }
 
 async function loadTaikenList(){
@@ -1287,7 +1287,7 @@ function sp(name,btn){
   document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
   if(name==='dashboard'){rDash();loadPayroll();}
-  if(name==='sales'){rSales();loadProfit();}
+  if(name==='sales'){rSales().then(()=>loadProfit());}
   if(name==='taiken'){loadTaikenList();loadCalendarReservations();}
   if(name==='members')rMem();
   if(name==='calendar'){pSel();rCal();renderCalendarAnalysis();}
