@@ -1013,8 +1013,8 @@ let salesCache=null;
 let salesViewYear=new Date().getFullYear();
 let yearlyPayrollCache=null; // ★ 年間人件費キャッシュ
 
-function cPrevYear(){salesViewYear--;await renderSales();}
-function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;await renderSales();}
+async function cPrevYear(){salesViewYear--;await renderSales();}
+async function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;await renderSales();}
 
 // ★ 修正: 0円を正しくカウント
 function calcYearData(data,year){
