@@ -146,6 +146,73 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbysR-n8bv5VWrJscMpXOOX3W8tr8VQgUwsQppF1Q2sAmgQgXvkkSDydMbqVMnTlTYFQKw/exec';
   const MEMBER_GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+  function renderTimeGrid(){
+  const grid=document.getElementById('time-grid');
+  const errMsg=document.getElementById('error-msg');
+  grid.innerHTML='';
+  if(!lastSlotsData||!lastSlotsData.length)return;
+  lastSlotsData.forEach(slot=>{
+    const isNagaoBlocked = selectedTrainer==='長尾' && slot.nagaoFull;
+    const isFull = slot.status==='full' || isNagaoBlocked;
+    const btn=document.createElement('button');
+    btn.className='time-btn';btn.type='button';btn.textContent=slot.label;
+    if(isFull){
+      btn.classList.add('full');btn.disabled=true;
+      btn.title=isNagaoBlocked?'この時間は長尾が対応できません':'この時間帯は満員です';
+      if(selectedStart===slot.start){selectedStart=null;selectedEnd=null;document.getElementById('selected-info').style.display='none';document.getElementById('submit-btn').disabled=true;}
+    }else{
+      if(selectedStart===slot.start){btn.classList.add('selected');}
+      btn.onclick=()=>{
+        document.querySelectorAll('.time-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedStart=slot.start;selectedEnd=slot.end;
+        const endDate=new Date(slot.end);
+        const endLabel=String(endDate.getHours()).padStart(2,'0')+':'+String(endDate.getMinutes()).padStart(2,'0');
+        const info=document.getElementById('selected-info');
+        info.style.display='block';
+        info.textContent='予約時間：'+slot.label+' 〜 '+endLabel+'(50分)';
+        document.getElementById('submit-btn').disabled=false;
+      };
+    }
+    grid.appendChild(btn);
+  });
+  const availableCount=lastSlotsData.filter(s=>{
+    const isNagaoBlocked = selectedTrainer==='長尾' && s.nagaoFull;
+    return s.status!=='full' && !isNagaoBlocked;
+  }).length;
+  if(availableCount===0){errMsg.textContent='この日は満員です。別の日をお選びください。';errMsg.style.display='block';}
+  else{errMsg.style.display='none';}
+}
+async function loadSlots(){
+  const date=document.getElementById('date').value;
+  if(!date)return;
+  const sel=new Date(date+'T00:00:00');
+  const tod=new Date();tod.setHours(0,0,0,0);
+  if(sel<=tod)return;
+  const slotCard=document.getElementById('slot-card');
+  const grid=document.getElementById('time-grid');
+  const loading=document.getElementById('loading');
+  const errMsg=document.getElementById('error-msg');
+  slotCard.style.display='block';grid.innerHTML='';
+  selectedStart=null;selectedEnd=null;
+  document.getElementById('selected-info').style.display='none';
+  document.getElementById('submit-btn').disabled=true;
+  loading.style.display='block';errMsg.style.display='none';
+  try{
+    const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+    loading.style.display='none';
+    if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';lastSlotsData=null;return;}
+    if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';lastSlotsData=null;return;}
+    lastSlotsData=data.slots;
+    renderTimeGrid();
+  }catch(err){
+    loading.style.display='none';
+    errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
+    errMsg.style.display='block';
+    lastSlotsData=null;
+  }
+}
 let selectedStart=null,selectedEnd=null;
 let selectedTrainer='';
 const today=new Date();
@@ -156,6 +223,7 @@ document.getElementById('date').value=tomorrow.toISOString().slice(0,10);
 function selectTrainer(name,btn){
   if(selectedTrainer===name){selectedTrainer='';btn.classList.remove('selected');}
   else{selectedTrainer=name;document.querySelectorAll('.trainer-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
+  renderTimeGrid();
 }
 async function loadSlots(){
   const date=document.getElementById('date').value;
