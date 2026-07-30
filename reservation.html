@@ -211,7 +211,19 @@ async function submitForm(){
   const date=document.getElementById('date').value;
   if(!name||!date||!selectedStart){alert('お名前と希望日・時間を入力してください');return;}
   const btn=document.getElementById('submit-btn');
-  btn.disabled=true;btn.textContent='送信中...';
+  btn.disabled=true;btn.textContent='確認中...';
+  try{
+    if(email){
+      const checkRes=await fetch(MEMBER_GAS_URL+'?action=checkTicketStatus&email='+encodeURIComponent(email)+'&t='+Date.now(),{method:'GET',mode:'cors'});
+      const checkData=await checkRes.json();
+      if(checkData&&checkData.blocked){
+        alert('回数券の有効期限が切れているか、契約回数を使い切っています。更新のお手続きについては公式LINEまたはスタッフまでご連絡ください。');
+        btn.disabled=false;btn.textContent='予約する';
+        return;
+      }
+    }
+  }catch(err){}
+  btn.textContent='送信中...';
   try{
     const params=new URLSearchParams({action:'reserve',name,email,start:selectedStart,end:selectedEnd,trainer:selectedTrainer});
     const res=await fetch(GAS_URL+'?'+params.toString(),{method:'GET',mode:'cors'});
