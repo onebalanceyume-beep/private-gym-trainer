@@ -55,8 +55,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
     <div id="loading-area" class="loading">予約情報を確認中...</div>
 
     <div id="form-area" style="display:none">
-      <div class="title">体験予約キャンセル</div>
-      <div class="subtitle">以下の予約内容でキャンセルを受け付けます。内容をご確認ください。</div>
+      <div class="title">予約について</div>
+      <div class="subtitle">以下の予約内容をご確認ください。</div>
 
       <div class="card">
         <div class="card-title">予約内容</div>
@@ -80,20 +80,15 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:#fdf6fb;color:#222;mi
         </div>
       </div>
 
-      <div class="warn-box">
-        <strong>⚠ キャンセル前にご確認ください</strong>
-        ・キャンセルは予約日時の24時間前まで受け付けます<br>
-        ・24時間を過ぎている場合は下記LINEからご連絡ください<br>
-        ・一度キャンセルすると元に戻せません
-      </div>
-
       <div class="line-box">
-        <div class="line-box-title">💬 24時間を過ぎた場合</div>
-        <div class="line-box-text">キャンセル受付期限を過ぎた場合は、下記の公式LINEからお気軽にお問い合わせください。</div>
-        <a href="https://lin.ee/QuZegDI" target="_blank" class="line-btn">公式LINEで問い合わせる</a>
+        <div class="line-box-title">💬 日程を変更したい場合</div>
+        <div class="line-box-text">日程の変更をご希望の方は、下記の公式LINEからお気軽にご相談ください。</div>
+        <a href="https://lin.ee/QuZegDI" target="_blank" class="line-btn">公式LINEで相談する</a>
       </div>
 
-      <button class="btn btn-cancel" id="cancel-btn" onclick="doCancel()">この予約をキャンセルする</button>
+      <div class="subtitle" style="margin-top:14px;margin-bottom:14px;">予約日時の24時間前まではご自身でのキャンセルも可能です。一度キャンセルすると元に戻せませんのでご注意ください。</div>
+
+      <button class="btn btn-cancel" id="cancel-btn" onclick="doCancel()" style="background:#f5f5f5;color:#888;font-weight:500;">この予約をキャンセルする</button>
       <a href="javascript:history.back()" class="btn btn-back" style="display:block;text-align:center;text-decoration:none;padding:14px">戻る</a>
     </div>
 
