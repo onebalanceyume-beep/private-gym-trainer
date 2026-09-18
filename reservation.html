@@ -92,7 +92,7 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
           <input type="email" id="email" placeholder="example@email.com" inputmode="email" autocomplete="email">
         </div>
         <div class="fg" style="margin-bottom:16px">
-          <label>希望日</label>
+          <label>希望日 <span class="hint">※祝日・お盆(8/13〜15)・年末年始(12/30〜1/4)はご予約いただけません</span></label>
           <input type="date" id="date" onchange="loadSlots()">
         </div>
         <div class="trainer-label">担当トレーナー（任意）</div>
@@ -146,6 +146,24 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbysR-n8bv5VWrJscMpXOOX3W8tr8VQgUwsQppF1Q2sAmgQgXvkkSDydMbqVMnTlTYFQKw/exec';
 const MEMBER_GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
+
+// 祝日データ取得（APIキー不要・自動更新）
+let holidays={};
+fetch('https://holidays-jp.github.io/api/v1/date.json')
+  .then(r=>r.json())
+  .then(d=>{holidays=d;})
+  .catch(()=>{});
+
+// 休業期間（お盆・年末年始）チェック用リスト
+// 月日のみで判定するので毎年自動的に適用されます。追加したい休業日はここに 'MM-DD' 形式で足してください。
+const CLOSED_MONTH_DAY=[
+  '08-13','08-14','08-15', // お盆休み
+  '12-30','12-31',         // 年末休み
+  '01-01','01-02','01-03','01-04' // 年始休み
+];
+function isClosedPeriod(dateStr){
+  return CLOSED_MONTH_DAY.includes(dateStr.slice(5));
+}
 
 let selectedStart=null,selectedEnd=null;
 let selectedTrainer='';
@@ -215,7 +233,25 @@ async function loadSlots(){
   selectedStart=null;selectedEnd=null;
   document.getElementById('selected-info').style.display='none';
   document.getElementById('submit-btn').disabled=true;
-  loading.style.display='block';errMsg.style.display='none';
+  errMsg.style.display='none';
+
+  // 祝日チェック（休業日）
+  if(holidays[date]){
+    errMsg.textContent='祝日（'+holidays[date]+'）は休業のため予約できません。別の日をお選びください。';
+    errMsg.style.display='block';
+    document.getElementById('date').value='';
+    return;
+  }
+
+  // お盆・年末年始チェック（休業期間）
+  if(isClosedPeriod(date)){
+    errMsg.textContent='お盆・年末年始休業期間のため予約できません。別の日をお選びください。';
+    errMsg.style.display='block';
+    document.getElementById('date').value='';
+    return;
+  }
+
+  loading.style.display='block';
   try{
     const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
