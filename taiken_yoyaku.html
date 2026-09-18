@@ -253,7 +253,7 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
       <div class="card">
         <div class="card-title">希望日時</div>
         <div class="fg">
-          <label>希望日 ※日曜・祝日は定休日のため選択できません</label>
+          <label>希望日 ※日曜・祝日・お盆(8/13〜15)・年末年始(12/30〜1/4)は定休日のため選択できません</label>
           <input type="date" id="date" onchange="loadSlots()">
         </div>
         <div class="choice-label">希望時間帯</div>
@@ -347,6 +347,17 @@ fetch('https://holidays-jp.github.io/api/v1/date.json')
   .then(d=>{holidays=d;})
   .catch(()=>{});
 
+// 休業期間（お盆・年末年始）チェック用リスト
+// 月日のみで判定するので毎年自動的に適用されます。追加したい休業日はここに 'MM-DD' 形式で足してください。
+const CLOSED_MONTH_DAY=[
+  '08-13','08-14','08-15', // お盆休み
+  '12-30','12-31',         // 年末休み
+  '01-01','01-02','01-03','01-04' // 年始休み
+];
+function isClosedPeriod(dateStr){
+  return CLOSED_MONTH_DAY.includes(dateStr.slice(5));
+}
+
 let selectedMode='';
 const selected={age:'',undou:''};
 const checked={kikkake:[]};
@@ -420,6 +431,14 @@ async function loadSlots(){
   // 祝日チェック（定休日）
   if(holidays[date]){
     errMsg.textContent='祝日（'+holidays[date]+'）は定休日のため予約できません。別の日をお選びください。';
+    errMsg.style.display='block';
+    document.getElementById('date').value='';
+    return;
+  }
+
+  // お盆・年末年始チェック（休業期間）
+  if(isClosedPeriod(date)){
+    errMsg.textContent='お盆・年末年始休業期間のため予約できません。別の日をお選びください。';
     errMsg.style.display='block';
     document.getElementById('date').value='';
     return;
