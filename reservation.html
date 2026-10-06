@@ -95,7 +95,7 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
           <input type="email" id="email" placeholder="example@email.com" inputmode="email" autocomplete="email">
         </div>
         <div class="fg" style="margin-bottom:16px">
-          <label>希望日 <span class="hint">※祝日・お盆(8/13〜15)・年末年始(12/30〜1/4)はご予約いただけません</span></label>
+          <label>希望日 <span class="hint">※日曜・祝日・お盆(8/13〜15)・年末年始(12/30〜1/4)は定休日のためご予約いただけません</span></label>
           <input type="date" id="date" onchange="loadSlots()">
           <div class="today-note">
             ご予約は<b>前日まで</b>受付しています。<br>
@@ -105,7 +105,7 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
         </div>
         <div class="trainer-label">担当トレーナー（任意）</div>
         <div class="trainer-grid">
-          <button type="button" class="trainer-btn" onclick="selectTrainer('稲田',this)">稲田</button>
+          <button type="button" class="trainer-btn selected" onclick="selectTrainer('稲田',this)">稲田</button>
           <button type="button" class="trainer-btn" onclick="selectTrainer('長尾',this)">長尾</button>
         </div>
         <div class="trainer-note">※ 選択しなくても予約できます</div>
@@ -156,11 +156,17 @@ const GAS_URL='https://script.google.com/macros/s/AKfycbysR-n8bv5VWrJscMpXOOX3W8
 const MEMBER_GAS_URL='https://script.google.com/macros/s/AKfycbzlR1zmKyyLcvWANYpKiO7oPqaaGlx-BOPKhi7redVr1G2MQ0Gj0WRBLLL46jeUxKI/exec';
 
 // 祝日データ取得（APIキー不要・自動更新）
-let holidays={};
+// 祝日の予備リスト（祝日APIが読み込めない時用）※2028年分は年末に追加
+const HOLIDAYS_FALLBACK={
+'2026-01-01':'元日','2026-01-12':'成人の日','2026-02-11':'建国記念の日','2026-02-23':'天皇誕生日','2026-03-20':'春分の日','2026-04-29':'昭和の日','2026-05-03':'憲法記念日','2026-05-04':'みどりの日','2026-05-05':'こどもの日','2026-05-06':'休日','2026-07-20':'海の日','2026-08-11':'山の日','2026-09-21':'敬老の日','2026-09-22':'休日','2026-09-23':'秋分の日','2026-10-12':'スポーツの日','2026-11-03':'文化の日','2026-11-23':'勤労感謝の日',
+'2027-01-01':'元日','2027-01-11':'成人の日','2027-02-11':'建国記念の日','2027-02-23':'天皇誕生日','2027-03-21':'春分の日','2027-03-22':'休日','2027-04-29':'昭和の日','2027-05-03':'憲法記念日','2027-05-04':'みどりの日','2027-05-05':'こどもの日','2027-07-19':'海の日','2027-08-11':'山の日','2027-09-20':'敬老の日','2027-09-23':'秋分の日','2027-10-11':'スポーツの日','2027-11-03':'文化の日','2027-11-23':'勤労感謝の日'
+};
+let holidays=Object.assign({},HOLIDAYS_FALLBACK);
 fetch('https://holidays-jp.github.io/api/v1/date.json')
   .then(r=>r.json())
-  .then(d=>{holidays=d;})
-  .catch(()=>{});
+  .then(d=>{holidays=Object.assign({},HOLIDAYS_FALLBACK,d);})
+  .catch(()=>{})
+  .finally(()=>{initDefaultDate();});
 
 // 休業期間（お盆・年末年始）チェック用リスト
 // 月日のみで判定するので毎年自動的に適用されます。追加したい休業日はここに 'MM-DD' 形式で足してください。
@@ -174,7 +180,7 @@ function isClosedPeriod(dateStr){
 }
 
 let selectedStart=null,selectedEnd=null;
-let selectedTrainer='';
+let selectedTrainer='稲田'; // デフォルト担当
 let lastSlotsData=null;
 
 const today=new Date();
@@ -184,6 +190,21 @@ const _pad=n=>String(n).padStart(2,'0');
 const _ymd=d=>d.getFullYear()+'-'+_pad(d.getMonth()+1)+'-'+_pad(d.getDate());
 document.getElementById('date').setAttribute('min',_ymd(tomorrow));
 document.getElementById('date').value=_ymd(tomorrow);
+// 初期表示：翌日以降の最初の営業日をセットして空き枠を自動表示
+function initDefaultDate(){
+  const SKIP_SUNDAY=true;
+  const d=new Date(tomorrow);
+  for(let i=0;i<30;i++){
+    const ymd=_ymd(d);
+    if(!(SKIP_SUNDAY&&d.getDay()===0)&&!holidays[ymd]&&!isClosedPeriod(ymd)){
+      document.getElementById('date').value=ymd;
+      loadSlots();
+      return;
+    }
+    d.setDate(d.getDate()+1);
+  }
+}
+let _slotReq=0; // 日付を素早く切り替えた時に古い結果が混ざらないようにする
 
 function selectTrainer(name,btn){
   if(selectedTrainer===name){selectedTrainer='';btn.classList.remove('selected');}
@@ -230,6 +251,7 @@ function renderTimeGrid(){
 }
 
 async function loadSlots(){
+  const reqId=++_slotReq;
   const date=document.getElementById('date').value;
   if(!date)return;
   const sel=new Date(date+'T00:00:00');
@@ -245,9 +267,17 @@ async function loadSlots(){
   document.getElementById('submit-btn').disabled=true;
   errMsg.style.display='none';
 
-  // 祝日チェック（休業日）
+  // 日曜日チェック（定休日）
+  if(sel.getDay()===0){
+    errMsg.textContent='日曜日は定休日のため予約できません。別の日をお選びください。';
+    errMsg.style.display='block';
+    document.getElementById('date').value='';
+    return;
+  }
+
+  // 祝日チェック（定休日）
   if(holidays[date]){
-    errMsg.textContent='祝日（'+holidays[date]+'）は休業のため予約できません。別の日をお選びください。';
+    errMsg.textContent='祝日（'+holidays[date]+'）は定休日のため予約できません。別の日をお選びください。';
     errMsg.style.display='block';
     document.getElementById('date').value='';
     return;
@@ -265,12 +295,14 @@ async function loadSlots(){
   try{
     const res=await fetch(GAS_URL+'?action=getSlots&date='+date+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
+    if(reqId!==_slotReq)return;
     loading.style.display='none';
     if(data.error){errMsg.textContent=data.error;errMsg.style.display='block';lastSlotsData=null;return;}
     if(!data.slots||data.slots.length===0){errMsg.textContent='この日は空き枠がありません。別の日をお選びください。';errMsg.style.display='block';lastSlotsData=null;return;}
     lastSlotsData=data.slots;
     renderTimeGrid();
   }catch(err){
+    if(reqId!==_slotReq)return;
     loading.style.display='none';
     errMsg.textContent='空き時間の取得に失敗しました。再度お試しください。';
     errMsg.style.display='block';
