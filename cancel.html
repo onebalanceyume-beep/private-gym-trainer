@@ -32,6 +32,9 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
 .result-icon{font-size:64px;margin-bottom:14px}
 .result-msg{font-size:20px;font-weight:800;margin-bottom:10px;font-family:'M PLUS Rounded 1c',sans-serif}
 .result-sub{font-size:13px;color:var(--text-sub);line-height:1.7;margin-bottom:20px;font-family:'M PLUS Rounded 1c',sans-serif}
+.expired{display:none;background:#fff5f5;border:2px solid #DB444C;border-radius:14px;padding:18px 16px;margin-bottom:16px;text-align:center;font-family:'M PLUS Rounded 1c',sans-serif}
+.expired-title{color:#DB444C;font-size:15px;font-weight:800;margin-bottom:8px}
+.expired-text{font-size:13px;line-height:1.7;margin-bottom:14px}
 .line-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:linear-gradient(135deg,#06C755,#00B14F);color:#fff;border-radius:14px;text-decoration:none;font-size:14px;font-weight:800;font-family:'M PLUS Rounded 1c',sans-serif}
 </style>
 </head>
@@ -47,8 +50,14 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
       <div class="card">
         <div class="detail-row"><span class="detail-label">お名前</span><span class="detail-value" id="d-name">-</span></div>
         <div class="detail-row"><span class="detail-label">日時</span><span class="detail-value" id="d-label">-</span></div>
+        <div class="detail-row"><span class="detail-label">キャンセル期限</span><span class="detail-value" id="d-deadline">前日20:00まで</span></div>
       </div>
-      <div class="warn">⚠️ 「キャンセルする」を押すと、この予約は取り消されます。よろしければ下のボタンを押してください。</div>
+      <div class="expired" id="expired-box">
+        <div class="expired-title">キャンセル期限（前日20:00）を過ぎています</div>
+        <div class="expired-text">このページからはキャンセルできません。<br>お手数ですが、公式LINEからお問い合わせください。</div>
+        <a href="https://lin.ee/66T2qpG" class="line-btn" target="_blank" rel="noopener">💬 公式LINEで問い合わせる</a>
+      </div>
+      <div class="warn" id="warn-box">⚠️ キャンセルは<b>前日20:00まで</b>このページから可能です。それ以降は公式LINEからお問い合わせください。<br>「キャンセルする」を押すと、この予約は取り消されます。よろしければ下のボタンを押してください。</div>
       <button class="btn-cancel" id="cancel-btn" onclick="doCancel()">この予約をキャンセルする</button>
       <a href="javascript:history.back()" class="btn-back">戻る</a>
       <div class="loading" id="loading">キャンセル処理中...</div>
@@ -57,7 +66,7 @@ body{font-family:'Noto Serif JP','M PLUS Rounded 1c',sans-serif;background:var(-
       <div class="result-icon" id="r-icon">✅</div>
       <div class="result-msg" id="r-msg"></div>
       <div class="result-sub" id="r-sub"></div>
-      <a href="https://lin.ee/nMHT6uF" class="line-btn" target="_blank" rel="noopener">💬 公式LINEを開く</a>
+      <a href="https://lin.ee/66T2qpG" class="line-btn" target="_blank" rel="noopener">💬 公式LINEを開く</a>
     </div>
   </div>
 </div>
@@ -74,7 +83,26 @@ if(!pStart||!pName){
   document.getElementById('cancel-btn').disabled=true;
   document.getElementById('cancel-btn').textContent='予約情報が読み取れません';
 }
+// ▼ キャンセル期限（前日20:00・日本時間）チェック
+function cancelDeadline(startIso){
+  const st=new Date(startIso);
+  if(isNaN(st))return null;
+  const j=new Date(st.getTime()+9*3600*1000); // 日本時間に換算
+  return new Date(Date.UTC(j.getUTCFullYear(),j.getUTCMonth(),j.getUTCDate()-1,20-9,0,0));
+}
+function showExpired(){
+  document.getElementById('expired-box').style.display='block';
+  document.getElementById('warn-box').style.display='none';
+  document.getElementById('cancel-btn').style.display='none';
+}
+const _dl=pStart?cancelDeadline(pStart):null;
+if(_dl){
+  const j=new Date(_dl.getTime()+9*3600*1000);
+  document.getElementById('d-deadline').textContent=(j.getUTCMonth()+1)+'/'+j.getUTCDate()+' 20:00まで';
+  if(Date.now()>_dl.getTime())showExpired();
+}
 async function doCancel(){
+  if(_dl&&Date.now()>_dl.getTime()){showExpired();return;}
   const btn=document.getElementById('cancel-btn');
   btn.disabled=true;
   document.getElementById('loading').style.display='block';
@@ -92,7 +120,7 @@ async function doCancel(){
     }else{
       document.getElementById('r-icon').textContent='⚠️';
       document.getElementById('r-msg').textContent='キャンセルできませんでした';
-      document.getElementById('r-sub').textContent=data.message||'お手数ですが公式LINEよりご連絡ください。';
+      document.getElementById('r-sub').textContent=data.expired?'キャンセル期限（前日20:00）を過ぎています。お手数ですが公式LINEからお問い合わせください。':(data.message||'お手数ですが公式LINEよりご連絡ください。');
     }
   }catch(err){
     document.getElementById('loading').style.display='none';
