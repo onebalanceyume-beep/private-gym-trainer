@@ -299,15 +299,30 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
         </div>
       </div>
 
-      <!-- 5. 運動経験 -->
+      <!-- 5. 体験の目的 -->
       <div class="card">
-        <div class="card-title">運動経験(これまで) *</div>
+        <div class="card-title">体験の目的 *（複数選択可）</div>
         <div class="check-grid" style="margin-bottom:0">
-          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','ない',this)">ない</button>
-          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','少しある',this)">少しある</button>
-          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','部活経験がある',this)">部活経験がある</button>
-          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','スポーツジム経験がある',this)">スポーツジム経験がある</button>
-          <button type="button" class="radio-btn" style="text-align:left;padding:10px 14px" onclick="selectRadio('undou','現在運動している',this)">現在運動している</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('mokuteki','ダイエット',this)">ダイエット</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('mokuteki','筋力アップ',this)">筋力アップ</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('mokuteki','姿勢改善',this)">姿勢改善</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('mokuteki','リハビリ',this)">リハビリ</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('mokuteki','体力・健康づくり',this)">体力・健康づくり</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('mokuteki','その他',this)" style="margin-bottom:0">その他</button>
+        </div>
+      </div>
+
+      <!-- 5-2. 気になる症状 -->
+      <div class="card">
+        <div class="card-title">気になる症状（あればチェック・複数選択可）</div>
+        <div class="check-grid" style="margin-bottom:0">
+          <button type="button" class="check-btn" onclick="toggleCheck('shoujou','肩こり',this)">肩こり</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('shoujou','腰痛',this)">腰痛</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('shoujou','猫背・巻き肩',this)">猫背・巻き肩</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('shoujou','その他',this);document.getElementById('shoujou-other-wrap').style.display=checked.shoujou.includes('その他')?'block':'none'" style="margin-bottom:0">その他</button>
+        </div>
+        <div id="shoujou-other-wrap" class="fg" style="display:none;margin-top:10px;margin-bottom:0">
+          <input type="text" id="shoujou-other" placeholder="気になるところがあればご記入ください（例：膝の痛み）">
         </div>
       </div>
 
@@ -373,8 +388,8 @@ function isClosedPeriod(dateStr){
 }
 
 let selectedMode='';
-const selected={age:'',undou:''};
-const checked={kikkake:[]};
+const selected={age:''};
+const checked={kikkake:[],mokuteki:[],shoujou:[]};
 let selectedStart=null,selectedEnd=null;
 
 const today=new Date();
@@ -534,10 +549,14 @@ async function submitForm(){
   if(!isValidEmail(email)){alert('メールアドレスの形式が正しくありません');return;}
   if(!selected.age){alert('年代を選択してください');return;}
   if(checked.kikkake.length===0){alert('知ったキッカケを選択してください');return;}
-  if(!selected.undou){alert('運動経験を選択してください');return;}
+  if(checked.mokuteki.length===0){alert('体験の目的を選択してください');return;}
   if(!date||!selectedStart){alert('希望日と時間を選択してください');return;}
   if(!agree){alert('体験規約に同意してください');return;}
   const genderLabel=selectedMode==='women'?'女性':'男性';
+  const mokutekiStr=checked.mokuteki.join('・');
+  const shoujouOther=(document.getElementById('shoujou-other').value||'').trim();
+  const shoujouStr=checked.shoujou.map(v=>(v==='その他'&&shoujouOther)?'その他（'+shoujouOther+'）':v).join('・');
+  const undouStr='目的：'+mokutekiStr+(shoujouStr?'／症状：'+shoujouStr:'');
   const btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='送信中...';
   const params=new URLSearchParams({
@@ -546,7 +565,9 @@ async function submitForm(){
     gender:genderLabel,
     age:selected.age,
     kikkake:checked.kikkake.join('・'),
-    undou:selected.undou,
+    undou:undouStr,
+    mokuteki:mokutekiStr,
+    shoujou:shoujouStr,
     start:selectedStart,
     end:selectedEnd
   });
