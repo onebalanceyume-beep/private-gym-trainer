@@ -290,11 +290,17 @@ body[data-mode="men"] .back-btn{background:var(--men-card);color:var(--men-gold)
       <div class="card">
         <div class="card-title">知ったキッカケ *（複数選択可）</div>
         <div class="check-grid" style="margin-bottom:0">
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','Google検索',this)">Google検索</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','Googleマップ',this)">Googleマップ</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','AI検索（ChatGPT・Geminiなど）',this)">AI検索（ChatGPT・Geminiなど）</button>
           <button type="button" class="check-btn" onclick="toggleCheck('kikkake','Instagram',this)">Instagram</button>
           <button type="button" class="check-btn" onclick="toggleCheck('kikkake','YouTube',this)">YouTube</button>
-          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','Google検索',this)">Google検索</button>
-          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','友人の紹介',this)">友人の紹介</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','TikTok',this)">TikTok</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','LINE',this)">LINE</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','友人・家族の紹介',this)">友人・家族の紹介</button>
           <button type="button" class="check-btn" onclick="toggleCheck('kikkake','看板・通りがかり',this)">看板・通りがかり</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','チラシ',this)">チラシ</button>
+          <button type="button" class="check-btn" onclick="toggleCheck('kikkake','ホームページ',this)">ホームページ</button>
           <button type="button" class="check-btn" onclick="toggleCheck('kikkake','その他',this)" style="margin-bottom:0">その他</button>
         </div>
       </div>
