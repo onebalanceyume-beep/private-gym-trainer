@@ -30,7 +30,7 @@
     <h2 class="en">Reservation</h2>
     <p class="big">お名前とメールアドレスで<br>予約する</p>
     <div class="card">
-      <div class="f"><label class="l" for="name">お名前</label><input id="name" type="text" autocomplete="name" placeholder="山田 花子"></div>
+      <div class="f"><label class="l" for="name">お名前</label><input id="name" type="text" autocomplete="name" placeholder="木村 拓哉"></div>
       <div class="f"><label class="l" for="email">メールアドレス</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="入会時のメールアドレス"></div>
     </div>
     <button class="btn" id="btnLogin">次へ</button>
@@ -62,8 +62,8 @@
   <section id="step3" class="hidden">
     <h2 class="en">Complete</h2>
     <p class="big">予約が<br>完了しました</p>
-    <div class="card"><div class="when" id="doneWhen"></div><div class="note">1回60分</div></div>
-    <p class="note">確認メールを送りました。キャンセルはメール内のリンクからできます。</p>
+    <div class="card"><div class="when" id="doneWhen"></div><div class="note">1回60分・確認メールをお送りしました</div></div>
+    <a class="btn ghost" id="doneCancel" href="#">この予約をキャンセルする</a>
     <button class="btn ghost" id="btnBack">予約画面に戻る</button>
   </section>
 
@@ -71,7 +71,8 @@
     <ul style="margin-top:0">
       <li>利用時間：月〜金 16:00〜22:00／土 16:00〜20:00（日祝休み）</li>
       <li>1回60分まで・同時に持てる予約は1件まで</li>
-      <li>無断キャンセルはイエローカード（3回目で退会）</li>
+      <li>ご友人・ご家族など2人でのご利用もOK（指導を仕事として行うのは禁止）</li>
+      <li>無断キャンセルは1回目イエローカード、2回目レッドカード（退会）</li>
     </ul>
   </div>
   <p class="foot">レンタルジムONE-TRE<br>鳥取県米子市車尾6丁目8-59-A</p>
@@ -87,7 +88,9 @@ let email = '', selected = null, currentDate = '';
 
 function store(k, v){ try{ v===null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
 function load(k){ try{ return localStorage.getItem(k) || ''; }catch(e){ return ''; } }
+const EXAMPLE = { male:'木村 拓哉', female:'長尾 儀子', none:'長尾 儀弘' };
 function setTheme(g){ const t = THEME[g]; if(t){ document.body.dataset.theme = t; store('rentalTheme', t); } }
+document.getElementById('name').placeholder = EXAMPLE[document.body.dataset.theme] || EXAMPLE.male;
 
 async function api(params){
   params.t = Date.now();
@@ -172,6 +175,7 @@ async function reserve(){
     const r = await api({ action:'reserve', email, start:selected.start });
     if(!r.ok){ $('msg2').textContent = r.error; loadSlots(currentDate); return; }
     $('doneWhen').textContent = r.date + ' ' + r.time;
+    $('doneCancel').href = CANCEL_PAGE + '?token=' + encodeURIComponent(r.token);
     show('step3');
   }catch(e){ $('msg2').textContent = '通信エラーです。予約できたか確認メールをご確認ください'; btn.disabled = false; btn.textContent = 'この時間で予約する'; }
 }

@@ -41,7 +41,7 @@
 
     <div class="card">
       <div class="f"><label class="l" for="name">お名前<span class="req">必須</span></label>
-        <input type="text" id="name" autocomplete="name" placeholder="山田 花子"><p class="e" data-for="name"></p></div>
+        <input type="text" id="name" autocomplete="name" placeholder="木村 拓哉"><p class="e" data-for="name"></p></div>
       <div class="f"><label class="l" for="email">メールアドレス<span class="req">必須</span></label>
         <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="hanako@example.com">
         <p class="hint">予約のときにこのメールアドレスを使います</p><p class="e" data-for="email"></p></div>
@@ -57,7 +57,7 @@
     <div class="card">
       <div class="f"><span class="l">ONE-TREを知ったきっかけ<span class="req">必須</span></span>
         <div class="chips two radio" id="source">
-          <label><input type="radio" name="source" value="ホームページ">ホームページ</label>
+          <label><input type="radio" name="source" value="Google検索">Google検索</label>
           <label><input type="radio" name="source" value="Instagram">Instagram</label>
           <label><input type="radio" name="source" value="友達・知人の紹介">友達・知人の紹介</label>
           <label class="wide"><input type="radio" name="source" value="ONE-TREのパーソナルで勧められた">ONE-TREのパーソナルで勧められた</label>
@@ -87,7 +87,9 @@
       <ul>
         <li>利用時間：月〜金 16:00〜22:00／土 16:00〜20:00（日祝休み）</li>
         <li>1回60分まで・同時に持てる予約は1件まで</li>
-        <li>無断キャンセル1回目・2回目はイエローカード、3回目で退会</li>
+        <li>ご友人・ご家族など2人でのご利用もOKです</li>
+        <li>ジム内でのパーソナルトレーニングなど、指導を仕事・ビジネスとして行うことは禁止です</li>
+        <li>無断キャンセルは1回目でイエローカード、2回目でレッドカード（退会）となります</li>
         <li>退会時のみ事務手数料3,300円</li>
         <li>器具の破損は弁償をお願いする場合があります。けがは自己責任でお願いします</li>
       </ul>
@@ -99,12 +101,27 @@
     <p class="msg" id="formErr"></p>
   </form>
 
+  <section id="first" class="hidden">
+    <h2 class="en">First reservation</h2>
+    <p class="big">お申込み<br>ありがとうございます</p>
+    <p class="lead">続けて、初回のご予約をお取りください。</p>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <div id="slotArea"><p class="loading">読み込み中…</p></div>
+    </div>
+    <button class="btn" id="btnReserve" disabled>時間を選んでください</button>
+    <p class="msg" id="msg2"></p>
+    <button class="btn ghost" id="btnSkip">あとで予約する</button>
+  </section>
+
   <section id="done" class="hidden">
     <h2 class="en">Thank you</h2>
-    <p class="big">お申込みを<br>受け付けました</p>
-    <div class="card"><p>続けて月額のお支払い手続きをお願いします。お支払いの確認後、予約ができるようになります。</p></div>
-    <a class="btn" id="payBtn" href="#">お支払いへ進む</a>
-    <p class="note" style="text-align:center">同じ案内をメールでもお送りしました。</p>
+    <p class="big" id="doneTitle">ご予約が<br>完了しました</p>
+    <div class="card" id="doneCard"><div class="note" style="margin-top:0">初回のご予約</div><div class="when" id="doneWhen"></div><div class="note">1回60分・確認メールをお送りしました</div></div>
+    <a class="btn ghost" id="cancelBtn" href="#">この予約をキャンセルする</a>
+    <div class="card"><p style="font-size:14px">月額のお支払い手続きがまだの場合は、こちらからお願いいたします。2回目以降のご予約は「簡単予約」からどうぞ。</p></div>
+    <a class="btn" id="payBtn" href="#">月額のお支払いへ進む</a>
+    <a class="btn ghost" href="rental_gym_yoyaku.html">簡単予約を開く</a>
   </section>
 
   <p class="foot">レンタルジムONE-TRE<br>鳥取県米子市車尾6丁目8-59-A</p>
@@ -113,6 +130,9 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxhkgXusWtzEaPt4X_9ys9bJXYV_VdTQoMTGwAXCFqdtiUq-GID17pCgOZbBCCVArgW/exec';
 const THEME = { '男性':'male', '女性':'female', 'どちらでもない':'none' };
+const EXAMPLE = { '男性':'木村 拓哉', '女性':'長尾 儀子', 'どちらでもない':'長尾 儀弘' };
+const W = ['日','月','火','水','木','金','土'];
+let email = '', selected = null, currentDate = '';
 const $ = id => document.getElementById(id);
 const err = (k, m) => { const el = document.querySelector('.e[data-for="' + k + '"]'); if (el) el.textContent = m || ''; };
 function store(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
@@ -130,7 +150,7 @@ function bindGroup(id, onChange){
     onChange && onChange(i);
   }));
 }
-bindGroup('gender', i => { document.body.dataset.theme = THEME[i.value]; });
+bindGroup('gender', i => { document.body.dataset.theme = THEME[i.value]; $('name').placeholder = EXAMPLE[i.value]; });
 bindGroup('source', i => { err('source'); $('sourceOther').classList.toggle('hidden', !(i.value === 'その他' && i.checked)); });
 bindGroup('purpose', () => { err('purpose'); $('purposeOther').classList.toggle('hidden', !document.querySelector('#purpose input[value="その他"]').checked); });
 
@@ -167,12 +187,63 @@ $('form').addEventListener('submit', async e => {
     const r = await res.json();
     if (!r.ok) { $('formErr').textContent = r.error; return; }
     store('rentalTheme', THEME[v.gender]); store('rentalEmail', v.email.toLowerCase()); store('rentalName', v.name);
+    email = v.email.toLowerCase();
     $('payBtn').href = r.payUrl;
-    $('form').classList.add('hidden'); $('done').classList.remove('hidden'); window.scrollTo(0, 0);
+    $('form').classList.add('hidden'); $('first').classList.remove('hidden'); window.scrollTo(0, 0);
+    buildTabs();
   } catch (x) {
     $('formErr').textContent = '通信エラーです。電波の良い所でもう一度お試しください';
   } finally { btn.removeAttribute('aria-busy'); btn.textContent = '申し込んでお支払いへ進む'; }
 });
+
+async function api(params){ params.t = Date.now(); const res = await fetch(GAS_URL + '?' + new URLSearchParams(params).toString(), { cache:'no-store' }); return res.json(); }
+function ymd(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function buildTabs(){
+  const tabs = $('tabs'); tabs.innerHTML = ''; const base = new Date();
+  for (let i = 0; i <= 1; i++) {
+    const d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
+    const b = document.createElement('button'); b.type = 'button';
+    b.textContent = (i === 0 ? '今日 ' : '明日 ') + (d.getMonth()+1) + '/' + d.getDate() + '(' + W[d.getDay()] + ')';
+    b.onclick = () => { [...tabs.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); loadSlots(ymd(d)); };
+    tabs.appendChild(b); if (i === 0) { b.classList.add('on'); loadSlots(ymd(d)); }
+  }
+}
+async function loadSlots(date){
+  currentDate = date; selected = null; $('btnReserve').disabled = true; $('btnReserve').textContent = '時間を選んでください'; $('msg2').textContent = '';
+  const area = $('slotArea'); area.innerHTML = '<p class="loading">読み込み中…</p>';
+  try {
+    const r = await api({ action:'getSlots', date });
+    if (date !== currentDate) return;
+    if (!r.ok) { area.innerHTML = '<p class="msg">' + r.error + '</p>'; return; }
+    if (r.closed) { area.innerHTML = '<p class="loading">' + r.reason + '</p>'; return; }
+    const grid = document.createElement('div'); grid.className = 'grid';
+    r.slots.filter(s => s.status !== '終了').forEach(s => {
+      const b = document.createElement('button'); b.type = 'button'; const full = s.status !== '空き';
+      b.className = 'slot' + (full ? ' full' : '');
+      b.innerHTML = '<b>' + s.label.split('〜')[0] + '</b><span>' + (full ? '満員' : '空き') + '</span>';
+      if (!full) b.onclick = () => { grid.querySelectorAll('.slot').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); selected = s; $('btnReserve').disabled = false; $('btnReserve').textContent = s.label + ' で予約する'; };
+      grid.appendChild(b);
+    });
+    area.innerHTML = '';
+    if (!grid.children.length) { area.innerHTML = '<p class="loading">この日の受付は終了しました。明日の枠をご確認ください</p>'; return; }
+    area.appendChild(grid);
+  } catch (e) { area.innerHTML = '<p class="msg">通信エラーです。もう一度お試しください</p>'; }
+}
+$('btnReserve').onclick = async () => {
+  if (!selected) return;
+  const btn = $('btnReserve'); btn.disabled = true; btn.textContent = '予約中…'; $('msg2').textContent = '';
+  try {
+    const r = await api({ action:'reserve', email, start:selected.start });
+    if (!r.ok) { $('msg2').textContent = r.error; loadSlots(currentDate); return; }
+    $('doneWhen').textContent = r.date + ' ' + r.time;
+    $('cancelBtn').href = 'rental_gym_cancel.html?token=' + encodeURIComponent(r.token);
+    $('first').classList.add('hidden'); $('done').classList.remove('hidden'); window.scrollTo(0, 0);
+  } catch (e) { $('msg2').textContent = '通信エラーです。確認メールが届いているかご確認ください'; btn.disabled = false; btn.textContent = 'この時間で予約する'; }
+};
+$('btnSkip').onclick = () => {
+  $('doneTitle').innerHTML = 'お申込みを<br>受け付けました'; $('doneCard').classList.add('hidden'); $('cancelBtn').classList.add('hidden');
+  $('first').classList.add('hidden'); $('done').classList.remove('hidden'); window.scrollTo(0, 0);
+};
 
 let lastTouch = 0;
 document.addEventListener('touchend', e => { const n = Date.now(); if (n - lastTouch < 350 && !e.target.closest('input,textarea,label')) e.preventDefault(); lastTouch = n; }, { passive:false });
