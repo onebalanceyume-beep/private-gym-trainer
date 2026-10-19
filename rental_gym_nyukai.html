@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="onetre_logo.png?v=1">
+<link rel="icon" href="onetre_logo.png?v=1">
+<title>レンタルジムONE-TRE — 入会申込み</title>
+<style>
+:root{--ink:#111;--sub:#6b6b6b;--line:#e5e5e5;--soft:#f6f6f4;--gold:#b08d57;--err:#c0392b}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{font-family:"Helvetica Neue",Helvetica,Arial,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;background:#fff;color:var(--ink);line-height:1.6;overflow-x:hidden;touch-action:manipulation}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 56px}
+header{display:flex;align-items:center;gap:12px;padding:20px 0 16px;border-bottom:1px solid var(--ink)}
+header img{width:44px;height:44px;object-fit:contain}
+.brand small{display:block;font-size:11px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+.brand b{font-size:20px}
+h2{font-size:13px;letter-spacing:.15em;color:var(--sub);margin:28px 0 8px;font-weight:700}
+.big{font-size:26px;font-weight:700;line-height:1.3}
+.plan{margin-top:16px;border:1px solid var(--ink);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.plan .tag{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.05em}
+.plan .p{font-size:36px;font-weight:700;line-height:1}
+.plan .p small{font-size:14px;font-weight:700;margin-left:2px}
+.plan .p .y{font-size:16px;margin-right:2px}
+.f{margin-top:20px}
+label.l{display:block;font-size:14px;font-weight:700;margin-bottom:6px}
+label.l em{font-style:normal;font-size:11px;color:#fff;background:var(--ink);padding:1px 6px;margin-left:6px;vertical-align:1px}
+input[type=text],input[type=email],input[type=tel],textarea{width:100%;font-size:16px;padding:14px;border:1px solid var(--ink);border-radius:0;background:#fff;color:var(--ink);-webkit-appearance:none;font-family:inherit}
+textarea{min-height:120px;resize:vertical}
+.age{display:flex;align-items:center;gap:8px}
+.age input{width:110px;text-align:center}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--ink)}
+.seg label{display:block;text-align:center;padding:14px 4px;font-size:15px;font-weight:700;cursor:pointer}
+.seg label+label{border-left:1px solid var(--ink)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label.on{background:var(--ink);color:#fff}
+.hint{font-size:12px;color:var(--sub);margin-top:6px}
+.e{font-size:13px;color:var(--err);margin-top:6px;min-height:0}
+.rules{margin-top:28px;background:var(--soft);padding:16px;font-size:13px}
+.rules li{margin-left:1.2em;margin-top:4px}
+.agree{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;font-weight:700}
+.agree input{width:22px;height:22px;flex:0 0 22px;accent-color:#111;margin-top:1px}
+.btn{display:block;width:100%;padding:18px;font-size:17px;font-weight:700;background:var(--ink);color:#fff;border:0;border-radius:0;margin-top:20px;letter-spacing:.05em;font-family:inherit;cursor:pointer}
+.btn[aria-busy=true]{background:#888}
+.hidden{display:none}
+.done .big{margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="onetre_logo.png?v=1" alt="ONE-TRE">
+    <div class="brand"><small>RENTAL GYM</small><b>レンタルジムONE-TRE</b></div>
+  </header>
+
+  <form id="form" novalidate>
+    <h2>JOIN</h2>
+    <p class="big">入会申込み</p>
+    <div class="plan" id="plan">
+      <div><div class="tag" id="planTag">読み込み中…</div><div style="font-size:13px;color:var(--sub)">月額・使い放題（税込）</div></div>
+      <div class="p" id="planPrice"></div>
+    </div>
+
+    <div class="f"><label class="l" for="name">お名前<em>必須</em></label>
+      <input type="text" id="name" autocomplete="name" placeholder="山田 花子"><p class="e" data-for="name"></p></div>
+
+    <div class="f"><label class="l" for="email">メールアドレス<em>必須</em></label>
+      <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="hanako@example.com">
+      <p class="hint">予約のときにこのメールアドレスを使います</p><p class="e" data-for="email"></p></div>
+
+    <div class="f"><label class="l" for="tel">電話番号<em>必須</em></label>
+      <input type="tel" id="tel" inputmode="tel" autocomplete="tel" placeholder="09012345678"><p class="e" data-for="tel"></p></div>
+
+    <div class="f"><label class="l" for="address">住所<em>必須</em></label>
+      <input type="text" id="address" autocomplete="street-address" placeholder="鳥取県米子市〇〇町1-2-3"><p class="e" data-for="address"></p></div>
+
+    <div class="f"><label class="l" for="age">年齢<em>必須</em></label>
+      <div class="age"><input type="text" id="age" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" placeholder="35"><span style="font-weight:700">歳</span></div>
+      <p class="e" data-for="age"></p></div>
+
+    <div class="f"><span class="l" style="display:block;font-size:14px;font-weight:700;margin-bottom:6px">性別<em style="font-style:normal;font-size:11px;color:#fff;background:#111;padding:1px 6px;margin-left:6px">必須</em></span>
+      <div class="seg" id="gender">
+        <label><input type="radio" name="gender" value="男性">男性</label>
+        <label><input type="radio" name="gender" value="女性">女性</label>
+        <label><input type="radio" name="gender" value="どちらでもない">どちらでもない</label>
+      </div><p class="e" data-for="gender"></p></div>
+
+    <div class="f"><label class="l" for="reason">始めようと思ったきっかけ</label>
+      <textarea id="reason" placeholder="例：仕事帰りに、人目を気にせず自分のペースで鍛えたい"></textarea></div>
+
+    <div class="rules">
+      <b>ご利用ルール</b>
+      <ul>
+        <li>利用時間：月〜金 16:00〜22:00／土 16:00〜20:00（日祝休み）</li>
+        <li>1回60分まで・同時に持てる予約は1件まで</li>
+        <li>無断キャンセル1回目・2回目はイエローカード、3回目で退会</li>
+        <li>退会時のみ事務手数料3,300円</li>
+        <li>器具の破損は弁償をお願いする場合があります。けがは自己責任でお願いします</li>
+      </ul>
+      <label class="agree"><input type="checkbox" id="agree">ご利用ルールに同意する</label>
+      <p class="e" data-for="agree"></p>
+    </div>
+
+    <button class="btn" id="submit" type="submit">申し込んでお支払いへ進む</button>
+    <p class="e" id="formErr"></p>
+  </form>
+
+  <section id="done" class="done hidden">
+    <h2>THANK YOU</h2>
+    <p class="big">お申込みを<br>受け付けました</p>
+    <p style="margin-top:12px">続けて月額のお支払い手続きをお願いします。お支払いの確認後、予約ができるようになります。</p>
+    <a class="btn" id="payBtn" style="text-align:center;text-decoration:none" href="#">お支払いへ進む</a>
+    <p class="hint">同じ案内をメールでもお送りしました。</p>
+  </section>
+</div>
+
+<script>
+// ===== 設定：GASのウェブアプリURL =====
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxhkgXusWtzEaPt4X_9ys9bJXYV_VdTQoMTGwAXCFqdtiUq-GID17pCgOZbBCCVArgW/exec';
+// ====================================
+const $ = id => document.getElementById(id);
+const err = (k, m) => { const el = document.querySelector('.e[data-for="' + k + '"]'); if (el) el.textContent = m || ''; };
+
+fetch(GAS_URL + '?action=getPlan&t=' + Date.now(), { cache:'no-store' }).then(r => r.json()).then(r => {
+  if (!r.ok) throw 0;
+  $('planTag').textContent = r.early ? '初期会員 残り' + r.left + '名' : '通常会員';
+  $('planPrice').innerHTML = '<span class="y">¥</span>' + r.price.toLocaleString() + '<small>/月</small>';
+}).catch(() => { $('planTag').textContent = '月額会員'; });
+
+document.querySelectorAll('#gender input').forEach(r => r.addEventListener('change', () => {
+  document.querySelectorAll('#gender label').forEach(l => l.classList.toggle('on', l.contains(r) && r.checked));
+  err('gender');
+}));
+$('age').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^0-9０-９]/g, '').replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).slice(0, 3); err('age'); });
+$('tel').addEventListener('input', () => err('tel'));
+['name','email','address'].forEach(k => $(k).addEventListener('input', () => err(k)));
+$('agree').addEventListener('change', () => err('agree'));
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const v = {
+    name: $('name').value.trim(), email: $('email').value.trim(), tel: $('tel').value.replace(/[^0-9０-９]/g, ''),
+    address: $('address').value.trim(), age: $('age').value.trim(),
+    gender: (document.querySelector('#gender input:checked') || {}).value || '', reason: $('reason').value.trim()
+  };
+  let ng = null; const set = (k, m) => { err(k, m); if (!ng) ng = k; };
+  if (!v.name) set('name', 'お名前を入力してください');
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) set('email', 'メールアドレスを確認してください');
+  if (v.tel.length < 10) set('tel', '電話番号を確認してください');
+  if (!v.address) set('address', '住所を入力してください');
+  const age = parseInt(v.age, 10);
+  if (!age || age < 10 || age > 110) set('age', '年齢を数字で入力してください');
+  if (!v.gender) set('gender', '性別を選んでください');
+  if (!$('agree').checked) set('agree', 'ご利用ルールへの同意が必要です');
+  if (ng) { const el = $(ng === 'gender' ? 'gender' : ng); el.scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+
+  const btn = $('submit'); btn.setAttribute('aria-busy', 'true'); btn.textContent = '送信中…'; $('formErr').textContent = '';
+  try {
+    const res = await fetch(GAS_URL, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action:'signup' }, v)) });
+    const r = await res.json();
+    if (!r.ok) { $('formErr').textContent = r.error; return; }
+    $('payBtn').href = r.payUrl;
+    $('form').classList.add('hidden'); $('done').classList.remove('hidden'); window.scrollTo(0, 0);
+  } catch (x) {
+    $('formErr').textContent = '通信エラーです。電波の良い所でもう一度お試しください';
+  } finally { btn.removeAttribute('aria-busy'); btn.textContent = '申し込んでお支払いへ進む'; }
+});
+
+let lastTouch = 0;
+document.addEventListener('touchend', e => { const n = Date.now(); if (n - lastTouch < 350 && !e.target.closest('input,textarea,label')) e.preventDefault(); lastTouch = n; }, { passive:false });
+window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); });
+</script>
+</body>
+</html>

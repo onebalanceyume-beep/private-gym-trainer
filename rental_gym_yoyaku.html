@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="レンタルジム">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
+<link rel="apple-touch-icon" href="onetre_logo.png?v=1">
+<link rel="icon" href="onetre_logo.png?v=1">
+<link rel="manifest" href="manifest_rental.json?v=1">
+<title>レンタルジムONE-TRE — 予約</title>
+<style>
+:root{--ink:#111;--sub:#6b6b6b;--line:#e5e5e5;--bg:#fff;--soft:#f6f6f4;--gold:#b08d57;--full:#c9c9c9}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{font-family:"Helvetica Neue",Helvetica,Arial,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden;touch-action:manipulation}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 48px}
+header{display:flex;align-items:center;gap:12px;padding:20px 0 16px;border-bottom:1px solid var(--ink)}
+header img{width:44px;height:44px;object-fit:contain}
+.brand small{display:block;font-size:11px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+.brand b{font-size:20px;letter-spacing:.02em}
+h2{font-size:13px;letter-spacing:.15em;color:var(--sub);margin:28px 0 10px;font-weight:700}
+.big{font-size:26px;font-weight:700;line-height:1.3}
+input{width:100%;font-size:16px;padding:14px;border:1px solid var(--ink);border-radius:0;background:#fff;color:var(--ink);-webkit-appearance:none}
+button{font-family:inherit;cursor:pointer;border:0;border-radius:0}
+.btn{display:block;width:100%;padding:16px;font-size:16px;font-weight:700;background:var(--ink);color:#fff;margin-top:12px;letter-spacing:.05em}
+.btn:disabled{background:var(--full)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+.msg{font-size:14px;margin-top:10px;color:#c0392b}
+.tabs{display:flex;border:1px solid var(--ink)}
+.tabs button{flex:1;padding:14px 4px;background:#fff;font-size:15px;font-weight:700;color:var(--ink)}
+.tabs button+button{border-left:1px solid var(--ink)}
+.tabs button.on{background:var(--ink);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.slot{padding:16px 8px;border:1px solid var(--ink);background:#fff;text-align:center}
+.slot b{display:block;font-size:20px}
+.slot span{font-size:12px;font-weight:700;letter-spacing:.1em}
+.slot.full{border-color:var(--line);background:var(--soft);color:var(--full);cursor:default}
+.slot.full span{color:#999}
+.slot.sel{background:var(--ink);color:#fff}
+.slot.sel span{color:var(--gold)}
+.note{font-size:12px;color:var(--sub);margin-top:10px}
+.card{border:1px solid var(--ink);padding:16px;margin-top:12px}
+.card .when{font-size:22px;font-weight:700}
+.gold{color:var(--gold)}
+.hidden{display:none}
+.rules{font-size:12px;color:var(--sub);margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+.rules li{margin-left:1.2em}
+.loading{font-size:14px;color:var(--sub);padding:16px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="onetre_logo.png?v=1" alt="ONE-TRE">
+    <div class="brand"><small>RENTAL GYM</small><b>レンタルジムONE-TRE</b></div>
+  </header>
+
+  <!-- STEP1 会員確認 -->
+  <section id="step1">
+    <h2>MEMBER</h2>
+    <p class="big">お名前とメールアドレスで<br>予約する</p>
+    <div style="margin-top:16px"><input id="name" type="text" autocomplete="name" placeholder="お名前（例：山田 花子）"></div>
+    <div style="margin-top:8px"><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="メールアドレス"></div>
+    <button class="btn" id="btnLogin">次へ</button>
+    <p class="msg" id="msg1"></p>
+  </section>
+
+  <!-- STEP2 予約中の枠がある -->
+  <section id="stepActive" class="hidden">
+    <h2>YOUR RESERVATION</h2>
+    <p id="hello1"></p>
+    <div class="card">
+      <div class="note">予約中</div>
+      <div class="when" id="activeWhen"></div>
+    </div>
+    <p class="note">同時に持てる予約は1件です。利用後またはキャンセル後に次の予約ができます。</p>
+    <a id="activeCancel" class="btn ghost" style="text-align:center;text-decoration:none">この予約をキャンセル</a>
+    <button class="btn ghost" id="btnLogout1">別のメールアドレスで入る</button>
+  </section>
+
+  <!-- STEP3 枠選択 -->
+  <section id="step2" class="hidden">
+    <h2>SELECT TIME</h2>
+    <p id="hello2"></p>
+    <div class="tabs" id="tabs"></div>
+    <div id="slotArea"><p class="loading">読み込み中…</p></div>
+    <button class="btn" id="btnReserve" disabled>この時間で予約する</button>
+    <p class="msg" id="msg2"></p>
+    <button class="btn ghost" id="btnLogout2">別のメールアドレスで入る</button>
+  </section>
+
+  <!-- STEP4 完了 -->
+  <section id="step3" class="hidden">
+    <h2>COMPLETE</h2>
+    <p class="big">予約が<br>完了しました</p>
+    <div class="card"><div class="when" id="doneWhen"></div><div class="note">1回60分</div></div>
+    <p class="note">確認メールを送りました。キャンセルはメール内のリンクからできます。</p>
+    <button class="btn ghost" id="btnBack">予約画面に戻る</button>
+  </section>
+
+  <ul class="rules">
+    <li>利用時間：月〜金 16:00〜22:00／土 16:00〜20:00（日祝休み）</li>
+    <li>1回60分まで・同時に持てる予約は1件まで</li>
+    <li>無断キャンセルはイエローカード（3回目で退会）</li>
+    <li>鳥取県米子市車尾6丁目8-59-A</li>
+  </ul>
+</div>
+
+<script>
+// ===== 設定：GASのウェブアプリURL =====
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxhkgXusWtzEaPt4X_9ys9bJXYV_VdTQoMTGwAXCFqdtiUq-GID17pCgOZbBCCVArgW/exec';
+const CANCEL_PAGE = 'rental_gym_cancel.html';
+const DAYS_AHEAD = 1; // GAS側の MAX_DAYS_AHEAD と合わせる
+// ====================================
+
+const $ = id => document.getElementById(id);
+let email = '', selected = null, currentDate = '';
+
+function store(k, v){ try{ v===null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k) || ''; }catch(e){ return ''; } }
+
+async function api(params){
+  params.t = Date.now();
+  const res = await fetch(GAS_URL + '?' + new URLSearchParams(params).toString(), { method:'GET', cache:'no-store' });
+  return res.json();
+}
+function show(id){ ['step1','stepActive','step2','step3'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo(0,0); }
+function ymd(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+const W = ['日','月','火','水','木','金','土'];
+
+async function login(){
+  email = $('email').value.trim();
+  const name = $('name').value.trim();
+  $('msg1').textContent = '';
+  if(!name){ $('msg1').textContent = 'お名前を入力してください'; return; }
+  if(!email){ $('msg1').textContent = 'メールアドレスを入力してください'; return; }
+  $('btnLogin').disabled = true; $('btnLogin').textContent = '確認中…';
+  try{
+    const r = await api({ action:'checkMember', email });
+    if(!r.ok){ $('msg1').textContent = r.error; return; }
+    store('rentalEmail', email); store('rentalName', name);
+    if(r.active && r.active.length){
+      const a = r.active[0];
+      $('hello1').textContent = r.name + '様';
+      $('activeWhen').textContent = a.date + ' ' + a.start + '〜' + a.end;
+      $('activeCancel').href = CANCEL_PAGE + '?token=' + encodeURIComponent(a.token);
+      show('stepActive');
+    }else{
+      $('hello2').textContent = r.name + '様';
+      buildTabs(); show('step2');
+    }
+  }catch(e){ $('msg1').textContent = '通信エラーです。電波の良い所でもう一度お試しください'; }
+  finally{ $('btnLogin').disabled = false; $('btnLogin').textContent = '次へ'; }
+}
+
+function buildTabs(){
+  const tabs = $('tabs'); tabs.innerHTML = '';
+  const base = new Date();
+  for(let i=0;i<=DAYS_AHEAD;i++){
+    const d = new Date(base.getFullYear(), base.getMonth(), base.getDate()+i);
+    const b = document.createElement('button');
+    b.textContent = (i===0?'今日 ':i===1?'明日 ':'') + (d.getMonth()+1) + '/' + d.getDate() + '(' + W[d.getDay()] + ')';
+    b.onclick = () => { [...tabs.children].forEach(x=>x.classList.remove('on')); b.classList.add('on'); loadSlots(ymd(d)); };
+    tabs.appendChild(b);
+    if(i===0){ b.classList.add('on'); loadSlots(ymd(d)); }
+  }
+}
+
+async function loadSlots(date){
+  currentDate = date; selected = null; $('btnReserve').disabled = true; $('msg2').textContent = '';
+  const area = $('slotArea'); area.innerHTML = '<p class="loading">読み込み中…</p>';
+  try{
+    const r = await api({ action:'getSlots', date });
+    if(date !== currentDate) return;
+    if(!r.ok){ area.innerHTML = '<p class="msg">' + r.error + '</p>'; return; }
+    if(r.closed){ area.innerHTML = '<p class="loading">' + r.reason + '</p>'; return; }
+    const grid = document.createElement('div'); grid.className = 'grid';
+    r.slots.filter(s => s.status !== '終了').forEach(s => {
+      const b = document.createElement('button');
+      const full = s.status !== '空き';
+      b.className = 'slot' + (full ? ' full' : '');
+      b.innerHTML = '<b>' + s.label.split('〜')[0] + '</b><span>' + (full ? '満員' : '空き') + '</span>';
+      if(!full) b.onclick = () => {
+        grid.querySelectorAll('.slot').forEach(x=>x.classList.remove('sel'));
+        b.classList.add('sel'); selected = s; $('btnReserve').disabled = false;
+        $('btnReserve').textContent = s.label + ' で予約する';
+      };
+      grid.appendChild(b);
+    });
+    area.innerHTML = '';
+    if(!grid.children.length){ area.innerHTML = '<p class="loading">本日の受付は終了しました</p>'; return; }
+    area.appendChild(grid);
+    const n = document.createElement('p'); n.className = 'note'; n.textContent = '1回60分。満員の時間はパーソナル等で使用中です。'; area.appendChild(n);
+  }catch(e){ area.innerHTML = '<p class="msg">通信エラーです。もう一度お試しください</p>'; }
+}
+
+async function reserve(){
+  if(!selected) return;
+  const btn = $('btnReserve'); btn.disabled = true; btn.textContent = '予約中…'; $('msg2').textContent = '';
+  try{
+    const r = await api({ action:'reserve', email, start:selected.start });
+    if(!r.ok){ $('msg2').textContent = r.error; loadSlots(currentDate); btn.textContent = 'この時間で予約する'; return; }
+    $('doneWhen').textContent = r.date + ' ' + r.time;
+    show('step3');
+  }catch(e){ $('msg2').textContent = '通信エラーです。予約できたか確認メールをご確認ください'; btn.disabled = false; btn.textContent = 'この時間で予約する'; }
+}
+
+function logout(){ store('rentalEmail', null); store('rentalName', null); $('email').value = ''; $('name').value = ''; show('step1'); }
+
+$('btnLogin').onclick = login;
+$('email').addEventListener('keydown', e => { if(e.key === 'Enter') login(); });
+$('btnReserve').onclick = reserve;
+$('btnLogout1').onclick = logout;
+$('btnLogout2').onclick = logout;
+$('btnBack').onclick = login;
+
+// iOSのダブルタップ拡大防止
+let lastTouch = 0;
+document.addEventListener('touchend', e => { const n = Date.now(); if(n - lastTouch < 350) e.preventDefault(); lastTouch = n; }, { passive:false });
+// 戻る操作でキャッシュ表示された時は再読み込み
+window.addEventListener('pageshow', e => { if(e.persisted) location.reload(); });
+
+const saved = load('rentalEmail'), savedName = load('rentalName');
+if(saved && savedName){ $('email').value = saved; $('name').value = savedName; login(); }
+</script>
+</body>
+</html>

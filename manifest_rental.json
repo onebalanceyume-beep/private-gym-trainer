@@ -1,0 +1,11 @@
+{
+  "name": "レンタルジムONE-TRE 予約",
+  "short_name": "レンタルジム",
+  "start_url": "rental_gym_yoyaku.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "onetre_logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
