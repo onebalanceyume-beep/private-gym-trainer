@@ -2,32 +2,31 @@
 :root,body[data-theme="male"]{
   --bg:#F4F1EB; --card:#FFFFFF; --ink:#1C2433; --sub:#6A7180; --line:#E3DED4;
   --accent:#1F3352; --accent-ink:#FFFFFF; --soft:#E6EBF2; --soft-ink:#1F3352; --tag:#B08D57;
-  --wood-tint:rgba(18,30,52,.42);
+  --hero-tint:rgba(20,32,56,.82);
 }
 body[data-theme="female"]{
   --bg:#FCF4F4; --card:#FFFFFF; --ink:#4A2F36; --sub:#8C7178; --line:#F0DDE0;
   --accent:#D88A9C; --accent-ink:#FFFFFF; --soft:#F9E3E8; --soft-ink:#9A4D60; --tag:#C59A7A;
-  --wood-tint:rgba(170,95,110,.28);
+  --hero-tint:rgba(150,80,98,.72);
 }
 body[data-theme="none"]{
   --bg:#F5EFE6; --card:#FFFFFF; --ink:#3B2A1E; --sub:#7E6C5E; --line:#E7DCCD;
   --accent:#5C4030; --accent-ink:#FFFFFF; --soft:#EFE3D3; --soft-ink:#5C4030; --tag:#B08D57;
-  --wood-tint:rgba(60,38,24,.25);
+  --hero-tint:rgba(62,40,26,.80);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
 body{font-family:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;background:var(--bg);color:var(--ink);line-height:1.7;overflow-x:hidden;touch-action:manipulation;transition:background .35s}
-.hero{position:relative;padding:34px 20px 40px;color:#FFF8EE;overflow:hidden;
-  background-color:#9C7350;
-  background-image:linear-gradient(var(--wood-tint),var(--wood-tint)),repeating-linear-gradient(90deg,transparent 0 118px,rgba(60,35,18,.28) 118px 120px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.11' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.22 0 0 0 0 0.12 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='600' height='300' fill='%23A97F58'/%3E%3Crect width='600' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-size:cover,auto,600px 300px;transition:background-color .35s}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:22px;background:var(--bg);border-radius:22px 22px 0 0;transition:background .35s}
-.hero-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:14px;position:relative;z-index:1}
-.hero .logo{width:58px;height:58px;border-radius:50%;background:#FFF8EE;display:flex;align-items:center;justify-content:center;flex:0 0 58px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.hero .logo img{width:42px;height:42px;object-fit:contain}
-.hero small{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;letter-spacing:.06em;opacity:.95}
-.hero b{display:block;font-size:22px;font-weight:800;letter-spacing:.04em;line-height:1.3}
+.hero{position:relative;min-height:320px;color:#FFF8EE;overflow:hidden;background:#3a2a1f url("rental_gym_room.jpg?v=1") center 58%/cover no-repeat;display:flex;align-items:flex-end}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.08) 34%,var(--hero-tint) 100%);transition:background .35s}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:24px;background:var(--bg);border-radius:24px 24px 0 0;transition:background .35s}
+.hero-in{position:static;width:100%;max-width:560px;margin:0 auto;padding:22px 20px 46px}
+.mark{position:absolute;z-index:2;top:22px;left:20px;display:flex;flex-direction:column;align-items:flex-start;line-height:1}
+.mark .wm{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:26px;letter-spacing:.14em;color:#FFF8EE}
+.mark .rule{display:block;width:100%;height:1px;background:rgba(255,248,238,.7);margin:6px 0 5px}
+.mark .sub{font-family:"Cormorant Garamond",serif;font-size:10.5px;letter-spacing:.42em;color:#FFF8EE;opacity:.9}
+.catch-en{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:18px;letter-spacing:.06em;opacity:.95;position:relative;z-index:1}
+.catch{position:relative;z-index:1;font-size:34px;font-weight:800;letter-spacing:.08em;line-height:1.25;text-shadow:0 2px 16px rgba(0,0,0,.35)}
 .wrap{max-width:560px;margin:0 auto;padding:6px 16px 56px}
 h2.en{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:600;font-size:22px;color:var(--tag);margin:18px 0 0;letter-spacing:.04em}
 .big{font-size:27px;font-weight:800;line-height:1.35;color:var(--ink)}
