@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="apple-touch-icon" href="onetre_logo.png?v=2">
+<link rel="icon" href="onetre_logo.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&display=swap">
+<link rel="stylesheet" href="rental_gym_cafe.css?v=6">
+<title>レンタルジムONE-TRE — 退会手続き</title>
+</head>
+<body data-theme="male">
+<script>try{document.body.dataset.theme=localStorage.getItem('rentalTheme')||'male'}catch(e){}</script>
+<div class="hero"><div class="hero-in">
+  <div class="mark"><span class="wm">ONE-TRE</span><span class="rule"></span><span class="sub">RENTAL GYM</span></div>
+  <p class="catch-en">Time just for you</p>
+  <p class="catch">じぶんだけの時間</p>
+</div></div>
+<div class="wrap">
+  <h2 class="en">Withdrawal</h2>
+  <section id="form">
+    <p class="big">退会のお手続き</p>
+    <div class="card">
+      <div class="f"><label class="l" for="email">会員メールアドレス<span class="req">必須</span></label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="入会時のメールアドレス"></div>
+      <div class="f"><span class="l">退会の理由<span class="opt">任意</span></span>
+        <div class="chips two radio" id="reason">
+          <label class="wide"><input type="radio" name="reason" value="引っ越し・転勤">引っ越し・転勤</label>
+          <label class="wide"><input type="radio" name="reason" value="時間が合わない">時間が合わない</label>
+          <label class="wide"><input type="radio" name="reason" value="予約が取りにくい">予約が取りにくい</label>
+          <label class="wide"><input type="radio" name="reason" value="料金">料金</label>
+          <label class="wide"><input type="radio" name="reason" value="目的を達成した">目的を達成した</label>
+          <label class="wide"><input type="radio" name="reason" value="体調・ケガ">体調・ケガ</label>
+          <label class="wide"><input type="radio" name="reason" value="ONE-TREのパーソナルに切り替える">ONE-TREのパーソナルに切り替える</label>
+          <label class="wide"><input type="radio" name="reason" value="その他">その他</label>
+        </div>
+        <input type="text" id="reasonOther" class="hidden" style="margin-top:8px" placeholder="よろしければ教えてください"></div>
+    </div>
+    <div class="card rules"><b>退会について</b>
+      <ul>
+        <li>次回の更新日の前日まで、これまで通りご利用いただけます</li>
+        <li>次回からの月額は発生しません</li>
+        <li>退会事務手数料<b>3,300円</b>をご登録のカードへ請求します</li>
+      </ul></div>
+    <label class="agree"><input type="checkbox" id="agree">上記を確認し、退会します</label>
+    <button class="btn" id="go" disabled>退会を申し込む</button>
+    <p class="msg" id="msg"></p>
+  </section>
+  <section id="done" class="hidden">
+    <p class="big" id="doneTitle"></p>
+    <div class="card"><div class="note">利用最終日</div><div class="when" id="doneDay"></div>
+      <div class="note">それまでは、これまで通りご予約いただけます。<br>確認メールをお送りしました。</div></div>
+    <a class="btn ghost" href="rental_gym_yoyaku.html">簡単予約へ</a>
+  </section>
+  <p class="foot">レンタルジムONE-TRE<br>鳥取県米子市車尾6丁目8-59-A</p>
+</div>
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxhkgXusWtzEaPt4X_9ys9bJXYV_VdTQoMTGwAXCFqdtiUq-GID17pCgOZbBCCVArgW/exec';
+const THEME = { '男性':'male', '女性':'female', 'どちらでもない':'none' };
+const $ = id => document.getElementById(id);
+try{ const s = localStorage.getItem('rentalEmail'); if(s) $('email').value = s; }catch(e){}
+const box = $('reason');
+box.querySelectorAll('input').forEach(i => i.addEventListener('change', () => {
+  box.querySelectorAll('label').forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
+  $('reasonOther').classList.toggle('hidden', i.value !== 'その他');
+}));
+$('agree').onchange = () => { $('go').disabled = !$('agree').checked; };
+$('go').onclick = async () => {
+  const email = $('email').value.trim();
+  $('msg').textContent = '';
+  if(!email){ $('msg').textContent = 'メールアドレスを入力してください'; return; }
+  let reason = (document.querySelector('#reason input:checked') || {}).value || '';
+  if(reason === 'その他' && $('reasonOther').value.trim()) reason = 'その他：' + $('reasonOther').value.trim();
+  $('go').disabled = true; $('go').textContent = '手続き中…';
+  try{
+    const r = await (await fetch(GAS_URL + '?' + new URLSearchParams({ action:'withdraw', email, reason, t:Date.now() }), { cache:'no-store' })).json();
+    if(r.gender && THEME[r.gender]) document.body.dataset.theme = THEME[r.gender];
+    if(!r.ok){ $('msg').textContent = r.error; return; }
+    $('doneTitle').innerHTML = r.name + '様<br>' + (r.already ? '退会手続きは受付済みです' : 'ありがとうございました');
+    $('doneDay').textContent = r.lastDay;
+    $('form').classList.add('hidden'); $('done').classList.remove('hidden'); window.scrollTo(0,0);
+  }catch(e){ $('msg').textContent = '通信エラーです。もう一度お試しください'; }
+  finally{ $('go').disabled = !$('agree').checked; $('go').textContent = '退会を申し込む'; }
+};
+window.addEventListener('pageshow', e => { if(e.persisted) location.reload(); });
+</script>
+</body>
+</html>
