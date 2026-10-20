@@ -80,7 +80,7 @@
   <div class="card rules" style="margin-top:28px">
     <ul style="margin-top:0">
       <li>利用時間：月〜金 16:00〜22:00／土 16:00〜20:00（日祝休み）</li>
-      <li>1回60分・ご予約は1日1回まで（あさっての分までご予約いただけます）</li>
+      <li>1回60分・ご予約は1日1回まで（今日と明日の分をご予約いただけます）</li>
       <li>2人でのご利用もOK（お2人とも会員登録が必要です）</li>
       <li>指導を仕事・ビジネスとして行うのは禁止（違反時は罰金33,000円）</li>
       <li>無断キャンセルは1回目イエローカード、2回目レッドカード（退会）</li>
@@ -93,7 +93,7 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxhkgXusWtzEaPt4X_9ys9bJXYV_VdTQoMTGwAXCFqdtiUq-GID17pCgOZbBCCVArgW/exec';
 const CANCEL_PAGE = 'rental_gym_cancel.html';
-const DAYS_AHEAD = 2;   // あさって（2日後）まで予約OK（GASの MAX_DAYS_AHEAD と同じ数字にする）
+const DAYS_AHEAD = 1;   // 今日・明日の2日間（GASの MAX_DAYS_AHEAD と同じ数字にする）
 const THEME = { '男性':'male', '女性':'female', 'どちらでもない':'none' };
 const $ = id => document.getElementById(id);
 let email = '', selected = null, currentDate = '', booked = new Set();
