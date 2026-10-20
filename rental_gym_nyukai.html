@@ -86,7 +86,7 @@
       <b>ご利用ルール</b>
       <ul>
         <li>利用時間：月〜金 16:00〜22:00／土 16:00〜20:00（日祝休み）</li>
-        <li>1回60分・ご予約は1日1回まで（3日後の分までご予約いただけます）</li>
+        <li>1回60分・ご予約は1日1回まで（あさっての分までご予約いただけます）</li>
         <li>2人でのご利用もOKです。ただし、お2人とも会員登録が必要です（会員でない方はご利用いただけません）</li>
         <li>ジム内でのパーソナルトレーニングなど、指導を仕事・ビジネスとして行うことは禁止です。違反した場合は罰金33,000円をいただきます</li>
         <li>無断キャンセルは1回目でイエローカード、2回目でレッドカード（退会）となります</li>
@@ -201,7 +201,7 @@ async function api(params){ params.t = Date.now(); const res = await fetch(GAS_U
 function ymd(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function buildTabs(){
   const tabs = $('tabs'); tabs.innerHTML = ''; const base = new Date();
-  for (let i = 0; i <= 3; i++) {   // 3日後まで予約OK
+  for (let i = 0; i <= 2; i++) {   // あさって（2日後）まで予約OK
     const d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
     const b = document.createElement('button'); b.type = 'button';
     b.textContent = (i === 0 ? '今日 ' : i === 1 ? '明日 ' : '') + (d.getMonth()+1) + '/' + d.getDate() + '(' + W[d.getDay()] + ')';
