@@ -326,6 +326,18 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <div class="mode-pill">TRAINER MODE</div>
   </div>
 
+<div id="moneyPinOv" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:#fff;border-radius:14px;padding:22px 20px;width:100%;max-width:320px;text-align:center;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+    <div style="font-size:17px;font-weight:800;margin-bottom:6px;">お金の画面は暗証番号が必要です</div>
+    <div style="font-size:12px;color:#777;margin-bottom:12px;">4桁の番号を入れてください</div>
+    <input id="moneyPinIn" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" style="width:100%;font-size:24px;text-align:center;letter-spacing:.4em;padding:10px;border:2px solid #ddd;border-radius:10px;box-sizing:border-box;" onkeydown="if(event.key==='Enter')moneyPinGo()">
+    <div id="moneyPinMsg" style="color:#d33;font-size:13px;min-height:18px;margin:8px 0;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="moneyPinCancel()" style="flex:1;padding:12px;border:1px solid #ccc;background:#fff;border-radius:10px;font-size:15px;">やめる</button>
+      <button onclick="moneyPinGo()" style="flex:1;padding:12px;border:0;background:#333;color:#fff;border-radius:10px;font-size:15px;font-weight:700;">開く</button>
+    </div>
+  </div>
+</div>
   <div class="nav">
     <button class="nbtn active" onclick="sp('dashboard',this)"><span>📊</span>ダッシュボード</button>
     <button class="nbtn" onclick="sp('sales',this)"><span>💰</span>売上</button>
@@ -376,6 +388,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <div class="card"><div class="section-ttl">年代別</div><div style="position:relative;height:180px"><canvas id="ca"></canvas></div></div>
     </div>
 
+    <div id="payroll-lock" style="display:none;margin:10px 0 14px;"><button onclick="askPin(function(){})" style="width:100%;padding:14px;border:2px dashed #bbb;background:#fafafa;border-radius:12px;font-size:14px;font-weight:800;color:#555;cursor:pointer;">🔒 人件費を見る（暗証番号）</button></div>
+    <div id="payroll-box">
     <div class="section-ttl">💰 人件費（16-22時外の時間外手当）</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px">
       <button onclick="payrollPrevMonth()" style="background:var(--blue2);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;cursor:pointer">◀ 前月</button>
@@ -417,6 +431,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
     <div id="payroll-error" style="display:none;padding:14px;background:var(--pink-bg2);border-radius:12px;color:var(--pink2);font-size:12px;font-weight:700"></div>
+    </div>
   </div>
 
   <div id="page-sales" class="page">
@@ -1282,7 +1297,28 @@ function saveBodyScore(){
   .catch(()=>showToast('スコア保存（オフライン）','success'));
 }
 
+/* 売上・見込み・人件費は暗証番号つき（直すときの検索ワード：MONEY_PIN）。画面を開くたびに1回入れる */
+const MONEY_PIN='0707';
+function moneyOk(){try{return sessionStorage.getItem('money_ok')==='1';}catch(e){return false;}}
+function applyMoneyLock(){
+  const ok=moneyOk();
+  const box=document.getElementById('payroll-box'),lock=document.getElementById('payroll-lock');
+  if(box)box.style.display=ok?'':'none';
+  if(lock)lock.style.display=ok?'none':'block';
+}
+function askPin(after){
+  const ov=document.getElementById('moneyPinOv');document.getElementById('moneyPinIn').value='';document.getElementById('moneyPinMsg').textContent='';
+  ov.style.display='flex';setTimeout(()=>document.getElementById('moneyPinIn').focus(),50);ov._after=after;
+}
+function moneyPinGo(){
+  const ov=document.getElementById('moneyPinOv'),v=document.getElementById('moneyPinIn').value.trim();
+  if(v===MONEY_PIN){try{sessionStorage.setItem('money_ok','1');}catch(e){}ov.style.display='none';applyMoneyLock();if(ov._after)ov._after();}
+  else{document.getElementById('moneyPinMsg').textContent='番号が違います';document.getElementById('moneyPinIn').value='';}
+}
+function moneyPinCancel(){document.getElementById('moneyPinOv').style.display='none';}
 function sp(name,btn){
+  if((name==='sales'||name==='forecast')&&!moneyOk()){askPin(function(){sp(name,btn);});return;}
+  applyMoneyLock();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
@@ -2487,5 +2523,6 @@ loadPayroll();
   }catch(e){console.log('バージョンチェック失敗:',e);}
 })();
 </script>
+<script>document.addEventListener('DOMContentLoaded',function(){try{applyMoneyLock();}catch(e){}});</script>
 </body>
 </html>
