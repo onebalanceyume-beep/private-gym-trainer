@@ -455,8 +455,8 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <div class="pair-toggle" id="pair-toggle" onclick="togglePair()">
         <div class="pair-ico">👫</div>
         <div class="pair-body">
-          <div class="pair-title">ペアで受ける（1回あたり価格が割引）</div>
-          <div class="pair-desc">お友達・ご家族と2人同時受講の場合に適用<br>1回あたり ¥1,500引き</div>
+          <div class="pair-title">ペアで受ける（さらに20%オフ）</div>
+          <div class="pair-desc">お友達・ご家族と2人同時受講の場合に適用<br>ペア割 さらに20%オフ</div>
         </div>
         <div class="pair-sw"></div>
       </div>
@@ -646,7 +646,7 @@ function openAdminRenew(memberId, memberName){
       <div class="pair-ico">👫</div>
       <div class="pair-body">
         <div class="pair-title">ペアで受ける</div>
-        <div class="pair-desc">1回あたり ¥1,500引き</div>
+        <div class="pair-desc">ペア割 さらに20%オフ</div>
       </div>
       <div class="pair-sw"></div>
     </div>
@@ -683,7 +683,7 @@ function updateAdmSummary(){
   const disc = Math.round(orig * 0.1);
   const afterDisc = orig - disc;
   const sessions = parseInt(adminRenewState.course) || 0;
-  const pairAmt = adminRenewState.pair ? (1500 * sessions) : 0;
+  const pairAmt = adminRenewState.pair ? Math.round(afterDisc * 0.2) : 0;
   const total = afterDisc - pairAmt;
   document.getElementById('adm-orig').textContent = '¥' + orig.toLocaleString();
   document.getElementById('adm-disc').textContent = '-¥' + disc.toLocaleString();
@@ -751,13 +751,13 @@ function updateRenewSummary(){
   const disc = Math.round(orig * 0.1);
   const afterDisc = orig - disc;
   const sessions = parseInt(renewState.course) || 0;
-  const pairAmt = renewState.pair ? (1500 * sessions) : 0;
+  const pairAmt = renewState.pair ? Math.round(afterDisc * 0.2) : 0;
   const total = afterDisc - pairAmt;
   document.getElementById('rs-orig').textContent = '¥' + orig.toLocaleString();
   document.getElementById('rs-disc').textContent = '-¥' + disc.toLocaleString();
   if (renewState.pair) {
     document.getElementById('rs-pair-row').style.display = 'flex';
-    document.getElementById('rs-pair-lbl').textContent = 'ペア割（¥1,500×' + sessions + '回）';
+    document.getElementById('rs-pair-lbl').textContent = 'ペア割（さらに20%オフ）';
     document.getElementById('rs-pair').textContent = '-¥' + pairAmt.toLocaleString();
   } else {
     document.getElementById('rs-pair-row').style.display = 'none';
@@ -769,7 +769,7 @@ function updateRenewSummary(){
     const o = parseInt(card.dataset.price);
     const s = parseInt(card.dataset.course);
     const d = Math.round(o * 0.1);
-    const pa = renewState.pair ? (1500 * s) : 0;
+    const pa = renewState.pair ? Math.round((o - d) * 0.2) : 0;
     const f = o - d - pa;
     const el = card.querySelector('[data-basic]');
     if(el) el.textContent = '¥' + f.toLocaleString();
@@ -795,7 +795,7 @@ async function submitRenew(){
       const disc = Math.round(orig * 0.1);
       const afterDisc = orig - disc;
       const sessions = parseInt(renewState.course) || 0;
-      const pairAmt = renewState.pair ? (1500 * sessions) : 0;
+      const pairAmt = renewState.pair ? Math.round(afterDisc * 0.2) : 0;
       const total = afterDisc - pairAmt;
       document.getElementById('done-amt').textContent = '¥' + total.toLocaleString();
       document.getElementById('done-crs').textContent = renewState.course + '回コース' + (renewState.pair ? '（ペア）' : '');

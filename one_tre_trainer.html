@@ -288,7 +288,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
         <input type="checkbox" id="rm-pair-chk" style="transform:scale(1.3);margin-right:10px">
         <div>
           <div style="font-size:13px;color:var(--ink);font-weight:700">ペアで受ける</div>
-          <div style="font-size:10px;color:var(--ink2);margin-top:2px;font-weight:500">2人同時受講の場合、1回あたり ¥1,500引き</div>
+          <div style="font-size:10px;color:var(--ink2);margin-top:2px;font-weight:500">2人同時受講の場合、ペア割 さらに20%オフ</div>
         </div>
       </label>
     </div>
@@ -824,10 +824,10 @@ function rmUpdateSummary(){
   }
   const isPair = document.getElementById('rm-pair-chk').checked && dealType === 'normal';
   const sessions = parseInt(rmState.course) || 0;
-  const pairAmt = isPair ? (1500 * sessions) : 0;
   const orig = rmState.coursePrice;
   const discAmt = Math.round(orig * discRate);
   const afterDisc = orig - discAmt;
+  const pairAmt = isPair ? Math.round(afterDisc * 0.2) : 0;
   let finalPrice = afterDisc - pairAmt;
   if(dealType === 'trade' || dealType === 'free') finalPrice = 0;
   document.getElementById('rm-sum-course').textContent = rmState.course + '回コース';
@@ -836,7 +836,7 @@ function rmUpdateSummary(){
   document.getElementById('rm-sum-disc').textContent = discAmt > 0 ? '-¥' + discAmt.toLocaleString() : '¥0';
   if(isPair){
     document.getElementById('rm-sum-pair-row').style.display = 'flex';
-    document.getElementById('rm-sum-pair-lbl').textContent = 'ペア割（¥1,500×' + sessions + '回）';
+    document.getElementById('rm-sum-pair-lbl').textContent = 'ペア割（さらに20%オフ）';
     document.getElementById('rm-sum-pair').textContent = '-¥' + pairAmt.toLocaleString();
   } else {
     document.getElementById('rm-sum-pair-row').style.display = 'none';

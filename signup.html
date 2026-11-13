@@ -369,13 +369,13 @@
         <div class="pt-row">
           <div class="pt-icon">👫</div>
           <div class="pt-body">
-            <div class="pt-title">ペアで受ける（1回あたり価格が割引）</div>
+            <div class="pt-title">ペアで受ける（さらに20%オフ）</div>
             <div class="pt-desc">お友達・ご家族と2人同時受講の場合に適用</div>
           </div>
           <div class="pt-switch"></div>
         </div>
         <div class="pair-detail" id="pair-detail">
-          <span id="pair-detail-text">1回あたり ¥1,200引き</span>
+          <span id="pair-detail-text">ペア割 さらに20%オフ</span>
         </div>
       </div>
 
@@ -574,9 +574,7 @@ function updatePrice(){
   if(!state.course) { priceSummary.style.display='none'; return; }
   const orig = state.coursePrice;
   const sessions = parseInt(state.course) || 0;
-  const pairPerSession = 1200;
-  const pairDiscountAmt = state.pair ? (pairPerSession * sessions) : 0;
-
+  const PAIR_RATE = 0.2; // ペア割：さらに20%オフ
   const sd = window.staffDiscount || {};
 
   // ① コース割引（%）
@@ -584,6 +582,7 @@ function updatePrice(){
   if(sd.courseDisc){
     courseDiscAmt = Math.round(orig * (sd.courseDisc / 100));
   }
+  const pairDiscountAmt = state.pair ? Math.round((orig - courseDiscAmt) * PAIR_RATE) : 0;
   const courseAfter = orig - courseDiscAmt - pairDiscountAmt;
 
   // ② 入会金割引
@@ -654,9 +653,9 @@ function updatePrice(){
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
     const sess = parseInt(card.dataset.course);
-    const pairAmt = state.pair ? (pairPerSession * sess) : 0;
     let cdAmt = 0;
     if(sd.courseDisc) cdAmt = Math.round(origin * (sd.courseDisc / 100));
+    const pairAmt = state.pair ? Math.round((origin - cdAmt) * PAIR_RATE) : 0;
     const cardPrice = Math.max(0, origin - cdAmt - pairAmt);
     const origSpan = card.querySelector('.c-origin');
     const dispSpan = card.querySelector('.c-display');
@@ -672,7 +671,7 @@ function updatePrice(){
     }
   });
 
-  $('pair-detail-text').textContent = '1回あたり ¥1,200引き';
+  $('pair-detail-text').textContent = 'ペア割 さらに20%オフ';
 }
 
 const fields = ['f-name','f-kana','f-email','f-phone','f-address'];
@@ -694,8 +693,8 @@ submitBtn.addEventListener('click', async () => {
   $('loading').classList.add('show');
   const sd = window.staffDiscount || {};
   const sessions0 = parseInt(state.course) || 0;
-  const pairAmt0 = state.pair ? (1200 * sessions0) : 0;
   let courseDiscAmt0 = sd.courseDisc ? Math.round(state.coursePrice * (sd.courseDisc / 100)) : 0;
+  const pairAmt0 = state.pair ? Math.round((state.coursePrice - courseDiscAmt0) * 0.2) : 0;
   let entryDiscAmt0 = 0, entryFee0 = ENTRY_FEE;
   if(sd.entryDisc === 'free'){ entryDiscAmt0 = ENTRY_FEE; entryFee0 = 0; }
   else if(sd.entryDisc === 'half'){ entryDiscAmt0 = Math.round(ENTRY_FEE/2); entryFee0 = ENTRY_FEE - entryDiscAmt0; }
