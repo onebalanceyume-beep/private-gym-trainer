@@ -112,6 +112,9 @@
   .pair-toggle.active .pair-detail{display:block;}
   .price-summary{background:#fafafa;border-radius:12px;padding:16px;margin-bottom:22px;border:1px solid #f0f0f0;}
   .price-summary .ps-row{display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:6px;}
+  .price-summary .ps-disc-box{background:#FBEAF0;border:1px solid #ED93B1;border-radius:8px;padding:8px 10px;margin:8px 0;}
+  .price-summary .ps-disc-row{display:flex;justify-content:space-between;font-size:13px;color:#72243E;padding:2px 0;}
+  .price-summary .ps-disc-total{display:flex;justify-content:space-between;font-size:14px;font-weight:500;color:#72243E;padding:6px 0 2px;margin-top:4px;border-top:1px solid #ED93B1;}
   .price-summary .ps-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:10px;border-top:1px dashed #ddd;}
   .price-summary .ps-total .l{font-size:13px;color:#333;font-weight:500;}
   .price-summary .ps-total .r{font-family:serif;font-size:26px;color:#1a1a1a;font-weight:500;}
@@ -406,11 +409,14 @@
 
       <div class="price-summary" id="price-summary" style="display:none;">
         <div class="ps-row"><span>コース代金</span><span id="ps-original">¥0</span></div>
-        <div class="ps-row" id="ps-coursedisc-row" style="display:none;"><span id="ps-coursedisc-lbl">コース割引</span><span id="ps-coursedisc-amount">-¥0</span></div>
         <div class="ps-row"><span id="ps-entry-lbl">入会金</span><span id="ps-entry">¥11,000</span></div>
-        <div class="ps-row" id="ps-entrydisc-row" style="display:none;"><span id="ps-entrydisc-lbl">入会金割引</span><span id="ps-entrydisc-amount">-¥0</span></div>
-        <div class="ps-row" id="ps-pair-row" style="display:none;"><span id="ps-pair-lbl">ペア割</span><span id="ps-pair-amount">-¥0</span></div>
-        <div class="ps-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">追加割引</span><span id="ps-discount-amount">-¥0</span></div>
+        <div class="ps-disc-box" id="ps-disc-box" style="display:none;">
+          <div class="ps-disc-row" id="ps-coursedisc-row" style="display:none;"><span id="ps-coursedisc-lbl">コース割引</span><span id="ps-coursedisc-amount">-¥0</span></div>
+          <div class="ps-disc-row" id="ps-entrydisc-row" style="display:none;"><span id="ps-entrydisc-lbl">入会金割引</span><span id="ps-entrydisc-amount">-¥0</span></div>
+          <div class="ps-disc-row" id="ps-pair-row" style="display:none;"><span id="ps-pair-lbl">ペア割</span><span id="ps-pair-amount">-¥0</span></div>
+          <div class="ps-disc-row" id="ps-discount-row" style="display:none;"><span id="ps-discount-lbl">追加割引</span><span id="ps-discount-amount">-¥0</span></div>
+          <div class="ps-disc-total"><span>割引合計</span><span id="ps-disc-total">-¥0</span></div>
+        </div>
         <div class="ps-total">
           <span class="l">お支払い金額</span>
           <span class="r" id="ps-total">¥0</span>
@@ -647,28 +653,21 @@ function updatePrice(){
     $('ps-discount-row').style.display = 'none';
   }
 
+  // 割引合計（ピンク枠）
+  const discTotal = courseDiscAmt + entryDiscAmt + pairDiscountAmt + addDiscAmt;
+  $('ps-disc-total').textContent = '-¥' + discTotal.toLocaleString();
+  $('ps-disc-box').style.display = discTotal > 0 ? 'block' : 'none';
+
   priceSummary.style.display = 'block';
 
-  // コースカードの価格表示更新（コース割引・ペア割を反映）
+  // コースカードは常に定価のまま（割引は下の内訳にだけ出す）
   document.querySelectorAll('.course-card').forEach(card => {
     const origin = parseInt(card.dataset.price);
-    const sess = parseInt(card.dataset.course);
-    let cdAmt = 0;
-    if(sd.courseDisc) cdAmt = Math.round(origin * (sd.courseDisc / 100));
-    const pairAmt = state.pair ? Math.round((origin - cdAmt) * PAIR_RATE) : 0;
-    const cardPrice = Math.max(0, origin - cdAmt - pairAmt);
     const origSpan = card.querySelector('.c-origin');
     const dispSpan = card.querySelector('.c-display');
-    if(state.pair || cdAmt > 0){
-      origSpan.style.display = 'inline';
-      origSpan.textContent = '¥' + origin.toLocaleString();
-      dispSpan.textContent = '¥' + cardPrice.toLocaleString();
-      dispSpan.classList.add('c-discount-price');
-    } else {
-      origSpan.style.display = 'none';
-      dispSpan.textContent = '¥' + origin.toLocaleString();
-      dispSpan.classList.remove('c-discount-price');
-    }
+    origSpan.style.display = 'none';
+    dispSpan.textContent = '¥' + origin.toLocaleString();
+    dispSpan.classList.remove('c-discount-price');
   });
 
   $('pair-detail-text').textContent = 'ペア割 さらに20%オフ';
