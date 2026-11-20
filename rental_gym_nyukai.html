@@ -11,15 +11,22 @@
 <link rel="icon" href="onetre_logo.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&display=swap">
+<link rel="preload" as="image" href="rental_gym_room_1280.webp" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="rental_gym_cafe.css?v=6">
+<link rel="stylesheet" href="rental_gym_nyukai.css?v=1">
 <title>レンタルジムONE-TRE — 入会申込み</title>
 </head>
 <body data-theme="male">
-<div class="hero"><div class="hero-in">
-  <div class="mark"><span class="wm">ONE-TRE</span><span class="rule"></span><span class="sub">RENTAL GYM</span></div>
-  <p class="catch-en">Time just for you</p>
+<div class="hero-photo"><img src="rental_gym_room_1280.webp" width="1280" height="939" fetchpriority="high" decoding="async" alt="ONE-TREレンタルジムの個室。ウッド調の壁にラックとベンチが並ぶ"></div>
+<div class="title-block">
+  <p class="brand">ONE-TRE RENTAL GYM</p>
   <p class="catch">じぶんだけの時間</p>
-</div></div>
+  <p class="sub-catch">誰にも見られない。だから、自分に酔える。</p>
+</div>
+<div class="photos">
+  <figure><img src="rental_gym_rack_800.webp" width="800" height="600" loading="lazy" decoding="async" alt="ラックとダンベルが揃ったトレーニングスペース"><figcaption>ラック・ダンベルが揃う個室</figcaption></figure>
+  <figure><img src="onetre_personal_800.webp" width="800" height="858" loading="lazy" decoding="async" alt="ラットプルダウンでトレーニングする利用者の後ろ姿"><figcaption>60分、自分のペースで</figcaption></figure>
+</div>
 
 <div class="wrap">
   <form id="form" novalidate>
@@ -28,6 +35,10 @@
         <div class="plan">
       <div><div class="tag" id="planTag">読み込み中…</div><div style="font-size:12px;color:var(--sub)">月額・使い放題（税込）</div></div>
       <div class="p" id="planPrice"></div>
+    </div>
+    <div class="plan-note hidden" id="planNote">
+      <p>4人目以降は通常 <b>月額6,600円（税込）</b></p>
+      <p>モニター条件：スタッフからアンケートをお願いした際にご回答ください。顔は映さない前提で動画を撮らせていただき、広告に使う場合があることをご了承ください。</p>
     </div>
 
     <div class="card">
@@ -140,7 +151,7 @@ function store(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
 
 fetch(GAS_URL + '?action=getPlan&t=' + Date.now(), { cache:'no-store' }).then(r => r.json()).then(r => {
   if (!r.ok) throw 0;
-  $('planTag').textContent = r.early ? '初期会員 残り' + r.left + '名' : '通常会員';
+  $('planTag').textContent = r.early ? 'モニター会員 残り' + r.left + '名（先着3名）' : '通常会員'; $('planNote').classList.toggle('hidden', !r.early);
   $('planPrice').innerHTML = '<span class="y">¥</span>' + r.price.toLocaleString() + '<small>/月</small>';
 }).catch(() => { $('planTag').textContent = '月額会員'; });
 

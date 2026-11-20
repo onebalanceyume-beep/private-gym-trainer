@@ -1,0 +1,22 @@
+/* レンタルジムONE-TRE 入会申込みページ専用（ゴールド×ウッド調・写真入り）。rental_gym_cafe.css の後に読み込む */
+:root,body[data-theme="male"]{
+  --bg:#F6EFE4; --card:#FFFDF8; --ink:#3B2A1E; --sub:#6B5642; --line:#D9C5A3;
+  --accent:#8F6A1F; --accent-ink:#FFFFFF; --soft:#F3E6C8; --soft-ink:#5E4310; --tag:#8F6A1F;
+}
+.wrap{max-width:640px}
+.hero-photo{width:100%;height:380px;overflow:hidden;background:#C9A06A}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:60% 50%;display:block}
+.title-block{max-width:640px;margin:0 auto;padding:30px 20px 4px;text-align:center}
+.title-block .brand{font-family:"Cormorant Garamond",serif;font-size:14px;letter-spacing:.32em;color:var(--tag);font-weight:600}
+.title-block .catch{position:static;text-shadow:none;color:var(--ink);font-size:36px;margin-top:4px}
+.title-block .sub-catch{font-size:15px;color:var(--sub);margin-top:6px}
+.photos{max-width:640px;margin:0 auto;padding:18px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.photos figure{margin:0}
+.photos img{width:100%;height:190px;object-fit:cover;border-radius:16px;display:block}
+.photos figcaption{font-size:13px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.4}
+.plan{border-top:4px solid #B8893A;background:var(--card);box-shadow:0 8px 28px rgba(90,60,30,.14)}
+.plan .tag{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:4px 12px;border-radius:99px;font-size:13px}
+.plan-note{font-size:13px;line-height:1.75;color:var(--sub);margin-top:12px;padding:0 4px}
+.plan-note b{color:var(--ink)}
+.plan-note p+p{margin-top:4px}
+@media(max-width:520px){.hero-photo{height:260px}.title-block .catch{font-size:30px}.photos img{height:150px}}
